@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orden de Laboratorio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            width: 80mm;
+            margin: 0;
+            padding: 0;
+        }
+        .ticket-container {
+            width: 100%;
+            padding: 5mm;
+            background-color: white;
+        }
+        h2 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        p {
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center; /* Centrar título de las secciones */
+            margin-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+            text-align: center; /* Centrar el contenido de la tabla */
+        }
+        td, th {
+            font-size: 12px;
+            padding: 5px;
+            border: 1px solid black;
+            text-align: center; /* Asegurar que el texto dentro de celdas esté centrado */
+        }
+        .order-number {
+            text-align: right;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-container">
+        <h2>Orden de Laboratorio</h2>
+        <p class="section-title"><strong>Fecha:</strong> {{dia_lab}} / {{mes_lab}} / {{año_lab}}</p>
+        <p class="section-title"><strong>N° de Orden:</strong> <span class="order-number"> {{ numero_orden }} </span></p>
+
+        <div class="section-title">Datos del Cliente</div>
+        <table>
+            <tr>
+                <td><strong>Ordenado por:</strong></td>
+                <td>{{ ordenado_por }}</td>
+            </tr>
+            <tr>
+                <td><strong>Ordenado a:</strong></td>
+                <td>{{ ordenado_a }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">Detalles de la Montura</div>
+        <table>
+            <tr>
+                <td><strong>Referencia Montura:</strong></td>
+                <td>{{ montura }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">Detalles del Lente</div>
+        <table>
+            <tr>
+                <th>O.D.</th>
+                <th>O.I.</th>
+            </tr>
+            <tr>
+                <td><strong>Esfera:</strong> {{ esfera_od }}</td>
+                <td><strong>Esfera:</strong> {{ esfera_oi }}</td>
+            </tr>
+            <tr>
+                <td><strong>Cilindro:</strong> {{ cilindro_od }}</td>
+                <td><strong>Cilindro:</strong> {{ cilindro_oi }}</td>
+            </tr>
+            <tr>
+                <td><strong>Eje:</strong> {{ eje_od }}</td>
+                <td><strong>Eje:</strong> {{ eje_oi }}</td>
+            </tr>
+            <tr>
+                <td><strong>Adición:</strong> {{ adicion_od }}</td>
+                <td><strong>Adición:</strong> {{ adicion_oi }}</td>
+            </tr>
+            <tr>
+                <td><strong>DP:</strong> {{ dp_od }}</td>
+                <td><strong>DP:</strong> {{ dp_oi }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">Características del Lente</div>
+        <table>
+            <tr>
+                <td><strong>Material:</strong> {{ material_lentes }}</td>
+            </tr>
+            <tr>
+                <td><strong>AR:</strong> {{ ar }}</td>
+            </tr>
+            <tr>
+                <td><strong>Fotocromático:</strong> {{ fotocromatico_cual }}</td>
+            </tr>
+            <tr>
+                <td><strong>Color:</strong> {{ color_lente }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">Adicionales</div>
+        <table>
+            <tr>
+                <td><strong>Progresivo:</strong> {{ progresivo }}</td>
+            </tr>
+            <tr>
+                <td><strong>Monofocal:</strong> {{ monofocal }}</td>
+            </tr>
+            <tr>
+                <td><strong>Bifocal:</strong> {{ bifocal }}</td>
+            </tr>
+            <tr>
+                <td><strong>Adicional:</strong> {{ adicional }}</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+

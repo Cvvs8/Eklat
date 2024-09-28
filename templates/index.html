@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orden Completa</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px; /* Añade espacio entre secciones si es necesario */
+            border-collapse: collapse;
+        }
+        td, th {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        input, textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 4px;
+        }
+        .order-number {
+            color: red;
+            font-size: 24px;
+            text-align: right;
+            vertical-align: middle;
+            padding-right: 20px;  /* Asegúrate de que haya suficiente espacio a la derecha */
+        }
+
+        input[type="text"] {
+            padding: 4px;
+            margin: 0;
+            width: 100%; /* Esto ayudará a evitar que los campos de entrada excedan el espacio de su celda */
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column; /* Hace que los botones se apilen uno debajo del otro */
+            align-items: center; /* Centra los botones horizontalmente */
+            gap: 10px; /* Añade espacio entre los botones */
+            margin-top: 20px;
+        }
+
+        button {
+            width: 60%; /* El botón ocupará el 60% del ancho del contenedor */
+            padding: 12px 30px; /* Ajusta el tamaño del botón */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 style="text-align: center;">ORDEN DE PEDIDO</h2>       
+        <form action="/submit" method="post" onsubmit="return validarPagos()">
+            <table>
+                <tr>
+                    <td >Fecha:</td>
+                    <td>Día:<input type="text" name="dia" required></td>
+                    <td>Mes:<input type="text" name="mes" required></td>
+                    <td>Año:<input type="text" name="año" required></td>
+                    <td class="order-number" colspan="1">N° {{ numero_orden }}</td>
+                </tr>
+                <tr>
+                    <td>Nombre del Laboratorio:</td>
+                    <td colspan="4"><input type="text" name="nombre_laboratorio" required></td>
+                </tr>
+                <tr>
+                    <td class="label">Vendedor:</td>
+                    <td colspan="4"><input type="text" name="vendedor" required></td>
+                </tr>
+                <tr>
+                    <td class="label">Nombre del Cliente:</td>
+                    <td colspan="4"><input type="text" name="nombre_cliente" required></td>
+                </tr>
+                <tr>
+                    <td class="label">Tipo de Identificación:</td>
+                    <td>
+                        <select name="tipo_identificacion" required>
+                            <option value="Registro Civil">Registro Civil</option>
+                            <option value="Tarjeta de Identidad">Tarjeta de Identidad</option>
+                            <option value="Cédula Ciudadanía">Cédula Ciudadanía</option>
+                            <option value="Tarjeta Extranjería">Tarjeta Extranjería</option>
+                            <option value="Cédula Extranjería">Cédula Extranjería</option>
+                            <option value="NIT">NIT</option>
+                            <option value="Pasaporte">Pasaporte</option>
+                            <option value="Documento Identidad Extranjero">Documento Identidad Extranjero</option>
+                            <option value="NUIP">NUIP</option>
+                            <option value="PEP">PEP</option>
+                            <option value="Salvoconducto de Permanencia">Salvoconducto de Permanencia</option>
+                            <option value="PPT">PPT</option>
+                        </select>
+                    </td>
+                    <td class="label">Número de Identificación:</td>
+                    <td colspan="2">
+                        <input type="text" name="numero_identificacion" required>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td class="label">Dirección de entrega:</td>
+                    <td colspan="4"><input type="text" name="direccion_entrega" required></td>
+                </tr>
+                <tr>
+                    <td class="label">Ciudad:</td>
+                    <td><input type="text" name="ciudad" required></td>
+                    <td class="label">Barrio:</td>
+                    <td colspan="2"><input type="text" name="barrio" required></td>
+                </tr>
+                <tr>
+                    <td class="label">Teléfonos:</td>
+                    <td><input type="text" name="telefonos" required></td>
+                    <td class="label">Email:</td>
+                    <td colspan="2"><input type="text" name="email" required></td>
+                </tr>
+                <tr>
+                    <td class="label">Tipo Régimen IVA:</td>
+                    <td colspan="4">
+                        <select name="tipo_regimen_iva" required>
+                            <option value="Persona Natural">Persona Natural</option>
+                            <option value="Persona Jurídica">Persona Jurídica</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Código Montura:</td>
+                    <td><input type="text" name="codigo_montura" required></td>
+                    <td class="label">Valor Montura:</td>
+                    <td colspan="2"><input type="text" name="valor_montura" required></td>
+                </tr>
+                <tr>
+                    <td class="label">Código Lente:</td>
+                    <td><input type="text" name="codigo_lente"></td>
+                    <td class="label">Valor Lente:</td>
+                    <td colspan="2"><input type="text" name="valor_lente"></td>
+                </tr>
+                <tr>
+                    <td class="label">Otros:</td>
+                    <td><input type="text" name="otros"></td>
+                    <td class="label">Valor Otros:</td>
+                    <td colspan="2"><input type="text" name="valor_otros"></td> <!-- Changed name to "otros" -->
+                </tr>
+                <tr>
+                    <td class="label">Total Venta:</td>
+                    <td colspan="4"><input type="text" name="total_venta" readonly></td>
+                </tr>
+                
+                <tr class="section-header">
+                    <td colspan="5" style="text-align: center;">FORMAS DE PAGO</td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Efectivo:</td>
+                    <td><input type="text" name="pago_efectivo"></td>
+                    <td class="payment-label">Sistecredito:</td>
+                    <td colspan="2"><input type="text" name="pago_sistecredito"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Bancolombia:</td>
+                    <td><input type="text" name="pago_bancolombia"></td>
+                    <td class="payment-label">Davivienda:</td>
+                    <td colspan="2"><input type="text" name="pago_davivienda"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Addi:</td>
+                    <td><input type="text" name="pago_addi"></td>
+                    <td class="payment-label">Envia:</td>
+                    <td colspan="2"><input type="text" name="pago_envia"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Inter Rapidismo:</td>
+                    <td><input type="text" name="pago_interapidism"></td>
+                    <td class="payment-label">Redeban:</td>
+                    <td colspan="2"><input type="text" name="pago_redeban"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Bold:</td>
+                    <td><input type="text" name="pago_bold"></td>
+                    <td class="payment-label">Mensajería EKlat:</td>
+                    <td colspan="2"><input type="text" name="pago_mensajeria_eklat"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Mercado Pago:</td>
+                    <td><input type="text" name="pago_mercadopago"></td>
+                    <td class="payment-label">Payco:</td>
+                    <td colspan="2"><input type="text" name="pago_payco"></td>
+                </tr>
+                
+                <tr>
+                    <td class="payment-label">Servientrega:</td>
+                    <td><input type="text" name="pago_servientrega"></td>
+                    <td class="payment-label">Otro:</td>
+                    <td colspan="4"><input type="text" name="pago_otro"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Guía de Despacho:</td>
+                    <td colspan="4"><input type="text" name="guia_despacho" required></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="header">Fecha de ENTREGADO AL CLIENTE:</td>
+                    <td>Día: <input type="text" name="dia_ent" size="2" required></td> <!-- Changed to "dia_lab" -->
+                    <td>Mes: <input type="text" name="mes_ent" size="2"></td required> <!-- Changed to "mes_lab" -->
+                    <td>Año: <input type="text" name="año_ent" size="2"></td required>
+                </tr>    
+                <tr>
+                    <td colspan="5">Observaciones:<textarea name="observaciones" rows="3"></textarea></td>
+                </tr>
+            </table>
+
+        <h2 style="text-align: center;">ORDEN DE LABORATORIO</h2>
+        <table>
+                <tr>
+                    <td colspan="2" class="header">Fecha:</td>
+                    <td>Día: <input type="text" name="dia_lab" size="2" required></td> <!-- Changed to "dia_lab" -->
+                    <td>Mes: <input type="text" name="mes_lab" size="2" required></td> <!-- Changed to "mes_lab" -->
+                    <td>Año: <input type="text" name="año_lab" size="4" required></td> <!-- Changed to "año_lab" -->
+                    <td class="order-number" colspan="1">N° {{ numero_orden }}</td>
+                </tr>
+                <tr colspan="5 ">
+                    <th></th>
+                    <th>Esfera</th>
+                    <th>Cilindro</th>
+                    <th>Eje</th>
+                    <th>Adición</th>
+                    <th>DP</th>
+                </tr>
+                <tr>
+                    <td class="header">O.D.</td>
+                    <td><input type="text" name="esfera_od"></td>
+                    <td><input type="text" name="cilindro_od"></td>
+                    <td><input type="text" name="eje_od"></td>
+                    <td><input type="text" name="adicion_od"></td>
+                    <td><input type="text" name="dp_od"></td>
+                </tr>
+                <tr>
+                    <td class="header">O.I.</td>
+                    <td><input type="text" name="esfera_oi"></td>
+                    <td><input type="text" name="cilindro_oi"></td>
+                    <td><input type="text" name="eje_oi"></td>
+                    <td><input type="text" name="adicion_oi"></td>
+                    <td><input type="text" name="dp_oi"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td class="header">REF: Montura</td>
+                    <td colspan="2"><input type="text" name="montura" required></td>
+                    <td class="header">Color:</td>
+                    <td colspan="2"><input type="text" name="color" required></td>
+                </tr>
+                <tr>
+                    <td class="header">Material Lentes:</td>
+                    <td colspan="2"><input type="text" name="material_lentes"></td>
+                    <td class="header">AR:</td>
+                    <td colspan="5">
+                        <select name="ar" id="ar-select" required>
+                            <option value="">Seleccione</option>
+                            <option value="Blanco">Blanco</option>
+                            <option value="Green">Green</option>
+                            <option value="Blue">Blue</option>
+                            <option value="Block">Block</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                
+                        <!-- Campo de texto para "Otro" que se mostrará cuando se seleccione "Otro" -->
+                        <input type="text" name="ar_otro" id="ar-otro-input" placeholder="Especifique otro" style="display: none; width: 50%; margin-left: 10px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="header">Progresivo:</td>
+                    <td colspan="2">
+                        <select name="progresivo" id="progresivo-select" required>
+                            <option value="">Seleccione</option>
+                            <option value="SI">Sí</option>
+                            <option value="NO">No</option>
+                        </select>
+
+                        <!-- Campo de selección adicional para la gama de Progresivo -->
+                        <select name="progresivo_gama" id="progresivo-gama" style="display: none; margin-left: 10px;">
+                            <option value="">Seleccione una gama</option>
+                            <option value="Premium">Premium</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Media">Media</option>
+                        </select>
+                    </td>
+                    <td class="header">Monofocal:</td>
+                    <td colspan="5">
+                        <select name="monofocal" id="monofocal-select" required>
+                            <option value="">Seleccione</option>
+                            <option value="SI">Sí</option>
+                            <option value="NO">No</option>
+                        </select>
+
+                        <!-- Campo de selección adicional para las opciones de Monofocal -->
+                        <select name="monofocal_option" id="monofocal-options" style="display: none; margin-left: 10px;">
+                            <option value="">Seleccione una opción</option>
+                            <option value="Terminado">Terminado</option>
+                            <option value="Extrarrango">Extrarrango</option>
+                            <option value="Tallado">Tallado</option>
+                        </select>
+                    </td>
+                <tr>
+                    <td class="header">Fotocromático:</td>
+                    <td colspan="2">
+                        <select name="fotocrom" id="fotocromatico-select" required>
+                            <option value="">Seleccione</option>
+                            <option value="SI">Sí</option>
+                            <option value="NO">No</option>
+                        </select>
+        <!-- Campo de texto para "Cual" que solo aparecerá si seleccionan "Sí" -->
+                        <input type="text" name="fotocromatico_cual" id="fotocromatico-cual-input" placeholder="Cual" style="display: none; width: 50%; margin-left: 10px;">
+                    </td>
+                    <td class="header">Bifocal:</td>
+                    <td colspan="5">
+                        <select name="bifocal" id="bifocal-select" required>
+                            <option value="">Seleccione</option>
+                            <option value="Invisible">Invisible</option>
+                            <option value="Flat Top">Flat Top</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="header">AF:</td>
+                    <td colspan="2"><input type="text" name="af"></td>
+                    <td class="header">Corredor:</td>
+                    <td colspan="2"><input type="text" name="corredor"></td>
+                </tr>
+                <tr>
+                    <td class="header">Adicional:</td>
+                    <td colspan="5"><input type="text" name="adicional"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td class="header">Ordenado a:</td>
+                    <td colspan="3"><input type="text" name="ordenado_a" required></td>
+                </tr>
+                <tr>
+                    <td class="header">Ordenado por:</td>
+                    <td colspan="3"><input type="text" name="ordenado_por" required></td>
+                </tr>
+            </table>
+        </div>
+        <div class="button-group">
+            <button type="submit">Enviar Orden</button>
+            <button type="button" onclick="window.location.href='{{ url_for('menu') }}'">Volver al Menú</button>
+        </div>   
+        </form> 
+    </div>
+    <script>
+        function calculateTotal() {
+            const valorMontura = parseFloat(document.querySelector('input[name="valor_montura"]').value) || 0;
+            const valorLente = parseFloat(document.querySelector('input[name="valor_lente"]').value) || 0;
+            const otros = parseFloat(document.querySelector('input[name="valor_otros"]').value) || 0;
+            const totalVenta = valorMontura + valorLente + otros;
+            document.querySelector('input[name="total_venta"]').value = totalVenta.toFixed(0);
+        }
+    
+        document.querySelector('input[name="valor_montura"]').addEventListener('input', calculateTotal);
+        document.querySelector('input[name="valor_lente"]').addEventListener('input', calculateTotal);
+        document.querySelector('input[name="valor_otros"]').addEventListener('input', calculateTotal);
+    </script>
+    <script>
+        function validateCylinderAndAxis() {
+            // Obtener los valores de los campos de cilindro y eje para OD (Ojo Derecho)
+            const cilindroOD = document.querySelector('input[name="cilindro_od"]').value;
+            const ejeOD = document.querySelector('input[name="eje_od"]');
+            
+            // Si hay un valor en el campo de cilindro para OD, el campo de eje será obligatorio
+            if (cilindroOD !== "") {
+                ejeOD.required = true;
+            } else {
+                ejeOD.required = false;
+            }
+    
+            // Obtener los valores de los campos de cilindro y eje para OI (Ojo Izquierdo)
+            const cilindroOI = document.querySelector('input[name="cilindro_oi"]').value;
+            const ejeOI = document.querySelector('input[name="eje_oi"]');
+            
+            // Si hay un valor en el campo de cilindro para OI, el campo de eje será obligatorio
+            if (cilindroOI !== "") {
+                ejeOI.required = true;
+            } else {
+                ejeOI.required = false;
+            }
+        }
+    
+        // Agregar eventos de escucha para detectar cuando se cambia el valor en los campos de cilindro
+        document.querySelector('input[name="cilindro_od"]').addEventListener('input', validateCylinderAndAxis);
+        document.querySelector('input[name="cilindro_oi"]').addEventListener('input', validateCylinderAndAxis);
+    </script>
+    <script>
+        function validateAdditionAndDependentFields() {
+            // Obtener los valores de los campos de Adición, DP y AF para OD (Ojo Derecho)
+            const adicionOD = document.querySelector('input[name="adicion_od"]').value;
+            const dpOD = document.querySelector('input[name="dp_od"]');
+            const afOD = document.querySelector('input[name="af"]');
+            
+            // Si hay un valor en el campo de Adición para OD, los campos DP y AF serán obligatorios
+            if (adicionOD !== "") {
+                dpOD.required = true;
+                afOD.required = true;
+            } else {
+                dpOD.required = false;
+                afOD.required = false;
+            }
+    
+            // Obtener los valores de los campos de Adición, DP y AF para OI (Ojo Izquierdo)
+            const adicionOI = document.querySelector('input[name="adicion_oi"]').value;
+            const dpOI = document.querySelector('input[name="dp_oi"]');
+            
+            // Si hay un valor en el campo de Adición para OI, el campo DP será obligatorio
+            if (adicionOI !== "") {
+                dpOI.required = true;
+            } else {
+                dpOI.required = false;
+            }
+        }
+    
+        // Agregar eventos de escucha para detectar cuando se cambia el valor en los campos de Adición
+        document.querySelector('input[name="adicion_od"]').addEventListener('input', validateAdditionAndDependentFields);
+        document.querySelector('input[name="adicion_oi"]').addEventListener('input', validateAdditionAndDependentFields);
+    </script>
+    <script>
+        document.getElementById('ar-select').addEventListener('change', function() {
+            const arOtroInput = document.getElementById('ar-otro-input');
+            
+            if (this.value === 'Otro') {
+                arOtroInput.style.display = 'inline-block';
+                arOtroInput.required = true;  // Hacer obligatorio el campo si selecciona "Otro"
+            } else {
+                arOtroInput.style.display = 'none';
+                arOtroInput.required = false;  // Quitar la obligatoriedad si no es "Otro"
+                arOtroInput.value = '';  // Limpiar el campo si se oculta
+            }
+        });
+    </script>    
+    <script>
+        document.getElementById('fotocromatico-select').addEventListener('change', function() {
+            const fotocromaticoCualInput = document.getElementById('fotocromatico-cual-input');
+            
+            if (this.value === 'SI') {
+                fotocromaticoCualInput.style.display = 'inline-block';
+                fotocromaticoCualInput.required = true;  // Hacer obligatorio el campo si selecciona "Sí"
+            } else {
+                fotocromaticoCualInput.style.display = 'none';
+                fotocromaticoCualInput.required = false;  // Quitar la obligatoriedad si no es "Sí"
+                fotocromaticoCualInput.value = '';  // Limpiar el campo si se oculta
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('monofocal-select').addEventListener('change', function() {
+            const monofocalOptions = document.getElementById('monofocal-options');
+            
+            if (this.value === 'SI') {
+                monofocalOptions.style.display = 'inline-block';
+                monofocalOptions.required = true;  // Hacer obligatorio si se elige "Sí"
+            } else {
+                monofocalOptions.style.display = 'none';
+                monofocalOptions.required = false;  // Quitar la obligatoriedad si no es "Sí"
+                monofocalOptions.value = '';  // Limpiar el campo si se oculta
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('progresivo-select').addEventListener('change', function() {
+            const progresivoGama = document.getElementById('progresivo-gama');
+            
+            if (this.value === 'SI') {
+                progresivoGama.style.display = 'inline-block';
+                progresivoGama.required = true;  // Hacer obligatorio si se elige "Sí"
+            } else {
+                progresivoGama.style.display = 'none';
+                progresivoGama.required = false;  // Quitar la obligatoriedad si no es "Sí"
+                progresivoGama.value = '';  // Limpiar el campo si se oculta
+            }
+        });
+    </script>
+    <script>
+        function validarPagos() {
+            // Obtener el valor de "Total Venta"
+            const totalVenta = parseFloat(document.querySelector('input[name="total_venta"]').value) || 0;
+    
+            // Obtener los valores de las formas de pago
+            const pagoEfectivo = parseFloat(document.querySelector('input[name="pago_efectivo"]').value) || 0;
+            const pagoSistecredito = parseFloat(document.querySelector('input[name="pago_sistecredito"]').value) || 0;
+            const pagoBancolombia = parseFloat(document.querySelector('input[name="pago_bancolombia"]').value) || 0;
+            const pagoDavivienda = parseFloat(document.querySelector('input[name="pago_davivienda"]').value) || 0;
+            const pagoAddi = parseFloat(document.querySelector('input[name="pago_addi"]').value) || 0;
+            const pagoEnvia = parseFloat(document.querySelector('input[name="pago_envia"]').value) || 0;
+            const pagoInterapidismo = parseFloat(document.querySelector('input[name="pago_interapidism"]').value) || 0;
+            const pagoRedeban = parseFloat(document.querySelector('input[name="pago_redeban"]').value) || 0;
+            const pagoBold = parseFloat(document.querySelector('input[name="pago_bold"]').value) || 0;
+            const pagoMensajeriaEklat = parseFloat(document.querySelector('input[name="pago_mensajeria_eklat"]').value) || 0;
+            const pagoMercadopago = parseFloat(document.querySelector('input[name="pago_mercadopago"]').value) || 0;
+            const pagoPayco = parseFloat(document.querySelector('input[name="pago_payco"]').value) || 0;
+            const pagoServientrega = parseFloat(document.querySelector('input[name="pago_servientrega"]').value) || 0;
+            const pagoOtro = parseFloat(document.querySelector('input[name="pago_otro"]').value) || 0;
+    
+            // Calcular la suma de las formas de pago
+            const sumaPagos = pagoEfectivo + pagoSistecredito + pagoBancolombia + pagoDavivienda +
+                              pagoAddi + pagoEnvia + pagoInterapidismo + pagoRedeban + pagoBold +
+                              pagoMensajeriaEklat + pagoMercadopago + pagoPayco + pagoServientrega + pagoOtro;
+    
+            // Comparar la suma con el "Total Venta"
+            if (sumaPagos !== totalVenta) {
+                alert('La suma de las formas de pago debe ser igual al Total Venta.');
+                return false; // Evitar el envío del formulario si la validación falla
+            }
+    
+            // Si la validación pasa, permitir que el formulario se envíe
+            return true;
+        }
+    </script>    
+    
+    
+</body>
+</html>

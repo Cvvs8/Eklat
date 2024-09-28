@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orden de Pedido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        .pedido-container {
+            width: 8.5in;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #000;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .header .logo {
+            width: 30%;
+        }
+
+        .header .logo img {
+            width: 100%;
+        }
+
+        .header .info {
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .header .order-number {
+            text-align: right;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        table th, table td {
+            padding: 6px;
+            border: 1px solid #000;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f9f9f9;
+        }
+
+        .order-details {
+            margin-bottom: 20px;
+        }
+
+        .formas-de-pago {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .formas-de-pago table td {
+            width: 50%;
+        }
+
+        .observaciones {
+            width: 97.5%;
+            border: 1px solid #000;
+            height: 80px;
+            padding: 10px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .observaciones-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="pedido-container">
+    <div class="header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/eklatlogo.png') }}" alt="Eklat Ópticas">
+        </div>
+        <div class="info">
+            <p>NIT: 901.714.006-7</p>
+            <p>Cra 16 # 50-59 Piso 2</p>
+            <p>Email: eklatopticas@gmail.com</p>
+            <p>BOGOTÁ D.C.</p>
+        </div>
+        <div class="order-number">
+            <p>Versión 1.0</p>
+            <p><strong>Fecha: </strong> {{dia}} / {{mes}} / {{año}}</p>
+            <p><strong>N° Orden: {{ numero_orden }}</strong></p>
+        </div>
+    </div>
+
+    <h2>Orden de Pedido</h2>
+
+    <div class="order-details">
+        <table>
+            <tr>
+                <th style="width: 25%;">Nombre de Laboratorio:</th>
+                <td style="width: 25%;">{{ nombre_laboratorio }}</td>
+                <th style="width: 25%;">Vendedor:</th>
+                <td style="width: 25%;">{{ vendedor }}</td>
+            </tr>
+            <tr>
+                <th>Nombre del Cliente:</th>
+                <td>{{ nombre_cliente }}</td>
+                <th>Identificación Cliente:</th>
+                <td>{{ identificacion_cliente }}</td>
+            </tr>
+            <tr>
+                <th>Dirección de Entrega:</th>
+                <td colspan="3">{{ direccion_entrega }}</td>
+            </tr>
+            <tr>
+                <th>Ciudad:</th>
+                <td>{{ ciudad }}</td>
+                <th>Barrio:</th>
+                <td>{{ barrio }}</td>
+            </tr>
+            <tr>
+                <th>Teléfonos:</th>
+                <td>{{ telefonos }}</td>
+                <th>Email:</th>
+                <td>{{ email }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="order-details">
+        <table>
+            <tr>
+                <th style="width: 50%;">Código Montura</th>
+                <th style="width: 50%;">Valor Montura</th>
+            </tr>
+            <tr>
+                <td>{{ codigo_montura }}</td>
+                <td>$ {{ valor_montura }}</td>
+            </tr>
+            <tr>
+                <th>Código Lente</th>
+                <th>Valor Lente</th>
+            </tr>
+            <tr>
+                <td>{{ codigo_lente }}</td>
+                <td>$ {{ valor_lente }}</td>
+            </tr>
+            <tr>
+                <th>Otros</th>
+                <th>Valor Otros</th>
+            </tr>
+            <tr>
+                <td>{{ otros }}</td>
+                <td>$ {{ valor_otros }}</td>
+            </tr>
+            <tr>
+                <th>Total Venta</th>
+                <td>$ {{ total_venta }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2>Formas de Pago</h2>
+    <table class="payment-methods">
+        <tr>
+            <td><strong>Efectivo: {{ pago_efectivo }} </strong></td>
+            <td><strong>Sistecredito: {{ pago_sistecredito }} </strong></td>
+        </tr>
+        <tr>
+            <td><strong>Bancolombia {{ pago_bancolombia }} </strong></td>
+            <td><strong>Addi: {{ pago_addi }} </strong></td>
+        </tr>
+        <tr>
+            <td><strong>Davivienda: {{ pago_davivienda }} </strong></td>
+            <td><strong>Envia: {{ pago_envia }} </strong></td>
+        </tr>
+        <tr>
+            <td><strong>Redeban: {{ pago_redeban }} </strong></td>
+            <td><strong>Interrapidísimo: {{ pago_interapidismo }} </strong></td>
+        </tr>
+        <tr>
+            <td><strong>Bold: {{ pago_bold }} </strong></td>
+            <td><strong>Servientrega: {{ pago_servientrega }} </strong></td>
+        </tr>
+        <tr>
+            <td><strong>Mercado Pago: {{ pago_mercadopago  }} </strong></td>
+            <td><strong>Mensajería Eklat {{ pago_mensajeria_eklat }} </strong></td>
+        </tr>
+        <tr>
+            <td><strong>Epayco: {{ pago_payco }} </strong></td>
+            <td><strong>Otro: {{ pago_otro }} </strong></td>
+        </tr>
+    </table>
+
+    <div class="observaciones">
+        <div class="observaciones-title">Observaciones:</div>
+        {{ observaciones }}
+    </div>
+
+</div>
+
+</body>
+</html>
+
+

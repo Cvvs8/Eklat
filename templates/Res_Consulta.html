@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen de Orden</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        td, th {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        .order-number {
+            color: red;
+            font-size: 24px;
+            text-align: right;
+            vertical-align: middle;
+            padding-right: 20px;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .print-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 24px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .print-btn:hover {
+            background-color: #218838;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @media print {
+            .print-btn {
+                display: none;
+            }
+        }
+        .btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column; /* Hace que los botones se apilen uno debajo del otro */
+            align-items: center; /* Centra los botones horizontalmente */
+            gap: 10px; /* Añade espacio entre los botones */
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container pedido">
+        <h2 style="text-align: center;">ORDEN DE PEDIDO</h2>
+        <table>
+            <tr>
+                <td>Fecha:</td>
+                <td >Día: {{ dia }}</td>
+                <td >Mes: {{ mes }}</td>
+                <td >Año: {{ año }}</td>
+                <td class="order-number" colspan="1">N° 0001</td>
+            </tr>
+            <tr>
+                <td>Nombre del Laboratorio:</td>
+                <td colspan="4">{{ nombre_laboratorio }}</td>
+            </tr>
+            <tr>
+                <td>Vendedor:</td>
+                <td colspan="4">{{ vendedor }}</td>
+            </tr>
+            <tr>
+                <td>Nombre del Cliente:</td>
+                <td colspan="4">{{ nombre_cliente }}</td>
+            </tr>
+            <tr>
+                <td>Tipo de Identificación:</td>
+                <td>{{ tipo_identificacion }}</td>
+                <td>Número de Identificación:</td>
+                <td colspan="2">{{ numero_identificacion }}</td>
+            </tr>
+            <tr>
+                <td>Dirección de entrega:</td>
+                <td colspan="4">{{ direccion_entrega }}</td>
+            </tr>
+            <tr>
+                <td>Ciudad:</td>
+                <td>{{ ciudad }}</td>
+                <td>Barrio:</td>
+                <td colspan="2">{{ barrio }}</td>
+            </tr>
+            <tr>
+                <td>Teléfonos:</td>
+                <td>{{ telefonos }}</td>
+                <td>Email:</td>
+                <td colspan="2">{{ email }}</td>
+            </tr>
+            <tr>
+                <td>Tipo Régimen IVA:</td>
+                <td colspan="4">{{ regimen_iva }}</td>
+            </tr>
+            <tr>
+                <td>Código Montura:</td>
+                <td>{{ codigo_montura }}</td>
+                <td>Valor Montura:</td>
+                <td colspan="2">{{ valor_montura }}</td>
+            </tr>
+            <tr>
+                <td>Código Lente:</td>
+                <td>{{ codigo_lente }}</td>
+                <td>Valor Lente:</td>
+                <td colspan="2">{{ valor_lente }}</td>
+            </tr>
+            <tr>
+                <td>Otros:</td>
+                <td>{{ otros }}</td>
+                <td>Valor Otros:</td>
+                <td colspan="2">{{ valor_otros }}</td>
+            </tr>
+            <tr>
+                <td>Total Venta:</td>
+                <td colspan="4">{{ total_venta }}</td>
+            </tr>
+        </table>
+
+        <h2 style="text-align: center;">FORMAS DE PAGO</h2>
+        <table>
+            <tr>
+                <td>Efectivo:</td>
+                <td>{{ pago_efectivo }}</td>
+                <td>Sistecredito:</td>
+                <td colspan="2">{{ pago_sistecredito }}</td>
+            </tr>
+            <tr>
+                <td>Bancolombia:</td>
+                <td>{{ pago_bancolombia }}</td>
+                <td>Davivienda:</td>
+                <td colspan="2">{{ pago_davivienda }}</td>
+            </tr>
+            <tr>
+                <td>Addi:</td>
+                <td>{{ pago_addi }}</td>
+                <td>Envia:</td>
+                <td colspan="2">{{ pago_envia }}</td>
+            </tr>
+            <tr>
+                <td>Inter Rapidísimo:</td>
+                <td>{{ pago_interapidismo }}</td>
+                <td>Redeban:</td>
+                <td colspan="2">{{ pago_redeban }}</td>
+            </tr>
+            <tr>
+                <td>Bold:</td>
+                <td>{{ pago_bold }}</td>
+                <td>Mensajería EKlat:</td>
+                <td colspan="2">{{ pago_mensajeria_eklat }}</td>
+            </tr>
+            <tr>
+                <td>Mercado Pago:</td>
+                <td>{{ pago_mercadopago }}</td>
+                <td>Epayco:</td>
+                <td colspan="2">{{ pago_payco }}</td>
+            </tr>
+            <tr>
+                <td>Servientrega:</td>
+                <td>{{ pago_servientrega }}</td>
+                <td>Otro:</td>
+                <td colspan="2">{{ pago_otro }}</td>
+
+                <tr>
+                    <td>Guía de Despacho:</td>
+                    <td colspan="4">{{ guia_despacho }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="header">Fecha de ENTREGADO AL CLIENTE:</td>
+                    <td>Día: {{dia_ent}} </td> <!-- Changed to "dia_lab" -->
+                    <td>Mes: {{mes_ent}} </td> <!-- Changed to "mes_lab" -->
+                    <td>Año: {{año_ent}} </td>
+                </tr>    
+                <tr>
+                    <td colspan="5">Observaciones:{{observaciones}}</td>
+                </tr>
+            </tr>
+        </table>
+    </div>
+
+    <div class="container laboratorio">
+        <h2 style="text-align: center;">ORDEN DE LABORATORIO</h2>
+        <table>
+            <tr>
+                <td colspan="2">Fecha:</td>
+                <td>Día: {{ dia_lab }}</td>
+                <td>Mes: {{ mes_lab }}</td>
+                <td>Año: {{ año_lab }}</td>
+                <td class="order-number" colspan="1">N° 0001</td>
+            </tr>
+            <tr>
+                <th></th>
+                <th>Esfera</th>
+                <th>Cilindro</th>
+                <th>Eje</th>
+                <th>Adición</th>
+                <th>DP</th>
+            </tr>
+            <tr>
+                <td>O.D.</td>
+                <td>{{ esfera_od }}</td>
+                <td>{{ cilindro_od }}</td>
+                <td>{{ eje_od }}</td>
+                <td>{{ adicion_od }}</td>
+                <td>{{ dp_od }}</td>
+            </tr>
+            <tr>
+                <td>O.I.</td>
+                <td>{{ esfera_oi }}</td>
+                <td>{{ cilindro_oi }}</td>
+                <td>{{ eje_oi }}</td>
+                <td>{{ adicion_oi }}</td>
+                <td>{{ dp_oi }}</td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td>REF: Montura</td>
+                <td>{{ montura }}</td>
+                <td>Color:</td>
+                <td colspan="2">{{ color }}</td>
+            </tr>
+            <tr>
+                <td>Material Lentes:</td>
+                <td>{{ material_lentes }}</td>
+                <td>AR:</td>
+                <td colspan="2">{{ ar }}</td>
+            </tr>
+            <tr>
+                <td>Progresivo:</td>
+                <td>{{ progresivo }}</td>
+                <td>Gama Progresivo:</td>
+                <td colspan="2">{{ gama_progresivo }}</td>
+            </tr>
+            <tr>
+                <td>Monofocal:</td>
+                <td>{{ monofocal }}</td>
+                <td>Opción Monofocal:</td>
+                <td colspan="2">{{ opcion_monofocal }}</td>
+            </tr>
+            <tr>
+                <td>Fotocromático:</td>
+                <td>{{ fotocrom }}</td>
+                <td>Fotocromático Cual:</td>
+                <td colspan="2">{{ fotocromatico_cual }}</td>
+            </tr>
+            <tr>
+                <td>Bifocal:</td>
+                <td>{{ bifocal }}</td>
+                <td>AF:</td>
+                <td colspan="2">{{ af }}</td>
+            </tr>
+            <tr>
+                <td>Corredor:</td>
+                <td>{{ corredor }}</td>
+                <td>Adicional:</td>
+                <td colspan="2">{{ adicional }}</td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td>Ordenado a:</td>
+                <td colspan="4">{{ ordenado_a }}</td>
+            </tr>
+            <tr>
+                <td>Ordenado por:</td>
+                <td colspan="4">{{ ordenado_por }}</td>
+            </tr>
+        </table>       
+    </div>
+    <div class="button-group">
+        <a href="{{ url_for('imprimir_pedido', numero_identificacion=numero_identificacion) }}" target="_blank">
+            <button class="print-btn">Imprimir Orden de Pedido</button>
+        </a>
+        <a href="{{ url_for('imprimir_laboratorio', numero_identificacion=numero_identificacion) }}" target="_blank">
+            <button class="print-btn">Imprimir Orden de Laboratorio</button>
+        </a>        
+        <button class="btn" onclick="window.location.href='{{ url_for('menu') }}'">Volver al Menú</button>
+    </div> 
+</body>
+</html>
+
+
+
+
