@@ -1,5 +1,4 @@
 from flask import Flask, request, render_template, redirect, url_for, session
-from excel_utils import completar_orden_excel
 import bcrypt
 import json
 import os
@@ -330,7 +329,7 @@ def submit():
               pagos['pago_otro']))
         mysql.connection.commit()
 
-        return "Orden guardada exitosamente"
+        return render_template('Confirmacion_Orden.html')
 
     except Exception as e:
         print(f"Error: {str(e)}")
