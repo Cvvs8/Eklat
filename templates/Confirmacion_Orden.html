@@ -46,10 +46,19 @@
         .btn-logout:hover {
             background-color: #c82333;
         }
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
+    
     <div class="container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/eklatlogo.png') }}" alt="Eklat Ópticas">
+        </div>
         <h1>¡Orden Creada!</h1>
         <a href="{{ url_for('menu') }}" class="btn">Volver al Menú Principal</a>
         <!-- Botón para cerrar sesión y volver al login -->

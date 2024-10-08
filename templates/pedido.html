@@ -135,14 +135,16 @@
                 <td>{{ identificacion_cliente }}</td>
             </tr>
             <tr>
-                <th>Dirección de Entrega:</th>
-                <td colspan="3">{{ direccion_entrega }}</td>
+                <th>Departamento:</th>
+                <td>{{ departamento }}</td>
+                <th>Ciudad:</th>
+                <td colspan="3">{{ ciudad }}</td>
             </tr>
             <tr>
-                <th>Ciudad:</th>
-                <td>{{ ciudad }}</td>
                 <th>Barrio:</th>
-                <td>{{ barrio }}</td>
+                <td >{{ barrio }}</td>
+                <th>Dirección de Entrega:</th>
+                <td colspan="3">{{ direccion_entrega }}</td>
             </tr>
             <tr>
                 <th>Teléfonos:</th>
@@ -201,7 +203,7 @@
             <td><strong>Envia: {{ pago_envia }} </strong></td>
         </tr>
         <tr>
-            <td><strong>Redeban: {{ pago_redeban }} </strong></td>
+            <td><strong>Pasarela de Pagos: {{ pasa_pagos }} </strong></td>
             <td><strong>Interrapidísimo: {{ pago_interapidismo }} </strong></td>
         </tr>
         <tr>
@@ -213,8 +215,7 @@
             <td><strong>Mensajería Eklat {{ pago_mensajeria_eklat }} </strong></td>
         </tr>
         <tr>
-            <td><strong>Epayco: {{ pago_payco }} </strong></td>
-            <td><strong>Otro: {{ pago_otro }} </strong></td>
+            <td colspan="4"><strong>Otro: {{ pago_otro }} </strong></td>
         </tr>
     </table>
 

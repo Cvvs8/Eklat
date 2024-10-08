@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orden Completa</title>
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
+            font-size: 18px;
         }
         .container {
-            width: 60%;
+            width: 70%;
             margin: 0 auto;
             padding: 20px;
             background-color: white;
@@ -20,6 +24,7 @@
         h2 {
             margin-top: 0;
             text-align: center;
+            font-weight: bold;
         }
         table {
             width: 100%;
@@ -58,7 +63,7 @@
         }
 
         button {
-            width: 60%; /* El botón ocupará el 60% del ancho del contenedor */
+            width: 20%; /* El botón ocupará el 60% del ancho del contenedor */
             padding: 12px 30px; /* Ajusta el tamaño del botón */
             background-color: #007bff;
             color: white;
@@ -72,6 +77,14 @@
         button:hover {
             background-color: #0056b3;
         }
+        .section-header {
+            font-weight: bold; /* Negrita */
+            font-size: 24px; /* Tamaño de fuente más grande */
+            text-align: center; /* Centrado */
+            padding: 10px 0; /* Añadir espacio arriba y abajo */
+        }
+        
+
     </style>
 </head>
 <body>
@@ -80,11 +93,11 @@
         <form action="/submit" method="post" onsubmit="return validarPagos()">
             <table>
                 <tr>
-                    <td >Fecha:</td>
-                    <td>Día:<input type="text" name="dia" required></td>
-                    <td>Mes:<input type="text" name="mes" required></td>
-                    <td>Año:<input type="text" name="año" required></td>
-                    <td class="order-number" colspan="1">N° {{ numero_orden }}</td>
+                    <td>Fecha:</td>
+                    <td colspan="2">
+                        <input type="text" id="fecha" class="form-control" name="fecha" required />
+                    </td>
+                    <td class="order-number" colspan="2">N° {{ numero_orden }}</td>
                 </tr>
                 <tr>
                     <td>Nombre del Laboratorio:</td>
@@ -121,16 +134,25 @@
                         <input type="text" name="numero_identificacion" required>
                     </td>
                 </tr>
-                
                 <tr>
-                    <td class="label">Dirección de entrega:</td>
-                    <td colspan="4"><input type="text" name="direccion_entrega" required></td>
+                    <td class="label">Departamento:</td>
+                    <td>
+                        <select id="departamento" name="departamento" required>
+                            <option value="">Selecciona un Departamento</option>
+                        </select>
+                    </td>
+                    <td class="label">Ciudad:</td>
+                    <td colspan="2">
+                        <select id="ciudad" name= "ciudad" required>
+                            <option value="">Selecciona una Ciudad</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
-                    <td class="label">Ciudad:</td>
-                    <td><input type="text" name="ciudad" required></td>
                     <td class="label">Barrio:</td>
-                    <td colspan="2"><input type="text" name="barrio" required></td>
+                    <td><input type="text" name="barrio" required></td>
+                    <td class="label">Dirección de entrega:</td>
+                    <td colspan="2"><input type="text" name="direccion_entrega" required></td>
                 </tr>
                 <tr>
                     <td class="label">Teléfonos:</td>
@@ -171,7 +193,7 @@
                 </tr>
                 
                 <tr class="section-header">
-                    <td colspan="5" style="text-align: center;">FORMAS DE PAGO</td>
+                    <td colspan="5" class="section-header">FORMAS DE PAGO</td>
                 </tr>
                 <tr>
                     <td class="payment-label">Efectivo:</td>
@@ -194,8 +216,8 @@
                 <tr>
                     <td class="payment-label">Inter Rapidismo:</td>
                     <td><input type="text" name="pago_interapidism"></td>
-                    <td class="payment-label">Redeban:</td>
-                    <td colspan="2"><input type="text" name="pago_redeban"></td>
+                    <td class="payment-label">Pasarela de Pagos:</td>
+                    <td colspan="2"><input type="text" name="pasa_pagos"></td>
                 </tr>
                 <tr>
                     <td class="payment-label">Bold:</td>
@@ -206,13 +228,11 @@
                 <tr>
                     <td class="payment-label">Mercado Pago:</td>
                     <td><input type="text" name="pago_mercadopago"></td>
-                    <td class="payment-label">Payco:</td>
-                    <td colspan="2"><input type="text" name="pago_payco"></td>
+                    <td class="payment-label">Servientrega:</td>
+                    <td colspan="2"><input type="text" name="pago_servientrega"></td>
                 </tr>
                 
                 <tr>
-                    <td class="payment-label">Servientrega:</td>
-                    <td><input type="text" name="pago_servientrega"></td>
                     <td class="payment-label">Otro:</td>
                     <td colspan="4"><input type="text" name="pago_otro"></td>
                 </tr>
@@ -221,10 +241,10 @@
                     <td colspan="4"><input type="text" name="guia_despacho" required></td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="header">Fecha de ENTREGADO AL CLIENTE:</td>
-                    <td>Día: <input type="text" name="dia_ent" size="2" required></td> <!-- Changed to "dia_lab" -->
-                    <td>Mes: <input type="text" name="mes_ent" size="2"></td required> <!-- Changed to "mes_lab" -->
-                    <td>Año: <input type="text" name="año_ent" size="2"></td required>
+                    <td>Fecha de Entrega:</td>
+                    <td colspan="4">
+                        <input type="text" id="fecha_entrega" class="form-control" name="fecha_entrega" required />
+                    </td>
                 </tr>    
                 <tr>
                     <td colspan="5">Observaciones:<textarea name="observaciones" rows="3"></textarea></td>
@@ -235,12 +255,12 @@
         <table>
                 <tr>
                     <td colspan="2" class="header">Fecha:</td>
-                    <td>Día: <input type="text" name="dia_lab" size="2" required></td> <!-- Changed to "dia_lab" -->
-                    <td>Mes: <input type="text" name="mes_lab" size="2" required></td> <!-- Changed to "mes_lab" -->
-                    <td>Año: <input type="text" name="año_lab" size="4" required></td> <!-- Changed to "año_lab" -->
+                    <td colspan="3">
+                        <input type="text" id="fecha_lab" name="fecha_lab" readonly/>
+                    </td>
                     <td class="order-number" colspan="1">N° {{ numero_orden }}</td>
                 </tr>
-                <tr colspan="5 ">
+                <tr colspan="5">
                     <th></th>
                     <th>Esfera</th>
                     <th>Cilindro</th>
@@ -282,8 +302,7 @@
                             <option value="">Seleccione</option>
                             <option value="Blanco">Blanco</option>
                             <option value="Green">Green</option>
-                            <option value="Blue">Blue</option>
-                            <option value="Block">Block</option>
+                            <option value="Blue">Blue Block</option>
                             <option value="Otro">Otro</option>
                         </select>
                 
@@ -359,12 +378,12 @@
             <table>
                 <tr>
                     <td class="header">Ordenado a:</td>
-                    <td colspan="3"><input type="text" name="ordenado_a" required></td>
+                    <td colspan="3"><input type="text" name="ordenado_a" id="ordenado_a" readonly></td>
                 </tr>
                 <tr>
                     <td class="header">Ordenado por:</td>
-                    <td colspan="3"><input type="text" name="ordenado_por" required></td>
-                </tr>
+                    <td colspan="3"><input type="text" name="ordenado_por" id="ordenado_por" readonly></td>
+                </tr>                
             </table>
         </div>
         <div class="button-group">
@@ -516,7 +535,7 @@
             const pagoAddi = parseFloat(document.querySelector('input[name="pago_addi"]').value) || 0;
             const pagoEnvia = parseFloat(document.querySelector('input[name="pago_envia"]').value) || 0;
             const pagoInterapidismo = parseFloat(document.querySelector('input[name="pago_interapidism"]').value) || 0;
-            const pagoRedeban = parseFloat(document.querySelector('input[name="pago_redeban"]').value) || 0;
+            const pagopasa_pagos = parseFloat(document.querySelector('input[name="pasa_pagos"]').value) || 0;
             const pagoBold = parseFloat(document.querySelector('input[name="pago_bold"]').value) || 0;
             const pagoMensajeriaEklat = parseFloat(document.querySelector('input[name="pago_mensajeria_eklat"]').value) || 0;
             const pagoMercadopago = parseFloat(document.querySelector('input[name="pago_mercadopago"]').value) || 0;
@@ -526,7 +545,7 @@
     
             // Calcular la suma de las formas de pago
             const sumaPagos = pagoEfectivo + pagoSistecredito + pagoBancolombia + pagoDavivienda +
-                              pagoAddi + pagoEnvia + pagoInterapidismo + pagoRedeban + pagoBold +
+                              pagoAddi + pagoEnvia + pagoInterapidismo + pagopasa_pagos + pagoBold +
                               pagoMensajeriaEklat + pagoMercadopago + pagoPayco + pagoServientrega + pagoOtro;
     
             // Comparar la suma con el "Total Venta"
@@ -539,7 +558,116 @@
             return true;
         }
     </script>    
+    <script>
+        // Copiar el valor del campo "vendedor" al campo "ordenado_a"
+        document.querySelector('input[name="vendedor"]').addEventListener('input', function() {
+            document.querySelector('input[name="ordenado_a"]').value = this.value;
+        });
     
+        // Copiar el valor del campo "nombre_cliente" al campo "ordenado_por"
+        document.querySelector('input[name="nombre_cliente"]').addEventListener('input', function() {
+            document.querySelector('input[name="ordenado_por"]').value = this.value;
+        });
+    </script>
+
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+
+    <script>
+        // Inicialización de Flatpickr en los campos de fecha
+        flatpickr("#fecha", {
+            dateFormat: "d/m/Y",
+            locale: "es",
+            onChange: function(selectedDates, dateStr, instance) {
+                // Copiar la fecha seleccionada en "fecha" a "fecha_lab"
+                document.querySelector("#fecha_lab")._flatpickr.setDate(dateStr);
+            }
+        });
+        
+        flatpickr("#fecha_entrega", {
+            dateFormat: "d/m/Y",
+            locale: "es"
+        });
+
+        flatpickr("#fecha_lab", {
+            dateFormat: "d/m/Y",
+            locale: "es"
+        });
+    </script>
+
+<script>
+    // Datos de departamentos y ciudades en Colombia
+    const departamentosYciudades = {
+    "Amazonas": ["Leticia", "Puerto Nariño", "El Encanto", "La Chorrera", "La Pedrera", "La Victoria", "Mirití-Paraná", "Puerto Alegría", "Puerto Arica", "Tarapacá"],
+    "Antioquia": ["Abejorral", "Abriaquí", "Alejandría", "Amagá", "Amalfi", "Andes", "Angelópolis", "Angostura", "Anorí", "Santafé de Antioquia", "Anza", "Apartadó", "Arboletes", "Argelia", "Armenia", "Barbosa", "Bello", "Belmira", "Betania", "Betulia", "Briceño", "Buriticá", "Cáceres", "Caicedo", "Caldas", "Campamento", "Cañasgordas", "Caracolí", "Caramanta", "Carepa", "Carolina", "Caucasia", "Chigorodó", "Cisneros", "Cocorná", "Concepción", "Concordia", "Copacabana", "Dabeiba", "Donmatías", "Ebéjico", "El Bagre", "Entrerríos", "Envigado", "Fredonia", "Frontino", "Giraldo", "Girardota", "Gómez Plata", "Granada", "Guadalupe", "Guarne", "Guatapé", "Heliconia", "Hispania", "Itagüí", "Ituango", "Jardín", "Jericó", "La Ceja", "La Estrella", "La Pintada", "La Unión", "Liborina", "Maceo", "Marinilla", "Medellín", "Montebello", "Murindó", "Mutatá", "Nariño", "Nechí", "Necoclí", "Olaya", "Peque", "Pueblorrico", "Puerto Berrío", "Puerto Nare", "Puerto Triunfo", "Remedios", "Retiro", "Rionegro", "Sabanalarga", "Sabaneta", "Salgar", "San Andrés de Cuerquia", "San Carlos", "San Francisco", "San Jerónimo", "San José de la Montaña", "San Juan de Urabá", "San Luis", "San Pedro de los Milagros", "San Pedro de Urabá", "San Rafael", "San Roque", "San Vicente", "Santa Bárbara", "Santa Rosa de Osos", "Santo Domingo", "Segovia", "Sonsón", "Sopetrán", "Támesis", "Tarazá", "Tarso", "Titiribí", "Toledo", "Turbo", "Uramita", "Urrao", "Valdivia", "Valparaíso", "Vegachí", "Venecia", "Vigía del Fuerte", "Yalí", "Yarumal", "Yolombó", "Yondó", "Zaragoza"],
+    "Arauca": ["Arauca", "Arauquita", "Cravo Norte", "Fortul", "Puerto Rondón", "Saravena", "Tame"],
+    "Atlántico": ["Barranquilla", "Baranoa", "Campo de la Cruz", "Candelaria", "Galapa", "Juan de Acosta", "Luruaco", "Malambo", "Manatí", "Palmar de Varela", "Piojó", "Polonuevo", "Ponedera", "Puerto Colombia", "Repelón", "Sabanagrande", "Sabanalarga", "Santa Lucía", "Santo Tomás", "Soledad", "Suan", "Tubará", "Usiacurí"],
+    "Bogotá D.C": ["Bogotá D.C."],
+    "Bolívar": ["Cartagena de Indias", "Achí", "Altos del Rosario", "Arenal", "Arjona", "Arroyohondo", "Barranco de Loba", "Calamar", "Cantagallo", "Cicuco", "Clemencia", "Córdoba", "El Carmen de Bolívar", "El Guamo", "El Peñón", "Hatillo de Loba", "Magangué", "Mahates", "Margarita", "María la Baja", "Montecristo", "Morales", "Norosí", "Pinillos", "Regidor", "Río Viejo", "San Cristóbal", "San Estanislao", "San Fernando", "San Jacinto", "San Jacinto del Cauca", "San Juan Nepomuceno", "San Martín de Loba", "Santa Catalina", "Santa Rosa", "Santa Rosa del Sur", "Simití", "Soplaviento", "Talaigua Nuevo", "Tiquisio", "Turbaco", "Turbaná", "Villanueva", "Zambrano"],
+    "Boyacá": ["Tunja", "Almeida", "Aquitania", "Arcabuco", "Belén", "Berbeo", "Betéitiva", "Boavita", "Boyacá", "Briceño", "Buena Vista", "Busbanzá", "Caldas", "Campohermoso", "Cerinza", "Chinavita", "Chiquinquirá", "Chíquiza", "Chiscas", "Chita", "Chitaraque", "Chivatá", "Ciénaga", "Cómbita", "Coper", "Corrales", "Covarachía", "Cubará", "Cucaita", "Cuítiva", "Chivor", "Duitama", "El Cocuy", "El Espino", "Firavitoba", "Floresta", "Gachantivá", "Gámeza", "Garagoa", "Guacamayas", "Guateque", "Guayatá", "Güicán", "Iza", "Jenesano", "Jericó", "Labranzagrande", "La Capilla", "La Uvita", "La Victoria", "Macanal", "Maripí", "Miraflores", "Mongua", "Monguí", "Moniquirá", "Motavita", "Muzo", "Nobsa", "Nuevo Colón", "Oicatá", "Otanche", "Pachavita", "Páez", "Paipa", "Pajarito", "Panqueba", "Pauna", "Paya", "Paz de Río", "Pesca", "Pisba", "Puerto Boyacá", "Quípama", "Ramiriquí", "Ráquira", "Rondón", "Saboyá", "Sáchica", "Samacá", "San Eduardo", "San José de Pare", "San Luis de Gaceno", "San Mateo", "San Miguel de Sema", "San Pablo de Borbur", "Santa María", "Santa Rosa de Viterbo", "Santa Sofía", "Santana", "Sativanorte", "Sativasur", "Siachoque", "Soatá", "Socha", "Socotá", "Sogamoso", "Somondoco", "Sora", "Sotaquirá", "Soracá", "Susacón", "Sutamarchán", "Sutatenza", "Tasco", "Tenza", "Tibaná", "Tibasosa", "Tinjacá", "Tipacoque", "Toca", "Togüí", "Tópaga", "Tota", "Tununguá", "Turmequé", "Tuta", "Tutazá", "Úmbita", "Ventaquemada", "Viracachá", "Zetaquira"],
+    "Caldas": ["Manizales", "Aguadas", "Anserma", "Aranzazu", "Belalcázar", "Chinchiná", "Filadelfia", "La Dorada", "La Merced", "Manzanares", "Marmato", "Marquetalia", "Marulanda", "Neira", "Norcasia", "Pácora", "Palestina", "Pensilvania", "Riosucio", "Risaralda", "Salamina", "Samaná", "San José", "Supía", "Victoria", "Villamaría", "Viterbo"],
+    "Caquetá": ["Florencia", "Albania", "Belén de los Andaquíes", "Cartagena del Chairá", "Curillo", "El Doncello", "El Paujil", "La Montañita", "Milán", "Morelia", "Puerto Rico", "San José del Fragua", "San Vicente del Caguán", "Solano", "Solita", "Valparaíso"],
+    "Casanare": ["Yopal", "Aguazul", "Chámeza", "Hato Corozal", "La Salina", "Maní", "Monterrey", "Nunchía", "Orocué", "Paz de Ariporo", "Pore", "Recetor", "Sabanalarga", "Sácama", "San Luis de Palenque", "Támara", "Tauramena", "Trinidad", "Villanueva"],
+    "Cauca": ["Popayán", "Almaguer", "Argelia", "Balboa", "Bolívar", "Buenos Aires", "Cajibío", "Caldono", "Caloto", "Corinto", "El Tambo", "Florencia", "Guachené", "Guapí", "Inzá", "Jambaló", "La Sierra", "La Vega", "López de Micay", "Mercaderes", "Miranda", "Morales", "Padilla", "Páez", "Patía", "Piamonte", "Piendamó", "Puerto Tejada", "Puracé", "Rosas", "San Sebastián", "Santa Rosa", "Santander de Quilichao", "Silvia", "Sotará", "Suárez", "Sucre", "Timbío", "Timbiquí", "Toribío", "Totoró", "Villa Rica"],
+    "Cesar": ["Valledupar", "Aguachica", "Agustín Codazzi", "Astrea", "Becerril", "Bosconia", "Chimichagua", "Chiriguaná", "Curumaní", "El Copey", "El Paso", "Gamarra", "González", "La Gloria", "La Jagua de Ibirico", "La Paz", "Manaure Balcón del Cesar", "Pailitas", "Pelaya", "Pueblo Bello", "Río de Oro", "San Alberto", "San Diego", "San Martín", "Tamalameque"],
+    "Chocó": ["Quibdó", "Acandí", "Alto Baudó", "Atrato", "Bagadó", "Bahía Solano", "Bajo Baudó", "Bojayá", "Cantón de San Pablo", "Cértegui", "Condoto", "El Carmen de Atrato", "El Carmen del Darién", "Istmina", "Juradó", "Litoral del San Juan", "Lloró", "Medio Atrato", "Medio Baudó", "Medio San Juan", "Nóvita", "Nuquí", "Río Iró", "Río Quito", "Riosucio", "San José del Palmar", "Sipí", "Tadó", "Unguía", "Unión Panamericana"],
+    "Córdoba": ["Montería", "Ayapel", "Buenavista", "Canalete", "Cereté", "Chimá", "Chinú", "Ciénaga de Oro", "Cotorra", "La Apartada", "Lorica", "Los Córdobas", "Momil", "Montelíbano", "Moñitos", "Planeta Rica", "Pueblo Nuevo", "Puerto Escondido", "Puerto Libertador", "Purísima", "Sahagún", "San Andrés de Sotavento", "San Antero", "San Bernardo del Viento", "San Carlos", "San José de Uré", "San Pelayo", "Tierralta", "Tuchín", "Valencia"],
+    "Cundinamarca": ["Agua de Dios", "Albán", "Anapoima", "Anolaima", "Apulo", "Arbeláez", "Beltrán", "Bituima", "Bojacá", "Cabrera", "Cachipay", "Cajicá", "Caparrapí", "Cáqueza", "Carmen de Carupa", "Chaguaní", "Chía", "Chipaque", "Choachí", "Chocontá", "Cogua", "Cota", "Cucunubá", "El Colegio", "El Peñón", "El Rosal", "Facatativá", "Fómeque", "Fosca", "Funza", "Fúquene", "Fusagasugá", "Gachalá", "Gachancipá", "Gachetá", "Gama", "Girardot", "Granada", "Guachetá", "Guaduas", "Guasca", "Guataquí", "Guatavita", "Guayabal de Síquima", "Guayabetal", "Gutiérrez", "Jerusalén", "Junín", "La Calera", "La Mesa", "La Palma", "La Peña", "La Vega", "Lenguazaque", "Machetá", "Madrid", "Manta", "Medina", "Mosquera", "Nariño", "Nemocón", "Nilo", "Nimaima", "Nocaima", "Pacho", "Paime", "Pandi", "Paratebueno", "Pasca", "Puerto Salgar", "Pulí", "Quebradanegra", "Quetame", "Quipile", "Ricaurte", "San Antonio del Tequendama", "San Bernardo", "San Cayetano", "San Francisco", "San Juan de Río Seco", "Sasaima", "Sesquilé", "Sibaté", "Silvania", "Simijaca", "Soacha", "Sopó", "Subachoque", "Suesca", "Supatá", "Susa", "Sutatausa", "Tabio", "Tausa", "Tena", "Tenjo", "Tibacuy", "Tibirita", "Tocaima", "Tocancipá", "Topaipí", "Ubalá", "Ubaque", "Ubaté", "Une", "Útica", "Venecia", "Vergara", "Vianí", "Villagómez", "Villapinzón", "Villeta", "Viotá", "Yacopí", "Zipacón", "Zipaquirá"],
+    "Guainía": ["Inírida", "Barrancominas"],
+    "Guaviare": ["San José del Guaviare", "Calamar", "El Retorno", "Miraflores"],
+    "Huila": ["Neiva", "Acevedo", "Agrado", "Aipe", "Algeciras", "Altamira", "Baraya", "Campoalegre", "Colombia", "Elías", "Garzón", "Gigante", "Guadalupe", "Hobo", "Iquira", "Isnos", "La Argentina", "La Plata", "Nátaga", "Oporapa", "Paicol", "Palermo", "Palestina", "Pital", "Pitalito", "Rivera", "Saladoblanco", "San Agustín", "Santa María", "Suaza", "Tarqui", "Tello", "Teruel", "Tesalia", "Timaná", "Villavieja", "Yaguará"],
+    "La Guajira": ["Riohacha", "Albania", "Barrancas", "Dibulla", "Distracción", "El Molino", "Fonseca", "Hatonuevo", "La Jagua del Pilar", "Maicao", "Manaure", "San Juan del Cesar", "Uribia", "Urumita", "Villanueva"],
+    "Magdalena": ["Santa Marta", "Algarrobo", "Aracataca", "Ariguaní", "Cerro de San Antonio", "Chibolo", "Ciénaga", "Concordia", "El Banco", "El Piñón", "El Retén", "Fundación", "Guamal", "Nueva Granada", "Pedraza", "Pijiño del Carmen", "Pivijay", "Plato", "Puebloviejo", "Remolino", "Sabanas de San Ángel", "Salamina", "San Sebastián de Buenavista", "San Zenón", "Santa Ana", "Santa Bárbara de Pinto", "Sitionuevo", "Tenerife", "Zapayán", "Zona Bananera"],
+    "Meta": ["Villavicencio", "Acacías", "Barranca de Upía", "Cabuyaro", "Castilla La Nueva", "Cubarral", "Cumaral", "El Calvario", "El Castillo", "El Dorado", "Fuente de Oro", "Granada", "Guamal", "Mapiripán", "Mesetas", "La Macarena", "La Uribe", "Lejanías", "Puerto Concordia", "Puerto Gaitán", "Puerto Lleras", "Puerto López", "Puerto Rico", "Restrepo", "San Carlos de Guaroa", "San Juan de Arama", "San Juanito", "San Martín", "Vista Hermosa"],
+    "Nariño": ["Pasto", "Albán", "Aldana", "Ancuyá", "Arboleda", "Barbacoas", "Belén", "Buesaco", "Chachagüí", "Colón", "Consacá", "Contadero", "Córdoba", "Cuaspud", "Cumbal", "Cumbitara", "El Charco", "El Peñol", "El Rosario", "El Tablón de Gómez", "El Tambo", "Francisco Pizarro", "Funes", "Guachucal", "Guaitarilla", "Gualmatán", "Iles", "Imués", "Ipiales", "La Cruz", "La Florida", "La Llanada", "La Tola", "La Unión", "Leiva", "Linares", "Los Andes", "Magüí", "Mallama", "Mosquera", "Nariño", "Olaya Herrera", "Ospina", "Policarpa", "Potosí", "Providencia", "Puerres", "Pupiales", "Ricaurte", "Roberto Payán", "Samaniego", "San Bernardo", "San Lorenzo", "San Pablo", "San Pedro de Cartago", "Sandoná", "Santa Bárbara", "Santacruz", "Sapuyes", "Taminango", "Tangua", "Tumaco", "Túquerres", "Yacuanquer"],
+    "Norte de Santander": ["Cúcuta", "Abrego", "Arboledas", "Bochalema", "Bucarasica", "Cácota", "Cáchira", "Chinácota", "Chitagá", "Convención", "Cucutilla", "Durania", "El Carmen", "El Tarra", "El Zulia", "Gramalote", "Hacarí", "Herrán", "La Esperanza", "La Playa", "Labateca", "Los Patios", "Lourdes", "Mutiscua", "Ocaña", "Pamplona", "Pamplonita", "Puerto Santander", "Ragonvalia", "Salazar", "San Calixto", "San Cayetano", "Santiago", "Sardinata", "Silos", "Teorama", "Tibú", "Toledo", "Villa Caro", "Villa del Rosario"],
+    "Putumayo": ["Mocoa", "Colón", "Orito", "Puerto Asís", "Puerto Caicedo", "Puerto Guzmán", "Leguízamo", "San Francisco", "San Miguel", "Santiago", "Sibundoy", "Valle del Guamuez", "Villagarzón"],
+    "Quindío": ["Armenia", "Buenavista", "Calarcá", "Circasia", "Córdoba", "Filandia", "Génova", "La Tebaida", "Montenegro", "Pijao", "Quimbaya", "Salento"],
+    "Risaralda": ["Pereira", "Apía", "Balboa", "Belén de Umbría", "Dosquebradas", "Guática", "La Celia", "La Virginia", "Marsella", "Mistrató", "Pueblo Rico", "Quinchía", "Santa Rosa de Cabal", "Santuario"],
+    "San Andrés y Providencia": ["San Andrés", "Providencia"],
+    "Santander": ["Bucaramanga", "Aguada", "Albania", "Aratoca", "Barbosa", "Barichara", "Barrancabermeja", "Betulia", "Bolívar", "Cabrera", "California", "Capitanejo", "Carcasí", "Cepitá", "Cerrito", "Charalá", "Charta", "Chima", "Chipatá", "Cimitarra", "Concepción", "Confines", "Contratación", "Coromoro", "Curití", "El Carmen de Chucurí", "El Guacamayo", "El Peñón", "El Playón", "Encino", "Enciso", "Florián", "Floridablanca", "Galán", "Gámbita", "Girón", "Guaca", "Guadalupe", "Guapotá", "Guavatá", "Güepsa", "Hato", "Jesús María", "Jordán", "La Belleza", "La Paz", "Landázuri", "Lebrija", "Los Santos", "Macaravita", "Málaga", "Matanza", "Mogotes", "Molagavita", "Ocamonte", "Oiba", "Onzaga", "Palmar", "Palmas del Socorro", "Páramo", "Piedecuesta", "Pinchote", "Puente Nacional", "Puerto Parra", "Puerto Wilches", "Rionegro", "Sabana de Torres", "San Andrés", "San Benito", "San Gil", "San Joaquín", "San José de Miranda", "San Miguel", "San Vicente de Chucurí", "Santa Bárbara", "Santa Helena del Opón", "Simacota", "Socorro", "Suaita", "Sucre", "Suratá", "Tona", "Valle de San José", "Vetas", "Villanueva", "Zapatoca"],
+    "Sucre": ["Sincelejo", "Buenavista", "Caimito", "Chalán", "Colosó", "Corozal", "Coveñas", "El Roble", "Galeras", "Guaranda", "La Unión", "Los Palmitos", "Majagual", "Morroa", "Ovejas", "Palmito", "Sampués", "San Benito Abad", "San Juan de Betulia", "San Marcos", "San Onofre", "San Pedro", "Sincé", "Sucre", "Tolú", "Tolú Viejo"],
+    "Tolima": ["Ibagué", "Alpujarra", "Alvarado", "Ambalema", "Anzoátegui", "Ataco", "Cajamarca", "Carmen de Apicalá", "Casabianca", "Chaparral", "Coello", "Coyaima", "Cunday", "Dolores", "Espinal", "Falan", "Flandes", "Fresno", "Guamo", "Herveo", "Honda", "Icononzo", "Lérida", "Líbano", "Melgar", "Murillo", "Natagaima", "Ortega", "Palocabildo", "Piedras", "Planadas", "Prado", "Purificación", "Rio Blanco", "Roncesvalles", "Rovira", "Saldaña", "San Antonio", "San Luis", "Santa Isabel", "Suárez", "Valle de San Juan", "Venadillo", "Villahermosa", "Villarrica"],
+    "Valle del Cauca": ["Cali", "Alcalá", "Andalucía", "Ansermanuevo", "Argelia", "Bolívar", "Buenaventura", "Buga", "Bugalagrande", "Caicedonia", "Calima", "Candelaria", "Cartago", "Dagua", "El Águila", "El Cairo", "El Cerrito", "El Dovio", "Florida", "Ginebra", "Guacarí", "Jamundí", "La Cumbre", "La Unión", "La Victoria", "Obando", "Palmira", "Pradera", "Restrepo", "Riofrío", "Roldanillo", "San Pedro", "Sevilla", "Toro", "Trujillo", "Tuluá", "Ulloa", "Versalles", "Vijes", "Yotoco", "Yumbo", "Zarzal"],
+    "Vaupés": ["Mitú", "Carurú", "Pacoa", "Taraira", "Yavaraté"],
+    "Vichada": ["Puerto Carreño", "Cumaribo", "La Primavera", "Santa Rosalía"]
+    };
+
+
+    // Inicializar los selectores
+    document.addEventListener('DOMContentLoaded', function() {
+        const departamentoSelect = document.getElementById('departamento');
+        const ciudadSelect = document.getElementById('ciudad');
+
+        // Rellenar el select de departamentos
+        for (const departamento in departamentosYciudades) {
+            const option = document.createElement('option');
+            option.value = departamento;
+            option.textContent = departamento;
+            departamentoSelect.appendChild(option);
+        }
+
+        // Cuando se selecciona un departamento, actualizar el select de ciudades
+        departamentoSelect.addEventListener('change', function() {
+            const ciudades = departamentosYciudades[this.value];
+            ciudadSelect.innerHTML = '<option value="">Selecciona una Ciudad</option>'; // Resetear el select de ciudades
+
+            if (ciudades) {
+                ciudades.forEach(ciudad => {
+                    const option = document.createElement('option');
+                    option.value = ciudad;
+                    option.textContent = ciudad;
+                    ciudadSelect.appendChild(option);
+                });
+            }
+        });
+    });
+    </script>
     
 </body>
 </html>

@@ -64,10 +64,23 @@
         .button-group {
             display: block;
         }
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            max-width: 200px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/eklatlogo.png') }}" alt="Eklat Ópticas">
+        </div>
+
         <h2>Consulta de Ordenes</h2>
         <form action="/consulta" method="POST">
             <label for="numero_identificacion">Número de Identificación:</label>
