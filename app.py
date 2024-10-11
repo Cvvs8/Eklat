@@ -13,7 +13,7 @@ app.secret_key = os.environ.get('SECRET_KEY', 'your_default_secret_key')
 # Configuración de conexión a MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Cv.Usa8132'  # Cambia esto si tienes una contraseña
+app.config['MYSQL_PASSWORD'] = 'Carlosv.Usa8132'  # Cambia esto si tienes una contraseña
 app.config['MYSQL_DB'] = 'eklat_clientes'
 
 # Inicializar la conexión con MySQL
@@ -298,7 +298,7 @@ def submit():
             'pago_sistecredito': int(request.form.get('pago_sistecredito', '0') or 0),
             'pago_addi': int(request.form.get('pago_addi', '0') or 0),
             'pago_envia': int(request.form.get('pago_envia', '0') or 0),
-            'pago_interapidism': int(request.form.get('pago_interapidism', '0') or 0),
+            'pago_interapidismo': int(request.form.get('pago_interapidismo', '0') or 0),
             'pago_servientrega': int(request.form.get('pago_servientrega', '0') or 0),
             'pago_otro': int(request.form.get('pago_otro', '0') or 0),
             'pago_mensajeria_eklat':int(request.form.get('pago_mensajeria_eklat', '0') or 0)
@@ -319,7 +319,7 @@ def submit():
               pagos['pago_sistecredito'], 
               pagos['pago_addi'], 
               pagos['pago_envia'], 
-              pagos['pago_interapidism'], 
+              pagos['pago_interapidismo'], 
               pagos['pago_servientrega'], 
               pagos['pago_otro']))
         mysql.connection.commit()
@@ -329,36 +329,6 @@ def submit():
     except Exception as e:
         print(f"Error: {str(e)}")
         return f"Ocurrió un error: {str(e)}"
-
-
-@app.route('/consulta', methods=['GET', 'POST'])
-def consulta():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        numero_identificacion = request.form.get('numero_identificacion')
-
-        # Consulta todas las órdenes del cliente
-        cursor = mysql.connection.cursor()
-        cursor.execute('''
-            SELECT Pedidos.pedido_id, Pedidos.fecha, Pedidos.total_venta, Pedidos.guia_despacho
-            FROM Pedidos
-            JOIN Clientes ON Pedidos.cliente_id = Clientes.cliente_id
-            WHERE Clientes.numero_identificacion = %s
-            ORDER BY Pedidos.pedido_id DESC
-        ''', (numero_identificacion,))
-
-        pedidos = cursor.fetchall()
-
-        if not pedidos:
-            return "No se encontró ninguna orden para este número de identificación."
-
-        # Renderizar una página que liste todas las órdenes
-        return render_template('lista.html', pedidos=pedidos, numero_identificacion=numero_identificacion)
-
-    # Mostrar la página de consulta (formulario de número de identificación)
-    return render_template('Consulta.html')
 
 
 @app.route('/consulta/<int:pedido_id>', methods=['GET','POST'])
@@ -880,6 +850,51 @@ def guardar_cambios(cliente_id):
     except Exception as e:
         print(f"Error: {str(e)}")
         return f"Ocurrió un error: {str(e)}"
+
+@app.route('/consulta_unificada', methods=['GET', 'POST'])
+def consulta_unificada():
+    filtro = None
+    numero_identificacion = None
+    pedidos = []
+
+    if request.method == 'POST':
+        filtro = request.form.get('filtro')
+        numero_identificacion = request.form.get('numero_identificacion')
+
+        cursor = mysql.connection.cursor()
+
+        if numero_identificacion:
+            # Consulta por número de identificación
+            cursor.execute('''
+                SELECT Pedidos.pedido_id, Pedidos.fecha, Pedidos.total_venta, Pedidos.guia_despacho,
+                       Pedidos.fecha_entrega, Clientes.cliente_id
+                FROM Pedidos
+                JOIN Clientes ON Pedidos.cliente_id = Clientes.cliente_id
+                WHERE Clientes.numero_identificacion = %s
+                ORDER BY Pedidos.pedido_id DESC
+            ''', (numero_identificacion,))
+        elif filtro:
+            # Consulta por filtro, asegurando siempre el mismo orden de columnas
+            if filtro == 'Activos':
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM Pedidos WHERE fecha_entrega IS NULL")
+            elif filtro == 'Terminados':
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM Pedidos WHERE fecha_entrega IS NOT NULL")
+            elif filtro == 'En proceso':
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM Pedidos WHERE (guia_despacho IS NULL OR guia_despacho = '') AND fecha_entrega IS NULL")
+            elif filtro == 'Despachados':
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM Pedidos WHERE guia_despacho IS NOT NULL AND guia_despacho != '' AND fecha_entrega IS NULL")
+            else:
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM Pedidos")
+        
+        pedidos = cursor.fetchall()
+        cursor.close()
+
+        # Imprimir los pedidos para depuración
+        print("Pedidos recuperados:", pedidos)
+
+    return render_template('lista.html', pedidos=pedidos, filtro=filtro, numero_identificacion=numero_identificacion)
+
+
 
 
 

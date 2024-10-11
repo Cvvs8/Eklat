@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Órdenes</title>
+    <title>Consulta de Pedidos</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f7f7f7;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start;
+            min-height: 100vh;
             margin: 0;
         }
 
@@ -20,8 +20,10 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 80%;
-            max-width: 800px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            box-sizing: border-box;
         }
 
         h1 {
@@ -95,6 +97,32 @@
         .button:hover {
             background-color: #0056b3;
         }
+
+        .filter-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-container form {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        select, input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+
+        select {
+            width: 200px;
+        }
+
+        input[type="text"] {
+            width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -103,32 +131,71 @@
     <div class="logo">
         <img src="{{ url_for('static', filename='images/eklatlogo.png') }}" alt="Eklat Ópticas">
     </div>
-    <h1>Órdenes del Cliente</h1>
+    <h1>Consulta de Pedidos</h1>
 
+    <!-- Formulario de filtro general -->
+    <div class="filter-container">
+        <form method="POST" action="{{ url_for('consulta_unificada') }}">
+            <label for="filtro">Filtrar por estado:</label>
+            <select name="filtro" id="filtro">
+                <option value="Todos" {% if filtro == 'Todos' %}selected{% endif %}>Todos</option>
+                <option value="Activos" {% if filtro == 'Activos' %}selected{% endif %}>Activos</option>
+                <option value="Terminados" {% if filtro == 'Terminados' %}selected{% endif %}>Terminados</option>
+                <option value="En proceso" {% if filtro == 'En proceso' %}selected{% endif %}>En proceso</option>
+                <option value="Despachados" {% if filtro == 'Despachados' %}selected{% endif %}>Despachados</option>
+            </select>
+            <button type="submit" class="button">Filtrar</button>
+        </form>
+
+        <!-- Formulario de búsqueda por número de identificación -->
+        <form method="POST" action="{{ url_for('consulta_unificada') }}">
+            <label for="numero_identificacion">Buscar por I.D:</label>
+            <input type="text" id="numero_identificacion" name="numero_identificacion" placeholder="Número de identificación">
+            <button type="submit" class="button">Buscar</button>
+        </form>
+    </div>
+
+    {% if numero_identificacion %}
+    <h2 style="text-align: center; color: #333;">Pedidos de: {{ numero_identificacion }}</h2>
+    {% elif filtro %}
+    <h2 style="text-align: center; color: #333;">Estado: {{ filtro }}</h2>
+    {% endif %}
+
+    <!-- Mostrar la tabla solo si hay pedidos filtrados -->
+    {% if pedidos is not none and pedidos|length > 0 %}
     <table>
         <thead>
             <tr>
-                <th>Número de Orden</th>
+                <th>ID del Pedido</th>
                 <th>Fecha</th>
                 <th>Total Venta</th>
                 <th>Guía Despacho</th>
-                <th>Ver Orden</th>
+                <th>Fecha de Entrega</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for pedido in pedidos %}
             <tr>
-                <td>{{ pedido[0] }}</td>
-                <td>{{ pedido[1].strftime('%d/%m/%Y') if pedido[1] else 'N/A' }}</td>
-                <td>{{ pedido[2] }}</td>
-                <td>{{ pedido[3] }}</td>
+                <td>{{ pedido[0] }}</td> <!-- pedido_id -->
+                <td>{{ pedido[1] if pedido[1] is not none else 'N/A' }}</td> <!-- fecha -->
+                <td>{{ pedido[2] }}</td> <!-- total_venta -->
+                <td>{{ pedido[3] if pedido[3] else 'N/A' }}</td> <!-- guia_despacho -->
+                <td>{{ pedido[4] if pedido[4] is not none else 'N/A' }}</td> <!-- fecha_entrega -->
                 <td>
-                    <a href="{{ url_for('ver_orden', pedido_id=pedido[0]) }}">Ver Orden</a>
+                    {% if not pedido[4] %}
+                        <a href="{{ url_for('editar', cliente_id=pedido[5]) }}">Editar</a>
+                    {% endif %}
+                    <a href="{{ url_for('ver_orden', pedido_id=pedido[0]) }}">Ver</a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
+        
     </table>
+    {% elif pedidos is not none %}
+        <p style="text-align: center; color: #666;">No se encontraron pedidos con el filtro seleccionado.</p>
+    {% endif %}
 
     <!-- Botón para volver al menú -->
     <div class="buttons">

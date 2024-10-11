@@ -47,10 +47,22 @@
             text-align: right;
             font-weight: bold;
         }
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            max-width: 200px;
+        }
     </style>
 </head>
 <body>
     <div class="ticket-container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/eklatlogo.png') }}" alt="Eklat Ópticas">
+        </div>
         <h2>Orden de Laboratorio</h2>
         <p class="section-title"><strong>Fecha:</strong> {{dia_lab}} / {{mes_lab}} / {{año_lab}}</p>
         <p class="section-title"><strong>N° de Orden:</strong> <span class="order-number"> {{ numero_orden }} </span></p>

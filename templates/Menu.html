@@ -46,6 +46,12 @@
         .btn-logout:hover {
             background-color: #c82333;
         }
+        .btn-green {
+            background-color: #28a745;
+        }
+        .btn-green:hover {
+            background-color: #218838;
+        }
         .logo {
             display: flex;
             justify-content: center;
@@ -60,7 +66,7 @@
         </div>
         <h1>Selecciona una opción</h1>
         <a href="{{ url_for('nueva_orden') }}" class="btn">Nueva Orden</a>
-        <a href="{{ url_for('consulta') }}" class="btn">Consultar Orden</a>
+        <a href="{{ url_for('consulta_unificada') }}" class="btn">Consultar Orden</a>
         <!-- Botón para cerrar sesión y volver al login -->
         <a href="{{ url_for('logout') }}" class="btn btn-logout">Cerrar Sesión</a>
     </div>

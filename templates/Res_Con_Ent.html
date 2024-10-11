@@ -202,65 +202,66 @@
                     <td class="label">Total Venta:</td>
                     <td colspan="4"><input type="text" name="total_venta" value="{{ pedido[22] }}" readonly></td>
                 </tr>
-            </table>
             
-            <tr class="section-header">
-                <td colspan="5" class="section-header">FORMAS DE PAGO</td>
-            </tr>
-            <tr>
-                <td class="payment-label">Efectivo:</td>
-                <td><input type="text" name="pago_efectivo" value="{{ pagos[0] }}"></td>
-                <td class="payment-label">Sistecredito:</td>
-                <td colspan="2"><input type="text" name="pago_sistecredito" value="{{ pagos[7] }}"></td>
-            </tr>
-            <tr>
-                <td class="payment-label">Bancolombia:</td>
-                <td><input type="text" name="pago_bancolombia" value="{{ pagos[1] }}"></td>
-                <td class="payment-label">Davivienda:</td>
-                <td colspan="2"><input type="text" name="pago_davivienda" value="{{ pagos[2] }}"></td>
-            </tr>
-            <tr>
-                <td class="payment-label">Addi:</td>
-                <td><input type="text" name="pago_addi" value="{{ pagos[8] }}"></td>
-                <td class="payment-label">Envia:</td>
-                <td colspan="2"><input type="text" name="pago_envia" value="{{ pagos[9] }}"></td>
-            </tr>
-            <tr>
-                <td class="payment-label">Inter Rapidismo:</td>
-                <td><input type="text" name="pago_interapidismo" value="{{ pagos[10] }}"></td>
-                <td class="payment-label">Pasarela de Pagos:</td>
-                <td colspan="2"><input type="text" name="pasa_pagos" value="{{ pagos[3] }}"></td>
-            </tr>
-            <tr>
-                <td class="payment-label">Bold:</td>
-                <td><input type="text" name="pago_bold" value="{{ pagos[4] }}"></td>
-                <td class="payment-label">Mensajería EKlat:</td>
-                <td colspan="2"><input type="text" name="pago_mensajeria_eklat" value="{{ pagos[5] }}"></td>
-            </tr>
-            <tr>
-                <td class="payment-label">Mercado Pago:</td>
-                <td><input type="text" name="pago_mercadopago" value="{{ pagos[6] }}"></td>
-                <td class="payment-label">Servientrega:</td>
-                <td colspan="2"><input type="text" name="pago_servientrega" value="{{ pagos[11] }}"></td>
-            </tr>
-            <tr>
-                <td class="payment-label">Otro:</td>
-                <td colspan="4"><input type="text" name="pago_otro" value="{{ pagos[12] }}"></td>
-            </tr>
-            <tr>
-                <td class="payment-label">Guía de Despacho:</td>
-                <td colspan="4"><input type="text" name="guia_despacho" value="{{ pedido[23] }}" required></td>
-            </tr>
-            <tr>
-                <td>Fecha de Entrega:</td>
-            <td colspan="4">
-                <input type="text" id="fecha_entrega" class="form-control" name="fecha_entrega" value="{{ pedido[24] }}"
-                    {% if not puede_editar %} readonly {% endif %} />
-            </td>
-            </tr>
-            <tr>
-                <td colspan="5">Observaciones:<textarea name="observaciones" rows="3">{{ pedido[25] }}</textarea></td>
-            </tr>
+            
+                <tr class="section-header">
+                    <td colspan="5" class="section-header">FORMAS DE PAGO</td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Efectivo:</td>
+                    <td><input type="text" name="pago_efectivo" value="{{ pagos[0] }}"></td>
+                    <td class="payment-label">Sistecredito:</td>
+                    <td colspan="2"><input type="text" name="pago_sistecredito" value="{{ pagos[7] }}"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Bancolombia:</td>
+                    <td><input type="text" name="pago_bancolombia" value="{{ pagos[1] }}"></td>
+                    <td class="payment-label">Davivienda:</td>
+                    <td colspan="2"><input type="text" name="pago_davivienda" value="{{ pagos[2] }}"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Addi:</td>
+                    <td><input type="text" name="pago_addi" value="{{ pagos[8] }}"></td>
+                    <td class="payment-label">Envia:</td>
+                    <td colspan="2"><input type="text" name="pago_envia" value="{{ pagos[9] }}"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Inter Rapidismo:</td>
+                    <td><input type="text" name="pago_interapidismo" value="{{ pagos[10] }}"></td>
+                    <td class="payment-label">Pasarela de Pagos:</td>
+                    <td colspan="2"><input type="text" name="pasa_pagos" value="{{ pagos[3] }}"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Bold:</td>
+                    <td><input type="text" name="pago_bold" value="{{ pagos[4] }}"></td>
+                    <td class="payment-label">Mensajería EKlat:</td>
+                    <td colspan="2"><input type="text" name="pago_mensajeria_eklat" value="{{ pagos[5] }}"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Mercado Pago:</td>
+                    <td><input type="text" name="pago_mercadopago" value="{{ pagos[6] }}"></td>
+                    <td class="payment-label">Servientrega:</td>
+                    <td colspan="2"><input type="text" name="pago_servientrega" value="{{ pagos[11] }}"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Otro:</td>
+                    <td colspan="4"><input type="text" name="pago_otro" value="{{ pagos[12] }}"></td>
+                </tr>
+                <tr>
+                    <td class="payment-label">Guía de Despacho:</td>
+                    <td colspan="4"><input type="text" name="guia_despacho" value="{{ pedido[23] }}" ></td>
+                </tr>
+                <tr>
+                    <td>Fecha de Entrega:</td>
+                <td colspan="4">
+                    <input type="text" id="fecha_entrega" class="form-control" name="fecha_entrega" value="{{ pedido[24] }}"
+                        {% if not puede_editar %} readonly {% endif %} />
+                </td>
+                </tr>
+                <tr>
+                    <td colspan="5">Observaciones:<textarea name="observaciones" rows="3">{{ pedido[25] }}</textarea></td>
+                </tr>
+            </table>
 
             <h2 style="text-align: center;">ORDEN DE LABORATORIO</h2>
             <table>
@@ -378,6 +379,7 @@
                             <option value="">Seleccione</option>
                             <option value="Invisible" {{ 'selected' if orden_laboratorio[9] == 'Invisible' else '' }}>Invisible</option>
                             <option value="Flat Top" {{ 'selected' if orden_laboratorio[9] == 'Flat Top' else '' }}>Flat Top</option>
+                            <option value="N/A" {{ 'selected' if orden_laboratorio[9] == 'N/A' else '' }}>N/A</option>
                         </select>
                     </td>
                 </tr>
@@ -539,7 +541,7 @@
         function validarPagos() {
             // Obtener el valor de "Total Venta"
             const totalVenta = parseFloat(document.querySelector('input[name="total_venta"]').value) || 0;
-    
+
             // Obtener los valores de las formas de pago
             const pagoEfectivo = parseFloat(document.querySelector('input[name="pago_efectivo"]').value) || 0;
             const pagoSistecredito = parseFloat(document.querySelector('input[name="pago_sistecredito"]').value) || 0;
@@ -548,25 +550,24 @@
             const pagoAddi = parseFloat(document.querySelector('input[name="pago_addi"]').value) || 0;
             const pagoEnvia = parseFloat(document.querySelector('input[name="pago_envia"]').value) || 0;
             const pagoInterapidismo = parseFloat(document.querySelector('input[name="pago_interapidismo"]').value) || 0;
-            const pagopasa_pagos = parseFloat(document.querySelector('input[name="pasa_pagos"]').value) || 0;
+            const pagoPasaPagos = parseFloat(document.querySelector('input[name="pasa_pagos"]').value) || 0;
             const pagoBold = parseFloat(document.querySelector('input[name="pago_bold"]').value) || 0;
             const pagoMensajeriaEklat = parseFloat(document.querySelector('input[name="pago_mensajeria_eklat"]').value) || 0;
             const pagoMercadopago = parseFloat(document.querySelector('input[name="pago_mercadopago"]').value) || 0;
-            const pagoPayco = parseFloat(document.querySelector('input[name="pago_payco"]').value) || 0;
             const pagoServientrega = parseFloat(document.querySelector('input[name="pago_servientrega"]').value) || 0;
             const pagoOtro = parseFloat(document.querySelector('input[name="pago_otro"]').value) || 0;
-    
+
             // Calcular la suma de las formas de pago
             const sumaPagos = pagoEfectivo + pagoSistecredito + pagoBancolombia + pagoDavivienda +
-                              pagoAddi + pagoEnvia + pagoInterapidismo + pagopasa_pagos + pagoBold +
-                              pagoMensajeriaEklat + pagoMercadopago + pagoPayco + pagoServientrega + pagoOtro;
-    
+                            pagoAddi + pagoEnvia + pagoInterapidismo + pagoPasaPagos + pagoBold +
+                            pagoMensajeriaEklat + pagoMercadopago + pagoServientrega + pagoOtro;
+
             // Comparar la suma con el "Total Venta"
             if (sumaPagos !== totalVenta) {
                 alert('La suma de las formas de pago debe ser igual al Total Venta.');
                 return false; // Evitar el envío del formulario si la validación falla
             }
-    
+
             // Si la validación pasa, permitir que el formulario se envíe
             return true;
         }
@@ -574,12 +575,12 @@
     <script>
         // Copiar el valor del campo "vendedor" al campo "ordenado_a"
         document.querySelector('input[name="vendedor"]').addEventListener('input', function() {
-            document.querySelector('input[name="ordenado_a"]').value = this.value;
+            document.querySelector('input[name="ordenado_por"]').value = this.value;
         });
     
         // Copiar el valor del campo "nombre_cliente" al campo "ordenado_por"
         document.querySelector('input[name="nombre_cliente"]').addEventListener('input', function() {
-            document.querySelector('input[name="ordenado_por"]').value = this.value;
+            document.querySelector('input[name="ordenado_a"]').value = this.value;
         });
     </script>
 

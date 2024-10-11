@@ -189,7 +189,7 @@
                 </tr>
                 <tr>
                     <td class="label">Total Venta:</td>
-                    <td colspan="4"><input type="text" name="total_venta" readonly></td>
+                    <td colspan="4"><input type="text" name="total_venta" id="total_venta" readonly></td>
                 </tr>
                 
                 <tr class="section-header">
@@ -215,7 +215,7 @@
                 </tr>
                 <tr>
                     <td class="payment-label">Inter Rapidismo:</td>
-                    <td><input type="text" name="pago_interapidism"></td>
+                    <td><input type="text" name="pago_interapidismo"></td>
                     <td class="payment-label">Pasarela de Pagos:</td>
                     <td colspan="2"><input type="text" name="pasa_pagos"></td>
                 </tr>
@@ -238,7 +238,7 @@
                 </tr>
                 <tr>
                     <td class="payment-label">Guía de Despacho:</td>
-                    <td colspan="4"><input type="text" name="guia_despacho" required></td>
+                    <td colspan="4"><input type="text" name="guia_despacho"></td>
                 </tr>
                 <tr>
                     <td>Fecha de Entrega:</td>
@@ -360,6 +360,7 @@
                             <option value="">Seleccione</option>
                             <option value="Invisible">Invisible</option>
                             <option value="Flat Top">Flat Top</option>
+                            <option value="N/A">N/A</option>
                         </select>
                     </td>
                 </tr>
@@ -526,7 +527,7 @@
         function validarPagos() {
             // Obtener el valor de "Total Venta"
             const totalVenta = parseFloat(document.querySelector('input[name="total_venta"]').value) || 0;
-    
+
             // Obtener los valores de las formas de pago
             const pagoEfectivo = parseFloat(document.querySelector('input[name="pago_efectivo"]').value) || 0;
             const pagoSistecredito = parseFloat(document.querySelector('input[name="pago_sistecredito"]').value) || 0;
@@ -534,26 +535,25 @@
             const pagoDavivienda = parseFloat(document.querySelector('input[name="pago_davivienda"]').value) || 0;
             const pagoAddi = parseFloat(document.querySelector('input[name="pago_addi"]').value) || 0;
             const pagoEnvia = parseFloat(document.querySelector('input[name="pago_envia"]').value) || 0;
-            const pagoInterapidismo = parseFloat(document.querySelector('input[name="pago_interapidism"]').value) || 0;
-            const pagopasa_pagos = parseFloat(document.querySelector('input[name="pasa_pagos"]').value) || 0;
+            const pagoInterapidismo = parseFloat(document.querySelector('input[name="pago_interapidismo"]').value) || 0;
+            const pagoPasaPagos = parseFloat(document.querySelector('input[name="pasa_pagos"]').value) || 0;
             const pagoBold = parseFloat(document.querySelector('input[name="pago_bold"]').value) || 0;
             const pagoMensajeriaEklat = parseFloat(document.querySelector('input[name="pago_mensajeria_eklat"]').value) || 0;
             const pagoMercadopago = parseFloat(document.querySelector('input[name="pago_mercadopago"]').value) || 0;
-            const pagoPayco = parseFloat(document.querySelector('input[name="pago_payco"]').value) || 0;
             const pagoServientrega = parseFloat(document.querySelector('input[name="pago_servientrega"]').value) || 0;
             const pagoOtro = parseFloat(document.querySelector('input[name="pago_otro"]').value) || 0;
-    
+
             // Calcular la suma de las formas de pago
             const sumaPagos = pagoEfectivo + pagoSistecredito + pagoBancolombia + pagoDavivienda +
-                              pagoAddi + pagoEnvia + pagoInterapidismo + pagopasa_pagos + pagoBold +
-                              pagoMensajeriaEklat + pagoMercadopago + pagoPayco + pagoServientrega + pagoOtro;
-    
+                            pagoAddi + pagoEnvia + pagoInterapidismo + pagoPasaPagos + pagoBold +
+                            pagoMensajeriaEklat + pagoMercadopago + pagoServientrega + pagoOtro;
+
             // Comparar la suma con el "Total Venta"
             if (sumaPagos !== totalVenta) {
                 alert('La suma de las formas de pago debe ser igual al Total Venta.');
                 return false; // Evitar el envío del formulario si la validación falla
             }
-    
+
             // Si la validación pasa, permitir que el formulario se envíe
             return true;
         }
@@ -561,12 +561,12 @@
     <script>
         // Copiar el valor del campo "vendedor" al campo "ordenado_a"
         document.querySelector('input[name="vendedor"]').addEventListener('input', function() {
-            document.querySelector('input[name="ordenado_a"]').value = this.value;
+            document.querySelector('input[name="ordenado_por"]').value = this.value;
         });
     
         // Copiar el valor del campo "nombre_cliente" al campo "ordenado_por"
         document.querySelector('input[name="nombre_cliente"]').addEventListener('input', function() {
-            document.querySelector('input[name="ordenado_por"]').value = this.value;
+            document.querySelector('input[name="ordenado_a"]').value = this.value;
         });
     </script>
 
