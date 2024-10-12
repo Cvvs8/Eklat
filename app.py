@@ -15,7 +15,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'Carlosv.Usa8132'  # Cambia esto si tienes una contraseña
-app.config['MYSQL_DB'] = 'eklatClientes'
+app.config['MYSQL_DB'] = 'eklatclientes'
 
 # Inicializar la conexión con MySQL
 mysql = MySQL(app)
@@ -67,7 +67,7 @@ def nueva_orden():
 
     # Obtener el último número de orden
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT MAX(pedido_id) FROM Pedidos')
+    cursor.execute('SELECT MAX(pedido_id) FROM pedidos')
     max_pedido_id = cursor.fetchone()[0]
     
     if max_pedido_id is None:
@@ -90,9 +90,9 @@ def submit():
         return redirect(url_for('login'))
 
     try:
-        # Obtener el último número de orden (pedido_id) más alto de la tabla Pedidos
+        # Obtener el último número de orden (pedido_id) más alto de la tabla pedidos
         cursor = mysql.connection.cursor()
-        cursor.execute('SELECT MAX(pedido_id) FROM Pedidos')
+        cursor.execute('SELECT MAX(pedido_id) FROM pedidos')
         max_pedido_id = cursor.fetchone()[0]  # Obtener el número de orden más alto
         if max_pedido_id is None:
             nuevo_numero_orden = 6501  # Si no hay órdenes, iniciar con 6501
@@ -150,10 +150,10 @@ def submit():
             return f"Error en la conversión de valores numéricos: {str(e)}"
 
 
-        # Insertar datos en la tabla Clientes
+        # Insertar datos en la tabla clientes
         cursor = mysql.connection.cursor()
         cursor.execute('''
-            INSERT INTO Clientes (nombre_cliente, tipo_identificacion, numero_identificacion, direccion_entrega, departamento, ciudad, barrio, telefonos, email, regimen_iva, ordenado_a, ordenado_por)
+            INSERT INTO clientes (nombre_cliente, tipo_identificacion, numero_identificacion, direccion_entrega, departamento, ciudad, barrio, telefonos, email, regimen_iva, ordenado_a, ordenado_por)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
         ''', (datos_pedido['nombre_cliente'], 
               datos_pedido['tipo_identificacion'], 
@@ -177,7 +177,7 @@ def submit():
 
         # Insertar el nuevo pedido con el número de orden nuevo
         cursor.execute('''
-            INSERT INTO Pedidos (pedido_id, cliente_id, nombre_laboratorio, vendedor, codigo_montura, valor_montura, codigo_lente, valor_lente, otros, valor_otros, total_venta, fecha_entrega, guia_despacho, observaciones, fecha)
+            INSERT INTO pedidos (pedido_id, cliente_id, nombre_laboratorio, vendedor, codigo_montura, valor_montura, codigo_lente, valor_lente, otros, valor_otros, total_venta, fecha_entrega, guia_despacho, observaciones, fecha)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         ''', (nuevo_numero_orden,
               cliente_id, 
@@ -197,7 +197,7 @@ def submit():
         mysql.connection.commit()
         pedido_id = cursor.lastrowid  # Obtener el ID del último pedido insertado
 
-        # Insertar detalles de lentes en la tabla Detalles_Lentes
+        # Insertar detalles de lentes en la tabla detalles_lentes
         datos_lentes = {
             'esfera_od': request.form.get('esfera_od', ''),
             'cilindro_od': request.form.get('cilindro_od', ''),
@@ -212,7 +212,7 @@ def submit():
         }
 
         cursor.execute('''
-            INSERT INTO Detalles_Lentes (pedido_id, esfera_od, cilindro_od, eje_od, adicion_od, dp_od, esfera_oi, cilindro_oi, eje_oi, adicion_oi, dp_oi)
+            INSERT INTO detalles_lentes (pedido_id, esfera_od, cilindro_od, eje_od, adicion_od, dp_od, esfera_oi, cilindro_oi, eje_oi, adicion_oi, dp_oi)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         ''', (pedido_id, 
               datos_lentes['esfera_od'], 
@@ -227,7 +227,7 @@ def submit():
               datos_lentes['dp_oi']))
         mysql.connection.commit()
 
-        # Insertar datos del laboratorio en la tabla Orden_Laboratorio
+        # Insertar datos del laboratorio en la tabla orden_laboratorio
         # Obtener valores del formulario, asegurándose de que los nombres coincidan con el HTML
         datos_laboratorio = {
             'montura': request.form.get('montura', ''),
@@ -265,7 +265,7 @@ def submit():
 
         # Ejecutar la inserción en la base de datos con los valores corregidos
         cursor.execute('''
-            INSERT INTO Orden_Laboratorio (pedido_id, montura, color, material_lentes, ar, progresivo, gama_progresivo, monofocal, opcion_monofocal, fotocromatico, bifocal, af, corredor, adicional, fecha_lab, gama_fotocromatico)
+            INSERT INTO orden_laboratorio (pedido_id, montura, color, material_lentes, ar, progresivo, gama_progresivo, monofocal, opcion_monofocal, fotocromatico, bifocal, af, corredor, adicional, fecha_lab, gama_fotocromatico)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         ''', (nuevo_numero_orden,
             datos_laboratorio['montura'],
@@ -288,7 +288,7 @@ def submit():
         # Hacer commit para guardar los cambios en la base de datos
         mysql.connection.commit()
 
-        # Insertar datos de pagos en la tabla Pagos
+        # Insertar datos de pagos en la tabla pagos
         pagos = {
             'pago_efectivo': int(request.form.get('pago_efectivo', '0') or 0),
             'pago_bancolombia': int(request.form.get('pago_bancolombia', '0') or 0),
@@ -307,7 +307,7 @@ def submit():
 
 
         cursor.execute('''
-            INSERT INTO Pagos (pedido_id, pago_efectivo, pago_bancolombia, pago_davivienda, pasa_pagos, pago_bold, pago_mensajeria_eklat, pago_mercadopago, pago_sistecredito, pago_addi, pago_envia, pago_interapidismo, pago_servientrega, pago_otro)
+            INSERT INTO pagos (pedido_id, pago_efectivo, pago_bancolombia, pago_davivienda, pasa_pagos, pago_bold, pago_mensajeria_eklat, pago_mercadopago, pago_sistecredito, pago_addi, pago_envia, pago_interapidismo, pago_servientrega, pago_otro)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         ''', (pedido_id, 
               pagos['pago_efectivo'], 
@@ -340,16 +340,16 @@ def ver_orden(pedido_id):
     # Consulta los detalles del pedido
     cursor = mysql.connection.cursor()
     cursor.execute('''
-        SELECT Clientes.nombre_cliente, Clientes.tipo_identificacion, Clientes.numero_identificacion, 
-               Clientes.direccion_entrega, Clientes.departamento, Clientes.ciudad, Clientes.barrio, 
-               Clientes.telefonos, Clientes.email, Clientes.regimen_iva, Clientes.ordenado_a, Clientes.ordenado_por,
-               Pedidos.pedido_id, Pedidos.nombre_laboratorio, Pedidos.vendedor, Pedidos.codigo_montura, 
-               Pedidos.valor_montura, Pedidos.codigo_lente, Pedidos.valor_lente, Pedidos.otros, 
-               Pedidos.valor_otros, Pedidos.total_venta, Pedidos.guia_despacho, Pedidos.fecha_entrega, 
-               Pedidos.observaciones, Pedidos.fecha
-        FROM Pedidos
-        JOIN Clientes ON Pedidos.cliente_id = Clientes.cliente_id
-        WHERE Pedidos.pedido_id = %s
+        SELECT clientes.nombre_cliente, clientes.tipo_identificacion, clientes.numero_identificacion, 
+               clientes.direccion_entrega, clientes.departamento, clientes.ciudad, clientes.barrio, 
+               clientes.telefonos, clientes.email, clientes.regimen_iva, clientes.ordenado_a, clientes.ordenado_por,
+               pedidos.pedido_id, pedidos.nombre_laboratorio, pedidos.vendedor, pedidos.codigo_montura, 
+               pedidos.valor_montura, pedidos.codigo_lente, pedidos.valor_lente, pedidos.otros, 
+               pedidos.valor_otros, pedidos.total_venta, pedidos.guia_despacho, pedidos.fecha_entrega, 
+               pedidos.observaciones, pedidos.fecha
+        FROM pedidos
+        JOIN clientes ON pedidos.cliente_id = clientes.cliente_id
+        WHERE pedidos.pedido_id = %s
     ''', (pedido_id,))
     pedido = cursor.fetchone()
 
@@ -363,7 +363,7 @@ def ver_orden(pedido_id):
     cursor.execute('''
         SELECT montura, color, material_lentes, ar, progresivo, gama_progresivo, monofocal, 
                opcion_monofocal, fotocromatico, bifocal, af, corredor, adicional, fecha_lab, gama_fotocromatico
-        FROM Orden_Laboratorio
+        FROM orden_laboratorio
         WHERE pedido_id = %s
     ''', (pedido_id,))
     orden_laboratorio = cursor.fetchone()
@@ -371,7 +371,7 @@ def ver_orden(pedido_id):
     # Consultar los detalles de los lentes
     cursor.execute('''
         SELECT esfera_od, cilindro_od, eje_od, adicion_od, dp_od, esfera_oi, cilindro_oi, eje_oi, adicion_oi, dp_oi
-        FROM Detalles_Lentes
+        FROM detalles_lentes
         WHERE pedido_id = %s
     ''', (pedido_id,))
     detalles_lentes = cursor.fetchone()
@@ -380,7 +380,7 @@ def ver_orden(pedido_id):
     cursor.execute('''
         SELECT pago_efectivo, pago_bancolombia, pago_davivienda, pasa_pagos, pago_bold, pago_mensajeria_eklat, 
                pago_mercadopago, pago_sistecredito, pago_addi, pago_envia, pago_interapidismo, pago_servientrega, pago_otro
-        FROM Pagos
+        FROM pagos
         WHERE pedido_id = %s
     ''', (pedido_id,))
     pagos = cursor.fetchone()
@@ -476,18 +476,18 @@ def imprimir_laboratorio(numero_identificacion):
 
     # Consulta los datos del pedido más reciente para el cliente con ese numero_identificacion
     cursor.execute('''
-        SELECT Clientes.nombre_cliente, Clientes.ordenado_a, Clientes.ordenado_por,
-               Pedidos.fecha, Pedidos.pedido_id, Pedidos.codigo_montura,
-               Detalles_Lentes.esfera_od, Detalles_Lentes.cilindro_od, Detalles_Lentes.eje_od, Detalles_Lentes.adicion_od, Detalles_Lentes.dp_od,
-               Detalles_Lentes.esfera_oi, Detalles_Lentes.cilindro_oi, Detalles_Lentes.eje_oi, Detalles_Lentes.adicion_oi, Detalles_Lentes.dp_oi,
-               Orden_Laboratorio.material_lentes, Orden_Laboratorio.ar, Orden_Laboratorio.gama_fotocromatico, Orden_Laboratorio.color, Orden_Laboratorio.gama_progresivo,
-               Orden_Laboratorio.opcion_monofocal, Orden_Laboratorio.bifocal, Orden_Laboratorio.af, Orden_Laboratorio.corredor, Orden_Laboratorio.adicional
-        FROM Pedidos
-        JOIN Clientes ON Pedidos.cliente_id = Clientes.cliente_id
-        JOIN Detalles_Lentes ON Pedidos.pedido_id = Detalles_Lentes.pedido_id
-        JOIN Orden_Laboratorio ON Pedidos.pedido_id = Orden_Laboratorio.pedido_id
-        WHERE Clientes.numero_identificacion = %s
-        ORDER BY Pedidos.pedido_id DESC
+        SELECT clientes.nombre_cliente, clientes.ordenado_a, clientes.ordenado_por,
+               pedidos.fecha, pedidos.pedido_id, pedidos.codigo_montura,
+               detalles_lentes.esfera_od, detalles_lentes.cilindro_od, detalles_lentes.eje_od, detalles_lentes.adicion_od, detalles_lentes.dp_od,
+               detalles_lentes.esfera_oi, detalles_lentes.cilindro_oi, detalles_lentes.eje_oi, detalles_lentes.adicion_oi, detalles_lentes.dp_oi,
+               orden_laboratorio.material_lentes, orden_laboratorio.ar, orden_laboratorio.gama_fotocromatico, orden_laboratorio.color, orden_laboratorio.gama_progresivo,
+               orden_laboratorio.opcion_monofocal, orden_laboratorio.bifocal, orden_laboratorio.af, orden_laboratorio.corredor, orden_laboratorio.adicional
+        FROM pedidos
+        JOIN clientes ON pedidos.cliente_id = clientes.cliente_id
+        JOIN detalles_lentes ON pedidos.pedido_id = detalles_lentes.pedido_id
+        JOIN orden_laboratorio ON pedidos.pedido_id = orden_laboratorio.pedido_id
+        WHERE clientes.numero_identificacion = %s
+        ORDER BY pedidos.pedido_id DESC
         LIMIT 1
     ''', (numero_identificacion,))
 
@@ -539,16 +539,16 @@ def imprimir_pedido(numero_identificacion):
 
     # Consulta los datos del pedido y cliente usando el número de identificación
     cursor.execute('''
-        SELECT Clientes.nombre_cliente, Clientes.numero_identificacion, Clientes.direccion_entrega, Clientes.departamento, Clientes.ciudad, Clientes.barrio, Clientes.telefonos, Clientes.email,
-               Pedidos.pedido_id, Pedidos.nombre_laboratorio, Pedidos.vendedor, Pedidos.codigo_montura, Pedidos.valor_montura, Pedidos.codigo_lente, Pedidos.valor_lente,
-               Pedidos.otros, Pedidos.valor_otros, Pedidos.total_venta, Pedidos.fecha, Pedidos.observaciones,
-               Pagos.pago_efectivo, Pagos.pago_bancolombia, Pagos.pago_davivienda, Pagos.pasa_pagos, Pagos.pago_bold, Pagos.pago_mercadopago,
-               Pagos.pago_sistecredito, Pagos.pago_addi, Pagos.pago_envia, Pagos.pago_interapidismo, Pagos.pago_servientrega, Pagos.pago_mensajeria_eklat, Pagos.pago_otro
-        FROM Pedidos
-        JOIN Clientes ON Pedidos.cliente_id = Clientes.cliente_id
-        JOIN Pagos ON Pedidos.pedido_id = Pagos.pedido_id
-        WHERE Clientes.numero_identificacion = %s
-        ORDER BY Pedidos.pedido_id DESC
+        SELECT clientes.nombre_cliente, clientes.numero_identificacion, clientes.direccion_entrega, clientes.departamento, clientes.ciudad, clientes.barrio, clientes.telefonos, clientes.email,
+               pedidos.pedido_id, pedidos.nombre_laboratorio, pedidos.vendedor, pedidos.codigo_montura, pedidos.valor_montura, pedidos.codigo_lente, pedidos.valor_lente,
+               pedidos.otros, pedidos.valor_otros, pedidos.total_venta, pedidos.fecha, pedidos.observaciones,
+               pagos.pago_efectivo, pagos.pago_bancolombia, pagos.pago_davivienda, pagos.pasa_pagos, pagos.pago_bold, pagos.pago_mercadopago,
+               pagos.pago_sistecredito, pagos.pago_addi, pagos.pago_envia, pagos.pago_interapidismo, pagos.pago_servientrega, pagos.pago_mensajeria_eklat, pagos.pago_otro
+        FROM pedidos
+        JOIN clientes ON pedidos.cliente_id = clientes.cliente_id
+        JOIN pagos ON pedidos.pedido_id = pagos.pedido_id
+        WHERE clientes.numero_identificacion = %s
+        ORDER BY pedidos.pedido_id DESC
         LIMIT 1
     ''', (numero_identificacion,))
     
@@ -648,36 +648,36 @@ def editar(cliente_id):
     cursor = mysql.connection.cursor()
     cursor.execute('''
         SELECT 
-            Clientes.cliente_id, 
-            Clientes.nombre_cliente, 
-            Clientes.tipo_identificacion, 
-            Clientes.numero_identificacion, 
-            Clientes.direccion_entrega, 
-            Clientes.departamento, 
-            Clientes.ciudad, 
-            Clientes.barrio, 
-            Clientes.telefonos, 
-            Clientes.email, 
-            Clientes.regimen_iva, 
-            Clientes.ordenado_a, 
-            Clientes.ordenado_por,
-            Pedidos.pedido_id, 
-            Pedidos.nombre_laboratorio, 
-            Pedidos.vendedor, 
-            Pedidos.codigo_montura, 
-            Pedidos.valor_montura, 
-            Pedidos.codigo_lente, 
-            Pedidos.valor_lente,
-            Pedidos.otros, 
-            Pedidos.valor_otros, 
-            Pedidos.total_venta, 
-            Pedidos.guia_despacho, 
-            DATE_FORMAT(Pedidos.fecha_entrega, '%%d/%%m/%%Y') as fecha_entrega, 
-            Pedidos.observaciones, 
-            DATE_FORMAT(Pedidos.fecha, '%%d/%%m/%%Y') as fecha
-        FROM Pedidos
-        JOIN Clientes ON Pedidos.cliente_id = Clientes.cliente_id
-        WHERE Clientes.cliente_id = %s
+            clientes.cliente_id, 
+            clientes.nombre_cliente, 
+            clientes.tipo_identificacion, 
+            clientes.numero_identificacion, 
+            clientes.direccion_entrega, 
+            clientes.departamento, 
+            clientes.ciudad, 
+            clientes.barrio, 
+            clientes.telefonos, 
+            clientes.email, 
+            clientes.regimen_iva, 
+            clientes.ordenado_a, 
+            clientes.ordenado_por,
+            pedidos.pedido_id, 
+            pedidos.nombre_laboratorio, 
+            pedidos.vendedor, 
+            pedidos.codigo_montura, 
+            pedidos.valor_montura, 
+            pedidos.codigo_lente, 
+            pedidos.valor_lente,
+            pedidos.otros, 
+            pedidos.valor_otros, 
+            pedidos.total_venta, 
+            pedidos.guia_despacho, 
+            DATE_FORMAT(pedidos.fecha_entrega, '%%d/%%m/%%Y') as fecha_entrega, 
+            pedidos.observaciones, 
+            DATE_FORMAT(pedidos.fecha, '%%d/%%m/%%Y') as fecha
+        FROM pedidos
+        JOIN clientes ON pedidos.cliente_id = clientes.cliente_id
+        WHERE clientes.cliente_id = %s
     ''', (cliente_id,))
     
     pedido = cursor.fetchone()
@@ -695,7 +695,7 @@ def editar(cliente_id):
     # Obtener detalles de los lentes
     cursor.execute('''
         SELECT esfera_od, cilindro_od, eje_od, adicion_od, dp_od, esfera_oi, cilindro_oi, eje_oi, adicion_oi, dp_oi
-        FROM Detalles_Lentes
+        FROM detalles_lentes
         WHERE pedido_id = %s
     ''', (pedido_id,))
     detalles_lentes = cursor.fetchone()
@@ -703,7 +703,7 @@ def editar(cliente_id):
     # Obtener detalles de los pagos
     cursor.execute('''
         SELECT pago_efectivo, pago_bancolombia, pago_davivienda, pasa_pagos, pago_bold, pago_mensajeria_eklat, pago_mercadopago, pago_sistecredito, pago_addi, pago_envia, pago_interapidismo, pago_servientrega, pago_otro
-        FROM Pagos
+        FROM pagos
         WHERE pedido_id = %s
     ''', (pedido_id,))
     pagos = cursor.fetchone()
@@ -711,7 +711,7 @@ def editar(cliente_id):
     # Obtener información adicional del laboratorio
     cursor.execute('''
         SELECT montura, color, material_lentes, ar, progresivo, gama_progresivo, monofocal, opcion_monofocal, fotocromatico, bifocal, af, corredor, adicional, DATE_FORMAT(fecha_lab, '%%d/%%m/%%Y') as fecha_lab, gama_fotocromatico
-        FROM Orden_Laboratorio
+        FROM orden_laboratorio
         WHERE pedido_id = %s
     ''', (pedido_id,))
     orden_laboratorio = cursor.fetchone()
@@ -789,7 +789,7 @@ def guardar_cambios(cliente_id):
         # Actualizar los datos del cliente
         cursor = mysql.connection.cursor()
         cursor.execute('''
-            UPDATE Clientes
+            UPDATE clientes
             SET nombre_cliente = %s, tipo_identificacion = %s, numero_identificacion = %s, direccion_entrega = %s, departamento = %s, ciudad = %s, barrio = %s, telefonos = %s, email = %s, regimen_iva = %s, ordenado_por = %s, ordenado_a = %s
             WHERE cliente_id = %s
         ''', (datos_pedido['nombre_cliente'], datos_pedido['tipo_identificacion'], datos_pedido['numero_identificacion'],
@@ -798,7 +798,7 @@ def guardar_cambios(cliente_id):
 
         # Actualizar los datos del pedido
         cursor.execute('''
-            UPDATE Pedidos
+            UPDATE pedidos
             SET nombre_laboratorio = %s, vendedor = %s, codigo_montura = %s, valor_montura = %s, codigo_lente = %s, valor_lente = %s, otros = %s, valor_otros = %s, total_venta = %s, guia_despacho = %s, observaciones = %s, fecha_entrega = %s
             WHERE cliente_id = %s
         ''', (datos_pedido['nombre_laboratorio'], datos_pedido['vendedor'], datos_pedido['codigo_montura'], datos_pedido['valor_montura'],
@@ -806,12 +806,12 @@ def guardar_cambios(cliente_id):
               datos_pedido['total_venta'], datos_pedido['guia_despacho'], datos_pedido['observaciones'], datos_pedido['fecha_entrega'], cliente_id))
 
         # Obtener el pedido_id para actualizar las demás tablas
-        cursor.execute('SELECT pedido_id FROM Pedidos WHERE cliente_id = %s ORDER BY pedido_id DESC LIMIT 1', (cliente_id,))
+        cursor.execute('SELECT pedido_id FROM pedidos WHERE cliente_id = %s ORDER BY pedido_id DESC LIMIT 1', (cliente_id,))
         pedido_id = cursor.fetchone()[0]
 
         # Actualizar los detalles de los lentes
         cursor.execute('''
-            UPDATE Detalles_Lentes
+            UPDATE detalles_lentes
             SET esfera_od = %s, cilindro_od = %s, eje_od = %s, adicion_od = %s, dp_od = %s, esfera_oi = %s, cilindro_oi = %s, eje_oi = %s, adicion_oi = %s, dp_oi = %s
             WHERE pedido_id = %s
         ''', (request.form.get('esfera_od', ''), request.form.get('cilindro_od', ''), request.form.get('eje_od', ''), request.form.get('adicion_od', ''),
@@ -825,7 +825,7 @@ def guardar_cambios(cliente_id):
 
         # Actualizar la orden del laboratorio
         cursor.execute('''
-            UPDATE Orden_Laboratorio
+            UPDATE orden_laboratorio
             SET montura = %s, color = %s, material_lentes = %s, ar = %s, progresivo = %s, gama_progresivo = %s, monofocal = %s, opcion_monofocal = %s, fotocromatico = %s, bifocal = %s, af = %s, corredor = %s, adicional = %s
             WHERE pedido_id = %s
         ''', (request.form.get('montura', ''), request.form.get('color', ''), request.form.get('material_lentes', ''), ar,  # Usar el valor ajustado de AR
@@ -835,7 +835,7 @@ def guardar_cambios(cliente_id):
 
         # Actualizar los pagos
         cursor.execute('''
-            UPDATE Pagos
+            UPDATE pagos
             SET pago_efectivo = %s, pago_bancolombia = %s, pago_davivienda = %s, pasa_pagos = %s, pago_bold = %s, pago_mensajeria_eklat = %s, pago_mercadopago = %s, pago_sistecredito = %s, pago_addi = %s, pago_envia = %s, pago_interapidismo = %s, pago_servientrega = %s, pago_otro = %s
             WHERE pedido_id = %s
         ''', (int(request.form.get('pago_efectivo', '0')), int(request.form.get('pago_bancolombia', '0')), int(request.form.get('pago_davivienda', '0')),
@@ -867,31 +867,31 @@ def consulta_unificada():
         if numero_identificacion:
             # Consulta por número de identificación
             cursor.execute('''
-                SELECT Pedidos.pedido_id, Pedidos.fecha, Pedidos.total_venta, Pedidos.guia_despacho,
-                       Pedidos.fecha_entrega, Clientes.cliente_id
-                FROM Pedidos
-                JOIN Clientes ON Pedidos.cliente_id = Clientes.cliente_id
-                WHERE Clientes.numero_identificacion = %s
-                ORDER BY Pedidos.pedido_id DESC
+                SELECT pedidos.pedido_id, pedidos.fecha, pedidos.total_venta, pedidos.guia_despacho,
+                       pedidos.fecha_entrega, clientes.cliente_id
+                FROM pedidos
+                JOIN clientes ON pedidos.cliente_id = clientes.cliente_id
+                WHERE clientes.numero_identificacion = %s
+                ORDER BY pedidos.pedido_id DESC
             ''', (numero_identificacion,))
         elif filtro:
             # Consulta por filtro, asegurando siempre el mismo orden de columnas
             if filtro == 'Activos':
-                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM Pedidos WHERE fecha_entrega IS NULL")
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE fecha_entrega IS NULL")
             elif filtro == 'Terminados':
-                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM Pedidos WHERE fecha_entrega IS NOT NULL")
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE fecha_entrega IS NOT NULL")
             elif filtro == 'En proceso':
-                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM Pedidos WHERE (guia_despacho IS NULL OR guia_despacho = '') AND fecha_entrega IS NULL")
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE (guia_despacho IS NULL OR guia_despacho = '') AND fecha_entrega IS NULL")
             elif filtro == 'Despachados':
-                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM Pedidos WHERE guia_despacho IS NOT NULL AND guia_despacho != '' AND fecha_entrega IS NULL")
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE guia_despacho IS NOT NULL AND guia_despacho != '' AND fecha_entrega IS NULL")
             else:
-                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM Pedidos")
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos")
         
         pedidos = cursor.fetchall()
         cursor.close()
 
         # Imprimir los pedidos para depuración
-        print("Pedidos recuperados:", pedidos)
+        print("pedidos recuperados:", pedidos)
 
     return render_template('lista.html', pedidos=pedidos, filtro=filtro, numero_identificacion=numero_identificacion)
 
