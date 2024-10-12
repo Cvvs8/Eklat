@@ -15,7 +15,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'Carlosv.Usa8132'  # Cambia esto si tienes una contraseña
-app.config['MYSQL_DB'] = 'eklatclientes'
+app.config['MYSQL_DB'] = 'eklatClientes'
 
 # Inicializar la conexión con MySQL
 mysql = MySQL(app)
