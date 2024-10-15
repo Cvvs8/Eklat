@@ -397,7 +397,8 @@ def ver_orden(pedido_id):
 
     # Renderizar la plantilla con todos los datos
     return render_template(
-            'Res_Consulta.html',
+            'Res_Consulta.html', 
+            pedido_id=pedido[12],
             cliente_id=pedido[12],
             dia=pedido[25].day if pedido[25] else '00',
             mes=pedido[25].month if pedido[25] else '00',
@@ -501,7 +502,7 @@ def imprimir_laboratorio(pedido_id):
     año_lab = fecha_pedido.year
 
     # Renderiza el template laboratorio.html con los datos correspondientes
-    return render_template('laboratorio.html',
+    return render_template('laboratorio.html', pedido_id=[4],
                            dia_lab=dia_lab,
                            mes_lab=mes_lab,
                            año_lab=año_lab,
@@ -560,7 +561,7 @@ def imprimir_pedido(pedido_id):
     año = fecha_pedido.year
 
     # Renderizar la plantilla pedido.html
-    return render_template('pedido.html',
+    return render_template('pedido.html', pedido_id=pedido[8],
                            dia=dia,
                            mes=mes,
                            año=año,
