@@ -470,11 +470,11 @@ def ver_orden(pedido_id):
 
 
 
-@app.route('/imprimir_laboratorio/<numero_identificacion>')
-def imprimir_laboratorio(numero_identificacion):
+@app.route('/imprimir_laboratorio/<int:pedido_id>')
+def imprimir_laboratorio(pedido_id):
     cursor = mysql.connection.cursor()
 
-    # Consulta los datos del pedido más reciente para el cliente con ese numero_identificacion
+    # Consulta los datos del pedido correspondiente al pedido_id proporcionado
     cursor.execute('''
         SELECT clientes.nombre_cliente, clientes.ordenado_a, clientes.ordenado_por,
                pedidos.fecha, pedidos.pedido_id, pedidos.codigo_montura,
@@ -486,15 +486,13 @@ def imprimir_laboratorio(numero_identificacion):
         JOIN clientes ON pedidos.cliente_id = clientes.cliente_id
         JOIN detalles_lentes ON pedidos.pedido_id = detalles_lentes.pedido_id
         JOIN orden_laboratorio ON pedidos.pedido_id = orden_laboratorio.pedido_id
-        WHERE clientes.numero_identificacion = %s
-        ORDER BY pedidos.pedido_id DESC
-        LIMIT 1
-    ''', (numero_identificacion,))
+        WHERE pedidos.pedido_id = %s
+    ''', (pedido_id,))
 
     pedido = cursor.fetchone()
 
     if not pedido:
-        return "No se encontró ningún pedido para este número de identificación."
+        return "No se encontró ningún pedido con ese número de pedido."
 
     # Dividir la fecha del pedido en día, mes y año para los campos dia_lab, mes_lab, año_lab
     fecha_pedido = pedido[3]
@@ -533,11 +531,11 @@ def imprimir_laboratorio(numero_identificacion):
                            adicional=pedido[25])
 
 
-@app.route('/imprimir_pedido/<numero_identificacion>')
-def imprimir_pedido(numero_identificacion):
+@app.route('/imprimir_pedido/<int:pedido_id>')
+def imprimir_pedido(pedido_id):
     cursor = mysql.connection.cursor()
 
-    # Consulta los datos del pedido y cliente usando el número de identificación
+    # Consulta los datos del pedido y cliente usando el pedido_id
     cursor.execute('''
         SELECT clientes.nombre_cliente, clientes.numero_identificacion, clientes.direccion_entrega, clientes.departamento, clientes.ciudad, clientes.barrio, clientes.telefonos, clientes.email,
                pedidos.pedido_id, pedidos.nombre_laboratorio, pedidos.vendedor, pedidos.codigo_montura, pedidos.valor_montura, pedidos.codigo_lente, pedidos.valor_lente,
@@ -547,15 +545,13 @@ def imprimir_pedido(numero_identificacion):
         FROM pedidos
         JOIN clientes ON pedidos.cliente_id = clientes.cliente_id
         JOIN pagos ON pedidos.pedido_id = pagos.pedido_id
-        WHERE clientes.numero_identificacion = %s
-        ORDER BY pedidos.pedido_id DESC
-        LIMIT 1
-    ''', (numero_identificacion,))
+        WHERE pedidos.pedido_id = %s
+    ''', (pedido_id,))
     
     pedido = cursor.fetchone()
 
     if not pedido:
-        return "No se encontró ningún pedido para este número de identificación."
+        return "No se encontró ningún pedido con ese número de pedido."
 
     # Manejo de fecha: la columna fecha está en el índice 18
     fecha_pedido = pedido[18]  
