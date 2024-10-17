@@ -71,7 +71,7 @@ def nueva_orden():
     max_pedido_id = cursor.fetchone()[0]
     
     if max_pedido_id is None:
-        nuevo_numero_orden = 6459  # Si no hay órdenes, iniciar en 1
+        nuevo_numero_orden = 6501  # Si no hay órdenes, iniciar en 1
     else:
         nuevo_numero_orden = max_pedido_id + 1  # Incrementar en 1
 
@@ -95,7 +95,7 @@ def submit():
         cursor.execute('SELECT MAX(pedido_id) FROM pedidos')
         max_pedido_id = cursor.fetchone()[0]  # Obtener el número de orden más alto
         if max_pedido_id is None:
-            nuevo_numero_orden = 6459  # Si no hay órdenes, iniciar con 6459
+            nuevo_numero_orden = 6459  # Si no hay órdenes, iniciar con 6501
         else:
             nuevo_numero_orden = max_pedido_id + 1  # Incrementar en 1
         # Recibir los datos del pedido del formulario
