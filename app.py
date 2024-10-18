@@ -758,8 +758,8 @@ def guardar_cambios(cliente_id):
             'guia_despacho': request.form.get('guia_despacho', ''),
             'fecha_entrega': request.form.get('fecha_entrega', ''),
             'observaciones': request.form.get('observaciones', ''),
-            'ordenado_por': request.form.get('ordenado_por', ''),
-            'ordenado_a': request.form.get('ordenado_a', '')
+            'ordenado_a': request.form.get('ordenado_a', ''),
+            'ordenado_por': request.form.get('ordenado_por', '')
         }
 
         # Función para convertir fechas
@@ -787,11 +787,11 @@ def guardar_cambios(cliente_id):
         cursor = mysql.connection.cursor()
         cursor.execute('''
             UPDATE clientes
-            SET nombre_cliente = %s, tipo_identificacion = %s, numero_identificacion = %s, direccion_entrega = %s, departamento = %s, ciudad = %s, barrio = %s, telefonos = %s, email = %s, regimen_iva = %s, ordenado_por = %s, ordenado_a = %s
+            SET nombre_cliente = %s, tipo_identificacion = %s, numero_identificacion = %s, direccion_entrega = %s, departamento = %s, ciudad = %s, barrio = %s, telefonos = %s, email = %s, regimen_iva = %s, ordenado_a = %s, ordenado_por = %s,
             WHERE cliente_id = %s
         ''', (datos_pedido['nombre_cliente'], datos_pedido['tipo_identificacion'], datos_pedido['numero_identificacion'],
               datos_pedido['direccion_entrega'], datos_pedido['departamento'], datos_pedido['ciudad'], datos_pedido['barrio'], datos_pedido['telefonos'],
-              datos_pedido['email'], datos_pedido['tipo_regimen_iva'],  datos_pedido['ordenado_por'], datos_pedido['ordenado_a'], cliente_id))
+              datos_pedido['email'], datos_pedido['tipo_regimen_iva'], datos_pedido['ordenado_a'], datos_pedido['ordenado_por'], cliente_id))
 
         # Actualizar los datos del pedido
         cursor.execute('''
