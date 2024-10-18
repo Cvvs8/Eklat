@@ -787,7 +787,7 @@ def guardar_cambios(cliente_id):
         cursor = mysql.connection.cursor()
         cursor.execute('''
             UPDATE clientes
-            SET nombre_cliente = %s, tipo_identificacion = %s, numero_identificacion = %s, direccion_entrega = %s, departamento = %s, ciudad = %s, barrio = %s, telefonos = %s, email = %s, regimen_iva = %s, ordenado_a = %s, ordenado_por = %s,
+            SET nombre_cliente = %s, tipo_identificacion = %s, numero_identificacion = %s, direccion_entrega = %s, departamento = %s, ciudad = %s, barrio = %s, telefonos = %s, email = %s, regimen_iva = %s, ordenado_a = %s, ordenado_por = %s
             WHERE cliente_id = %s
         ''', (datos_pedido['nombre_cliente'], datos_pedido['tipo_identificacion'], datos_pedido['numero_identificacion'],
               datos_pedido['direccion_entrega'], datos_pedido['departamento'], datos_pedido['ciudad'], datos_pedido['barrio'], datos_pedido['telefonos'],
