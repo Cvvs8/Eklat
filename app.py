@@ -791,7 +791,7 @@ def guardar_cambios(cliente_id):
             WHERE cliente_id = %s
         ''', (datos_pedido['nombre_cliente'], datos_pedido['tipo_identificacion'], datos_pedido['numero_identificacion'],
               datos_pedido['direccion_entrega'], datos_pedido['departamento'], datos_pedido['ciudad'], datos_pedido['barrio'], datos_pedido['telefonos'],
-              datos_pedido['email'], datos_pedido['tipo_regimen_iva'],  datos_pedido['ordenado_por'], datos_pedido['ordenado_a'], cliente_id))
+              datos_pedido['email'], datos_pedido['tipo_regimen_iva'], datos_pedido['ordenado_a'], datos_pedido['ordenado_por'], cliente_id))
 
         # Actualizar los datos del pedido
         cursor.execute('''
