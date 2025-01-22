@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría</title>
+    <style>
+        :root {
+            --primary-color: #28a745; /* Verde intenso */
+            --secondary-color: #8bc34a; /* Verde claro */
+            --background-gradient: linear-gradient(140deg, var(--secondary-color), var(--primary-color));
+            --text-color: #2d3436; /* Verde oscuro para el texto */
+            --accent-color: #20c997; /* Verde menta */
+            --font-family: 'Lato', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: var(--background-gradient);
+            font-family: var(--font-family);
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px 10px rgba(38, 38, 69, 0.52);
+            width: 100%;
+            max-width: 1200px;
+            overflow-y: auto;
+            max-height: 80vh; /* Ajustar para dejar espacio para el botón */
+        }
+
+        h1 {
+            color: var(--text-color);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color); /* Letra verde */
+            background: white; /* Fondo blanco */
+            border: 2px solid var(--primary-color); /* Borde verde */
+            border-radius: 10px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            top: 20px; /* Ajustar para posicionar el botón */
+        }
+
+        .btn:hover {
+            background: var(--primary-color); /* Fondo verde al pasar el ratón */
+            color: white; /* Letra blanca al pasar el ratón */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-logout {
+            background: linear-gradient(0deg, rgba(220, 53, 69, 1) 0%, rgba(200, 35, 51, 1) 100%);
+        }
+
+        .btn-logout:hover {
+            background-color: #c82333;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registros de Auditoría</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Pedido ID</th>
+                    <th>Usuario</th>
+                    <th>Cambio</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registro in auditoria %}
+                <tr>
+                    <td>{{ registro[1] }}</td>
+                    <td>{{ registro[2] }}</td>
+                    <td>{{ registro[3] }}</td>
+                    <td>{{ registro[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="button-container">
+        <a href="{{ url_for('menu') }}" class="btn">Volver al Menú</a>
+    </div>
+</body>
+</html>
+
