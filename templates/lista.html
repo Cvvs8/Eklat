@@ -5,205 +5,240 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consulta de Pedidos</title>
     <style>
+        :root {
+            --primary-color: #28a745; /* Verde intenso */
+            --secondary-color: #8bc34a; /* Verde claro */
+            --background-gradient: linear-gradient(140deg, var(--secondary-color), var(--primary-color));
+            --text-color: #2d3436; /* Verde oscuro para el texto */
+            --accent-color: #20c997; /* Verde menta */
+            --font-family: 'Lato', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh;
-            margin: 0;
+            background-image: var(--background-gradient);
+            font-family: var(--font-family);
         }
 
         .container {
             background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 30px;
+            box-shadow: 0 0 20px 10px rgba(38, 38, 69, 0.52);
             width: 90%;
             max-width: 1200px;
-            margin: 20px auto;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
+            padding: 2rem;
+            overflow: hidden;
         }
 
         .logo {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
 
         .logo img {
-            max-width: 200px;
+            max-width: 150px;
         }
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .button {
-            background-color: #007bff;
-            border: none;
-            color: white;
-            padding: 12px 24px;
+        h1 {
             text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            letter-spacing: 3px;
         }
 
         .filter-container {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 2rem;
         }
 
         .filter-container form {
             display: inline-block;
-            margin-right: 20px;
+            background-color: #f5f5f5;
+            padding: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0.5rem;
         }
 
         select, input[type="text"] {
+            width: 250px;
             padding: 10px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+            border: none;
+            border-bottom: 2px solid var(--text-color);
+            outline: none;
+            font-size: 1rem;
             margin-right: 10px;
         }
 
-        select {
-            width: 200px;
+        button {
+            background: linear-gradient(0deg, rgba(86, 180, 109, 1) 0%, rgba(61, 143, 87, 1) 100%);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        input[type="text"] {
-            width: 300px;
+        button:hover {
+            background: var(--accent-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        table th, table td {
+            text-align: center;
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.5rem; /* Aumentar el tamaño de los títulos */
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        table tr:hover {
+            background: #f1f1f1;
+        }
+        label {
+            font-weight: normal;
+            font-size: 1.1rem;
+        }
+
+        .pedido-id {
+            font-size: 1.2rem; /* Aumentar el tamaño del número de pedido */
+            font-weight: normal; /* Poner en negrita el número de pedido */
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .buttons a {
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .buttons a:hover {
+            background: var(--accent-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        @media screen and (max-width: 768px) {
+            .filter-container form {
+                display: block;
+                margin: 1rem 0;
+            }
+
+            select, input[type="text"] {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/eklatlogo.png') }}" alt="Eklat Ópticas">
+        </div>
+        <h1>Consulta de Pedidos</h1>
 
-<div class="container">
-    <div class="logo">
-        <img src="https://i.imgur.com/yaB6a63.png" alt="Eklat Ópticas">
+        <div class="filter-container">
+            <form method="POST" action="{{ url_for('consulta_unificada') }}">
+                <label for="filtro">Estado</label>
+                <select name="filtro" id="filtro">
+                    <option value="Todos" {% if filtro == 'Todos' %}selected{% endif %}>Todos</option>
+                    <option value="Activos" {% if filtro == 'Activos' %}selected{% endif %}>Activos</option>
+                    <option value="Terminados" {% if filtro == 'Terminados' %}selected{% endif %}>Terminados</option>
+                    <option value="En proceso" {% if filtro == 'En proceso' %}selected{% endif %}>En proceso</option>
+                    <option value="Despachados" {% if filtro == 'Despachados' %}selected{% endif %}>Despachados</option>
+                </select>
+                <button type="submit">Buscar</button>
+            </form>
+
+            <form method="POST" action="{{ url_for('consulta_unificada') }}">
+                <label for="numero_orden">Número de Orden</label>
+                <input type="text" id="numero_orden" name="numero_orden">
+                <button type="submit">Buscar</button>
+            </form>
+
+            <form method="POST" action="{{ url_for('consulta_unificada') }}">
+                <label for="numero_identificacion">Número de identificación</label>
+                <input type="text" id="numero_identificacion" name="numero_identificacion">
+                <button type="submit">Buscar</button>
+            </form>
+
+        </div>
+
+        {% if numero_identificacion %}
+        <h2 style="text-align: center; color: var(--text-color);">Pedidos de: {{ numero_identificacion }}</h2>
+        {% elif filtro %}
+        <h2 style="text-align: center; color: var(--text-color);">Estado: {{ filtro }}</h2>
+        {% endif %}
+
+        {% if pedidos is not none and pedidos|length > 0 %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Fecha</th>
+                    <th>Total Venta</th>
+                    <th>Vendedor</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos %}
+                <tr>
+                    <td style="color: green; font-size: 1.5rem;" class="pedido-id">{{ pedido[0] }}</td>
+                    <td class="pedido-id">{{ pedido[1].strftime('%d/%m/%Y') if pedido[1] is not none else 'N/A' }}</td>
+                    <td class="pedido-id">{{ pedido[2] | format_currency}}</td>
+                    <td class="pedido-id">{{ pedido[3] if pedido[3] else 'N/A' }}</td>
+                    <td>
+                        <a href="{{ url_for('ver_orden', pedido_id=pedido[0]) }}" style="color: green;" class="pedido-id">Ver</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="text-align: center; color: var(--text-color);">No se encontraron pedidos con el filtro seleccionado.</p>
+        {% endif %}
+
+        <div class="buttons">
+            <a href="{{ url_for('menu') }}">Volver al Menú</a>
+        </div>
     </div>
-    <h1>Consulta de Pedidos</h1>
-
-    <!-- Formulario de filtro general -->
-    <div class="filter-container">
-        <form method="POST" action="{{ url_for('consulta_unificada') }}">
-            <label for="filtro">Filtrar por estado:</label>
-            <select name="filtro" id="filtro">
-                <option value="Todos" {% if filtro == 'Todos' %}selected{% endif %}>Todos</option>
-                <option value="Activos" {% if filtro == 'Activos' %}selected{% endif %}>Activos</option>
-                <option value="Terminados" {% if filtro == 'Terminados' %}selected{% endif %}>Terminados</option>
-                <option value="En proceso" {% if filtro == 'En proceso' %}selected{% endif %}>En proceso</option>
-                <option value="Despachados" {% if filtro == 'Despachados' %}selected{% endif %}>Despachados</option>
-            </select>
-            <button type="submit" class="button">Filtrar</button>
-        </form>
-
-        <!-- Formulario de búsqueda por número de identificación -->
-        <form method="POST" action="{{ url_for('consulta_unificada') }}">
-            <label for="numero_identificacion">Buscar por I.D:</label>
-            <input type="text" id="numero_identificacion" name="numero_identificacion" placeholder="Número de identificación">
-            <button type="submit" class="button">Buscar</button>
-        </form>
-    </div>
-
-    {% if numero_identificacion %}
-    <h2 style="text-align: center; color: #333;">Pedidos de: {{ numero_identificacion }}</h2>
-    {% elif filtro %}
-    <h2 style="text-align: center; color: #333;">Estado: {{ filtro }}</h2>
-    {% endif %}
-
-    <!-- Mostrar la tabla solo si hay pedidos filtrados -->
-    {% if pedidos is not none and pedidos|length > 0 %}
-    <table>
-        <thead>
-            <tr>
-                <th>ID del Pedido</th>
-                <th>Fecha</th>
-                <th>Total Venta</th>
-                <th>Guía Despacho</th>
-                <th>Fecha de Entrega</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for pedido in pedidos %}
-            <tr>
-                <td>{{ pedido[0] }}</td> <!-- pedido_id -->
-                <td>{{ pedido[1] if pedido[1] is not none else 'N/A' }}</td> <!-- fecha -->
-                <td>{{ pedido[2] }}</td> <!-- total_venta -->
-                <td>{{ pedido[3] if pedido[3] else 'N/A' }}</td> <!-- guia_despacho -->
-                <td>{{ pedido[4] if pedido[4] is not none else 'N/A' }}</td> <!-- fecha_entrega -->
-                <td>
-                    {% if not pedido[4] %}
-                        <a href="{{ url_for('editar', cliente_id=pedido[5]) }}">Editar</a>
-                    {% endif %}
-                    <a href="{{ url_for('ver_orden', pedido_id=pedido[0]) }}">Ver</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-        
-    </table>
-    {% elif pedidos is not none %}
-        <p style="text-align: center; color: #666;">No se encontraron pedidos con el filtro seleccionado.</p>
-    {% endif %}
-
-    <!-- Botón para volver al menú -->
-    <div class="buttons">
-        <a href="{{ url_for('menu') }}" class="button">Volver al Menú</a>
-    </div>
-</div>
-
 </body>
 </html>
-
-
