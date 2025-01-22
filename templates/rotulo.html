@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rótulo de Envío</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        .container {
+            width: 500px;
+            border: 2px solid black;
+            padding: 20px;
+            position: relative;
+        }
+        .header, .section {
+            border: 1px solid black;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .header h2, .section h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .section p {
+            margin: 5px 0;
+            position: relative;
+        }
+        .highlight {
+            font-weight: bold;
+        }
+        .recaudo {
+            color: red;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .delicado {
+            font-size: 24px;
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+        .logo {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .logo img {
+            width: 200px;
+            height: auto;
+            border: 2px solid black;
+            border-radius: 5px;
+            transition: opacity 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .logo img:hover {
+            opacity: 0.8;
+        }
+        .op {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        /* Input transparente sobre el texto */
+        .input-overlay {
+            position: absolute;
+            left: 130px;
+            width: calc(100% - 140px);
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        
+        /* Oculta completamente el select visualmente */
+        .hidden-select {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            cursor: pointer;
+        }
+        .input-overlay-select {
+            position: absolute;
+            left: 220px;
+            width: calc(100% - 180px);
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: inherit;
+            cursor: pointer;
+            -webkit-appearance: none; /* Para ocultar la apariencia nativa en algunos navegadores */
+            -moz-appearance: none;
+            appearance: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>REMITE</h2>
+        <p><span class="highlight">EKLAT OPTICAS S.A.S.</span></p>
+        <p>NIT. 901.714.006-7</p>
+        <p>CRA. 16 No. 50 – 59 SEGUNDO PISO</p>
+        <p>CEL. 3106992949</p>
+        <p>BOGOTÁ</p>
+    </div>
+
+    <div class="section">
+        <h3>DESTINATARIO</h3>
+        <p><span class="highlight">Nombre:</span> 
+            <input type="text" class="input-overlay" value="{{ nombre_cliente }}" required>
+        </p>
+        <p><span class="highlight">Identificación:</span> 
+            <input type="text" class="input-overlay" value="{{ numero_identificacion }}" required>
+        </p>
+        <p><span class="highlight">Teléfono:</span> 
+            <input type="text" class="input-overlay" value="{{ telefonos }}" required>
+        </p>
+        <p><span class="highlight">Dirección:</span> 
+            <input type="text" class="input-overlay" value="{{ direccion }}" required>
+        </p>
+        <p><span class="highlight">Barrio:</span> 
+            <input type="text" class="input-overlay" value="{{ barrio }}" required>
+        </p>
+        <p><span class="highlight">Ciudad:</span> 
+            <input type="text" class="input-overlay" value="{{ ciudad }}" required>
+        </p>
+        <p><span class="recaudo">Recaudo:</span> 
+            <input type="text" class="input-overlay" placeholder="Ingrese el valor de recaudo">
+        </p>
+        <p><span class="highlight">Vr. Asegurado:</span> 
+            <input type="text" class="input-overlay" placeholder="Ingrese el valor asegurado">
+        </p>
+    </div>
+
+    <div class="footer">
+        POR FAVOR LLAMAR AL CLIENTE PARA <br>
+        COORDINAR ENTREGA.
+    </div>
+
+    <div class="delicado">
+        DELICADO
+    </div>
+
+    <div class="logo">
+        <div class="image-selector" onclick="document.getElementById('empresa').click();">
+            <img id="logo-img" src="{{ url_for('static', filename='images/envia.png') }}" alt="Envía">
+        </div>
+    
+        <select id="empresa" class="input-overlay-select" onchange="cambiarLogo()">
+            <option value="envia" data-image="{{ url_for('static', filename='images/envia.png') }}">Envía</option>
+            <option value="interrapidisimo" data-image="{{ url_for('static', filename='images/interrapidisimo.png') }}">Interrapidísimo</option>
+            <option value="servientrega" data-image="{{ url_for('static', filename='images/servientrega.png') }}">Servientrega</option>
+        </select>
+    </div>
+
+    <div class="op">
+        OP 6974
+    </div>
+</div>
+
+<script>
+    function cambiarLogo() {
+        var selectElement = document.getElementById("empresa");
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var logo = document.getElementById("logo-img");
+
+        // Cambia la imagen de acuerdo a la opción seleccionada
+        logo.src = selectedOption.getAttribute('data-image');
+    }
+</script>
+
+</body>
+</html>
