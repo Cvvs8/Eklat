@@ -5,50 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú de Opciones</title>
     <style>
+        :root {
+            --primary-color: #28a745; /* Verde intenso */
+            --secondary-color: #8bc34a; /* Verde claro */
+            --background-gradient: linear-gradient(140deg, var(--secondary-color), var(--primary-color));
+            --text-color: #2d3436; /* Verde oscuro para el texto */
+            --accent-color: #20c997; /* Verde menta */
+            --font-family: 'Lato', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
+            background-image: var(--background-gradient);
+            font-family: var(--font-family);
         }
+
         .container {
             text-align: center;
             background-color: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 0 20px 10px rgba(38, 38, 69, 0.52);
+            width: 90%;
+            max-width: 600px;
         }
+
         h1 {
+            color: var(--text-color);
+            font-size: 2rem;
             margin-bottom: 20px;
         }
+
         .btn {
             display: inline-block;
             margin: 10px;
             padding: 15px 30px;
             font-size: 18px;
+            font-weight: bold;
             color: white;
-            background-color: #007bff;
+            background: linear-gradient(0deg, rgba(86, 180, 109, 1) 0%, rgba(61, 143, 87, 1) 100%);
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            border-radius: 10px;
             text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
+
         .btn:hover {
-            background-color: #0056b3;
+            background: var(--accent-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
-        /* Estilo específico para el botón de logout */
+
         .btn-logout {
-            background-color: #dc3545;
+            background: linear-gradient(0deg, rgba(220, 53, 69, 1) 0%, rgba(200, 35, 51, 1) 100%);
         }
+
         .btn-logout:hover {
             background-color: #c82333;
         }
-        .logo {
-            display: flex;
-            justify-content: center;
+
+        .logo img {
+            max-width: 200px;
             margin-bottom: 20px;
         }
     </style>
@@ -56,11 +82,10 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img src="https://i.imgur.com/yaB6a63.png" alt="Eklat Ópticas">
+            <img src="{{ url_for('static', filename='images/eklatlogo.png') }}" alt="Eklat Ópticas">
         </div>
         <h1>¡Orden Modificada!</h1>
         <a href="{{ url_for('menu') }}" class="btn">Volver al Menú Principal</a>
-        <!-- Botón para cerrar sesión y volver al login -->
         <a href="{{ url_for('logout') }}" class="btn btn-logout">Cerrar Sesión</a>
     </div>
 </body>
