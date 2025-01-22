@@ -8,86 +8,207 @@
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
-        html, body {
+        :root {
+            --primary-color: #28a745;
+            --secondary-color: #8bc34a;
+            --background-gradient: linear-gradient(140deg, var(--secondary-color), var(--primary-color));
+            --text-color: #2d3436;
+            --accent-color: #20c997;
+            --font-family: 'Lato', sans-serif;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            height: 100%;
-            font-size: 18px;
+            box-sizing: border-box;
         }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: var(--background-gradient);
+            font-family: var(--font-family);
+        }
+
         .container {
-            width: 70%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #fff;
+            border-radius: 30px;
+            box-shadow: 0 0 20px 10px rgba(38, 38, 69, 0.52);
+            width: 90%;
+            max-width: 1200px;
+            padding: 2rem;
+            overflow: hidden;
         }
+
         h2 {
-            margin-top: 0;
             text-align: center;
-            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            letter-spacing: 3px;
         }
+
         table {
             width: 100%;
-            margin-top: 20px; /* Añade espacio entre secciones si es necesario */
+            margin-top: 1rem;
             border-collapse: collapse;
         }
+
         td, th {
-            border: 1px solid black;
-            padding: 8px;
             text-align: left;
-        }
-        input, textarea {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 4px;
-        }
-        .order-number {
-            color: red;
-            font-size: 24px;
-            text-align: right;
-            vertical-align: middle;
-            padding-right: 20px;  /* Asegúrate de que haya suficiente espacio a la derecha */
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
         }
 
-        input[type="text"] {
-            padding: 4px;
-            margin: 0;
-            width: 100%; /* Esto ayudará a evitar que los campos de entrada excedan el espacio de su celda */
+        th {
+            background: var(--primary-color);
+            color: white;
         }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            font-size: 1rem;
+        }
+
         .button-group {
             display: flex;
-            flex-direction: column; /* Hace que los botones se apilen uno debajo del otro */
-            align-items: center; /* Centra los botones horizontalmente */
-            gap: 10px; /* Añade espacio entre los botones */
-            margin-top: 20px;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 2rem;
         }
 
-        .btn {
-            display: inline-block;
-            margin: 10px;
-            padding: 15px 30px;
-            font-size: 18px;
-            color: white;
-            background-color: #007bff;
+        button {
+            background: linear-gradient(0deg, rgba(86, 180, 109, 1) 0%, rgba(61, 143, 87, 1) 100%);
             border: none;
+            color: white;
+            padding: 10px 20px;
             border-radius: 5px;
+            font-size: 1rem;
             cursor: pointer;
-            text-decoration: none;
-            min-width: max-content; /* Define un ancho mínimo para todos los botones */
-            text-align: center;
+            transition: all 0.3s ease;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background: var(--accent-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
-        .section-header {
-            font-weight: bold; /* Negrita */
-            font-size: 24px; /* Tamaño de fuente más grande */
-            text-align: center; /* Centrado */
-            padding: 10px 0; /* Añadir espacio arriba y abajo */
-        }
-        
 
+        .section-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+
+        @media screen and (max-width: 768px) {
+            table {
+                font-size: 0.9rem;
+            }
+
+            input, select, textarea {
+                font-size: 0.9rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+            }
+        }
+        .label {
+            font-weight: bold;
+        }
+        .payment-label {
+            font-weight: bold;
+        }
+        .header {
+            font-weight: bold;
+        }
+        /* Grupo de checkboxes en una fila */
+        .checkbox-group {
+            display: flex;
+            gap: 20px; /* Espacio entre opciones */
+            align-items: center;
+        }
+
+        /* Ocultar input radio original */
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Estilo atractivo para las opciones */
+        .custom-checkbox {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-radius: 30px;
+            background: var(--primary-color);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-color);
+        }
+
+        /* Cambiar color al pasar el cursor */
+        .custom-checkbox:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        /* Estilo cuando está seleccionado */
+        input[type="radio"]:checked + .custom-checkbox {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        /* Estilización de los inputs */
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .input-group input {
+            width: 40%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .direccion-cientifica {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-top: 2px solid var(--primary-color);
+            padding-top: 20px;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
@@ -96,14 +217,16 @@
         <form action="{{ url_for('guardar_cambios', cliente_id=pedido[0]) }}" method="post" onsubmit="return validarPagos()">
             <table>
                 <tr>
-                    <td>Fecha:</td>
+                    <td class="label">Fecha:</td>
                     <td colspan="2">
                         <input type="text" id="fecha" class="form-control" name="fecha" value="{{ pedido[26] }}" required />
                     </td>
-                    <td class="order-number" colspan="2">N° {{ pedido[0] }}</td>
+                    <td class="order-number" colspan="2" style="text-align: left;">
+                        <span style="color: red; font-size: 1.5rem; font-weight: bold;">N° {{ pedido[0] }}</span>
+                    </td>
                 </tr>
                 <tr>
-                    <td>Nombre del Laboratorio:</td>
+                    <td class="label">Nombre del Laboratorio:</td>
                     <td colspan="4"><input type="text" name="nombre_laboratorio" value="{{ pedido[14] }}" required></td>
                 </tr>
                 <tr>
@@ -184,83 +307,217 @@
                     <td class="label">Código Montura:</td>
                     <td><input type="text" name="codigo_montura" value="{{ pedido[16] }}" required></td>
                     <td class="label">Valor Montura:</td>
-                    <td colspan="2"><input type="text" name="valor_montura" value="{{ pedido[17] }}" required></td>
+                    <td colspan="2">
+                        <input type="text" 
+                               name="valor_montura_hidden" 
+                               value="{{ pedido[17] }}" 
+                               oninput="formatCurrencyOnInput(this, 'valor_montura')" 
+                               class="currency">
+                        <input type="hidden" 
+                               name="valor_montura" 
+                               id="valor_montura" 
+                               value="{{ pedido[17] }}">
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">Código Lente:</td>
                     <td><input type="text" name="codigo_lente" value="{{ pedido[18] }}"></td>
                     <td class="label">Valor Lente:</td>
-                    <td colspan="2"><input type="text" name="valor_lente" value="{{ pedido[19] }}"></td>
+                    <td colspan="2">
+                        <input type="text" 
+                               name="valor_lente_hidden" 
+                               value="{{ pedido[19] }}" 
+                               oninput="formatCurrencyOnInput(this, 'valor_lente')" 
+                               class="currency">
+                        <input type="hidden" 
+                               name="valor_lente" 
+                               id="valor_lente" 
+                               value="{{ pedido[19] }}">
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">Otros:</td>
                     <td><input type="text" name="otros" value="{{ pedido[20] }}"></td>
                     <td class="label">Valor Otros:</td>
-                    <td colspan="2"><input type="text" name="valor_otros" value="{{ pedido[21] }}"></td>
+                    <td colspan="2">
+                        <input type="text" 
+                               name="valor_otros_hidden" 
+                               value="{{ pedido[21] }}" 
+                               oninput="formatCurrencyOnInput(this, 'valor_otros')" 
+                               class="currency">
+                        <input type="hidden" 
+                               name="valor_otros" 
+                               id="valor_otros" 
+                               value="{{ pedido[21] }}">
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">Total Venta:</td>
-                    <td colspan="4"><input type="text" name="total_venta" value="{{ pedido[22] }}" readonly></td>
+                    <td colspan="4">
+                        <input type="text" 
+                               name="total_venta_hidden" 
+                               id="total_venta_hidden"
+                               value="{{ pedido[22] }}" 
+                               readonly 
+                               class="currency">
+                        <input type="hidden" 
+                               name="total_venta" 
+                               id="total_venta" 
+                               value="{{ pedido[22] }}">
+                    </td>
                 </tr>
-            
-            
+
                 <tr class="section-header">
                     <td colspan="5" class="section-header">FORMAS DE PAGO</td>
                 </tr>
                 <tr>
                     <td class="payment-label">Efectivo:</td>
-                    <td><input type="text" name="pago_efectivo" value="{{ pagos[0] }}"></td>
+                    <td>
+                        <input type="text" name="pago_efectivo_hidden" value="{{ pagos[0] }}" oninput="formatCurrencyOnInput(this, 'pago_efectivo')" class="currency">
+                        <input type="hidden" name="pago_efectivo" id="pago_efectivo" value="{{ pagos[0] }}">
+                    </td>
                     <td class="payment-label">Sistecredito:</td>
-                    <td colspan="2"><input type="text" name="pago_sistecredito" value="{{ pagos[7] }}"></td>
+                    <td colspan="2">
+                        <input type="text" name="pago_sistecredito_hidden" value="{{ pagos[7] }}" oninput="formatCurrencyOnInput(this, 'pago_sistecredito')" class="currency">
+                        <input type="hidden" name="pago_sistecredito" id="pago_sistecredito" value="{{ pagos[7] }}">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Bancolombia:</td>
-                    <td><input type="text" name="pago_bancolombia" value="{{ pagos[1] }}"></td>
+                    <td>
+                        <input type="text" name="pago_bancolombia_hidden" value="{{ pagos[1] }}" oninput="formatCurrencyOnInput(this, 'pago_bancolombia')" class="currency">
+                        <input type="hidden" name="pago_bancolombia" id="pago_bancolombia" value="{{ pagos[1] }}">
+                    </td>
                     <td class="payment-label">Davivienda:</td>
-                    <td colspan="2"><input type="text" name="pago_davivienda" value="{{ pagos[2] }}"></td>
+                    <td colspan="2">
+                        <input type="text" name="pago_davivienda_hidden" value="{{ pagos[2] }}" oninput="formatCurrencyOnInput(this, 'pago_davivienda')" class="currency">
+                        <input type="hidden" name="pago_davivienda" id="pago_davivienda" value="{{ pagos[2] }}">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Addi:</td>
-                    <td><input type="text" name="pago_addi" value="{{ pagos[8] }}"></td>
+                    <td>
+                        <input type="text" name="pago_addi_hidden" value="{{ pagos[8] }}" oninput="formatCurrencyOnInput(this, 'pago_addi')" class="currency">
+                        <input type="hidden" name="pago_addi" id="pago_addi" value="{{ pagos[8] }}">
+                    </td>
                     <td class="payment-label">Envia:</td>
-                    <td colspan="2"><input type="text" name="pago_envia" value="{{ pagos[9] }}"></td>
+                    <td colspan="2">
+                        <input type="text" name="pago_envia_hidden" value="{{ pagos[9] }}" oninput="formatCurrencyOnInput(this, 'pago_envia')" class="currency">
+                        <input type="hidden" name="pago_envia" id="pago_envia" value="{{ pagos[9] }}">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Inter Rapidismo:</td>
-                    <td><input type="text" name="pago_interapidismo" value="{{ pagos[10] }}"></td>
+                    <td>
+                        <input type="text" name="pago_interapidismo_hidden" value="{{ pagos[10] }}" oninput="formatCurrencyOnInput(this, 'pago_interapidismo')" class="currency">
+                        <input type="hidden" name="pago_interapidismo" id="pago_interapidismo" value="{{ pagos[10] }}">
+                    </td>
                     <td class="payment-label">Pasarela de Pagos:</td>
-                    <td colspan="2"><input type="text" name="pasa_pagos" value="{{ pagos[3] }}"></td>
+                    <td colspan="2">
+                        <input type="text" name="pasa_pagos_hidden" value="{{ pagos[3] }}" oninput="formatCurrencyOnInput(this, 'pasa_pagos')" class="currency">
+                        <input type="hidden" name="pasa_pagos" id="pasa_pagos" value="{{ pagos[3] }}">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Bold:</td>
-                    <td><input type="text" name="pago_bold" value="{{ pagos[4] }}"></td>
+                    <td>
+                        <input type="text" name="pago_bold_hidden" value="{{ pagos[4] }}" oninput="formatCurrencyOnInput(this, 'pago_bold')" class="currency">
+                        <input type="hidden" name="pago_bold" id="pago_bold" value="{{ pagos[4] }}">
+                    </td>
                     <td class="payment-label">Mensajería EKlat:</td>
-                    <td colspan="2"><input type="text" name="pago_mensajeria_eklat" value="{{ pagos[5] }}"></td>
+                    <td colspan="2">
+                        <input type="text" name="pago_mensajeria_eklat_hidden" value="{{ pagos[5] }}" oninput="formatCurrencyOnInput(this, 'pago_mensajeria_eklat')" class="currency">
+                        <input type="hidden" name="pago_mensajeria_eklat" id="pago_mensajeria_eklat" value="{{ pagos[5] }}">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Mercado Pago:</td>
-                    <td><input type="text" name="pago_mercadopago" value="{{ pagos[6] }}"></td>
+                    <td>
+                        <input type="text" name="pago_mercadopago_hidden" value="{{ pagos[6] }}" oninput="formatCurrencyOnInput(this, 'pago_mercadopago')" class="currency">
+                        <input type="hidden" name="pago_mercadopago" id="pago_mercadopago" value="{{ pagos[6] }}">
+                    </td>
                     <td class="payment-label">Servientrega:</td>
-                    <td colspan="2"><input type="text" name="pago_servientrega" value="{{ pagos[11] }}"></td>
+                    <td colspan="2">
+                        <input type="text" name="pago_servientrega_hidden" value="{{ pagos[11] }}" oninput="formatCurrencyOnInput(this, 'pago_servientrega')" class="currency">
+                        <input type="hidden" name="pago_servientrega" id="pago_servientrega" value="{{ pagos[11] }}">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Otro:</td>
-                    <td colspan="4"><input type="text" name="pago_otro" value="{{ pagos[12] }}"></td>
+                    <td colspan="4">
+                        <input type="text" name="pago_otro_hidden" value="{{ pagos[12] }}" oninput="formatCurrencyOnInput(this, 'pago_otro')" class="currency">
+                        <input type="hidden" name="pago_otro" id="pago_otro" value="{{ pagos[12] }}">
+                    </td>
                 </tr>
+
                 <tr>
                     <td class="payment-label">Guía de Despacho:</td>
                     <td colspan="4"><input type="text" name="guia_despacho" value="{{ pedido[23] }}" ></td>
                 </tr>
                 <tr>
-                    <td>Fecha de Entrega:</td>
+                    <td class="label">Fecha de Entrega:</td>
                 <td colspan="4">
-                    <input type="text" id="fecha_entrega" class="form-control" name="fecha_entrega" value="{{ pedido[24] }}"
+                    <input type="text" id="fecha_entrega" class="form-control" name="fecha_entrega" value="{{ pedido[24] or '' }}"
                         {% if not puede_editar %} readonly {% endif %} />
                 </td>
                 </tr>
                 <tr>
-                    <td colspan="5">Observaciones:<textarea name="observaciones" rows="3">{{ pedido[25] }}</textarea></td>
+                    <td colspan="5" class="label">Observaciones:<textarea name="observaciones" rows="3">{{ pedido[25] }}</textarea></td>
                 </tr>
+                {% if session['role'] == 'director' %}
+                <tr>
+                    <td class="label">Lensometría:</td>
+                    <td colspan="3">
+                        <div class="checkbox-group">
+                            <input type="radio" id="conforme" name="lensometria" value="Conforme"
+                                {% if lensometria[0] == 'Conforme' %} checked {% endif %}>
+                            <label for="conforme" class="custom-checkbox">Conforme</label>
+
+                            <input type="radio" id="no_conforme" name="lensometria" value="No Conforme"
+                                {% if lensometria[0] == 'No Conforme' %} checked {% endif %}>
+                            <label for="no_conforme" class="custom-checkbox">No Conforme</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Registro INVIMA:</td>
+                    <td colspan="3">
+                        <div class="input-group">
+                            <label for="registro_invima_od">O.D.:</label>
+                            <input type="text" id="registro_invima_od" name="registro_invima_od" value="{{ lensometria[1] }}">
+
+                            <label for="registro_invima_oi">O.I.:</label>
+                            <input type="text" id="registro_invima_oi" name="registro_invima_oi" value="{{ lensometria[2] }}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Lote:</td>
+                    <td colspan="3">
+                        <div class="input-group">
+                            <label for="lote_od">O.D.:</label>
+                            <input type="text" id="lote_od" name="lote_od" value="{{ lensometria[3] }}" >
+
+                            <label for="lote_oi">O.I.:</label>
+                            <input type="text" id="lote_oi" name="lote_oi" value="{{ lensometria[4] }}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Aprobado:</td>
+                    <td colspan="3">
+                        <div class="checkbox-group">
+                            <input type="radio" id="aprobado_si" name="aprobado" value="Si"
+                                {% if lensometria[5] == 'Si' %} checked {% endif %}>
+                            <label for="aprobado_si" class="custom-checkbox">Sí</label>
+
+                            <input type="radio" id="aprobado_no" name="aprobado" value="No"
+                                {% if lensometria[5] == 'No' %} checked {% endif %}>
+                            <label for="aprobado_no" class="custom-checkbox">No</label>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
             </table>
 
             <h2 style="text-align: center;">ORDEN DE LABORATORIO</h2>
@@ -270,7 +527,9 @@
                     <td colspan="3">
                         <input type="text" id="fecha_lab" name="fecha_lab" value="{{ orden_laboratorio[13] }}" readonly/>
                     </td>
-                    <td class="order-number" colspan="1">N° {{ pedido[0] }}</td>
+                    <td class="order-number" colspan="2" style="text-align: left;">
+                        <span style="color: red; font-size: 1.5rem; font-weight: bold;">N° {{ pedido[0] }}</span>
+                    </td>
                 </tr>
                 <tr colspan="5">
                     <th></th>
@@ -405,21 +664,48 @@
                         <td class="header">Ordenado por:</td>
                         <td colspan="3"><input type="text" name="ordenado_por" value="{{ pedido[15] }}" readonly></td>
                     </tr>                
-                </table>                 
+                </table>       
+                <div class="button-group">
+                    <!-- Botón para guardar los cambios -->
+                    <button class="btn" type="submit">Guardar Cambios</button>
+    
+                    <!-- Botón para volver al menú (fuera del formulario) -->
+                    <button class="btn" type="button" onclick="window.location.href='{{ url_for('menu') }}'">Volver al Menú</button>
+                </div>
+                {% if session['role'] == 'director' %}
+                <div class="direccion-cientifica">
+                    DIRECCIÓN CIENTÍFICA
+                </div>
+                {% endif %}
+       
     </div>
+
     <script>
         function calculateTotal() {
-            const valorMontura = parseFloat(document.querySelector('input[name="valor_montura"]').value) || 0;
-            const valorLente = parseFloat(document.querySelector('input[name="valor_lente"]').value) || 0;
-            const otros = parseFloat(document.querySelector('input[name="valor_otros"]').value) || 0;
-            const totalVenta = valorMontura + valorLente + otros;
-            document.querySelector('input[name="total_venta"]').value = totalVenta.toFixed(0);
+            // Obtener valores numéricos de los campos ocultos
+            const valorMontura = parseFloat(document.getElementById('valor_montura').value) || 0;
+            const valorLente = parseFloat(document.getElementById('valor_lente').value) || 0;
+            const valorOtros = parseFloat(document.getElementById('valor_otros').value) || 0;
+
+            // Calcular el total
+            const totalVenta = valorMontura + valorLente + valorOtros;
+
+            // Actualizar los campos visibles y ocultos
+            document.getElementById('total_venta_hidden').value = totalVenta.toLocaleString('es-CO', {
+                style: 'currency',
+                currency: 'COP',
+                minimumFractionDigits: 0
+            });
+            document.getElementById('total_venta').value = totalVenta;
         }
-    
-        document.querySelector('input[name="valor_montura"]').addEventListener('input', calculateTotal);
-        document.querySelector('input[name="valor_lente"]').addEventListener('input', calculateTotal);
-        document.querySelector('input[name="valor_otros"]').addEventListener('input', calculateTotal);
+
+        // Agregar eventos para recalcular el total al editar valores
+        document.getElementById('valor_montura_hidden').addEventListener('input', calculateTotal);
+        document.getElementById('valor_lente_hidden').addEventListener('input', calculateTotal);
+        document.getElementById('valor_otros_hidden').addEventListener('input', calculateTotal);
+
     </script>
+
     <script>
         function validateCylinderAndAxis() {
             // Obtener los valores de los campos de cilindro y eje para OD (Ojo Derecho)
@@ -540,38 +826,38 @@
     <script>
         function validarPagos() {
             // Obtener el valor de "Total Venta"
-            const totalVenta = parseFloat(document.querySelector('input[name="total_venta"]').value) || 0;
+            const totalVenta = parseFloat(document.getElementById('total_venta').value) || 0;
 
             // Obtener los valores de las formas de pago
-            const pagoEfectivo = parseFloat(document.querySelector('input[name="pago_efectivo"]').value) || 0;
-            const pagoSistecredito = parseFloat(document.querySelector('input[name="pago_sistecredito"]').value) || 0;
-            const pagoBancolombia = parseFloat(document.querySelector('input[name="pago_bancolombia"]').value) || 0;
-            const pagoDavivienda = parseFloat(document.querySelector('input[name="pago_davivienda"]').value) || 0;
-            const pagoAddi = parseFloat(document.querySelector('input[name="pago_addi"]').value) || 0;
-            const pagoEnvia = parseFloat(document.querySelector('input[name="pago_envia"]').value) || 0;
-            const pagoInterapidismo = parseFloat(document.querySelector('input[name="pago_interapidismo"]').value) || 0;
-            const pagoPasaPagos = parseFloat(document.querySelector('input[name="pasa_pagos"]').value) || 0;
-            const pagoBold = parseFloat(document.querySelector('input[name="pago_bold"]').value) || 0;
-            const pagoMensajeriaEklat = parseFloat(document.querySelector('input[name="pago_mensajeria_eklat"]').value) || 0;
-            const pagoMercadopago = parseFloat(document.querySelector('input[name="pago_mercadopago"]').value) || 0;
-            const pagoServientrega = parseFloat(document.querySelector('input[name="pago_servientrega"]').value) || 0;
-            const pagoOtro = parseFloat(document.querySelector('input[name="pago_otro"]').value) || 0;
+            const pagos = [
+                'pago_efectivo',
+                'pago_sistecredito',
+                'pago_bancolombia',
+                'pago_davivienda',
+                'pago_addi',
+                'pago_envia',
+                'pago_interapidismo',
+                'pasa_pagos',
+                'pago_bold',
+                'pago_mensajeria_eklat',
+                'pago_mercadopago',
+                'pago_servientrega',
+                'pago_otro'
+            ].map(id => parseFloat(document.getElementById(id).value) || 0);
 
             // Calcular la suma de las formas de pago
-            const sumaPagos = pagoEfectivo + pagoSistecredito + pagoBancolombia + pagoDavivienda +
-                            pagoAddi + pagoEnvia + pagoInterapidismo + pagoPasaPagos + pagoBold +
-                            pagoMensajeriaEklat + pagoMercadopago + pagoServientrega + pagoOtro;
+            const sumaPagos = pagos.reduce((a, b) => a + b, 0);
 
             // Comparar la suma con el "Total Venta"
             if (sumaPagos !== totalVenta) {
-                alert('La suma de las formas de pago debe ser igual al Total Venta.');
-                return false; // Evitar el envío del formulario si la validación falla
+                alert(`La suma de las formas de pago (${sumaPagos}) no coincide con el Total Venta (${totalVenta}).`);
+                return false; // Evitar el envío del formulario
             }
 
-            // Si la validación pasa, permitir que el formulario se envíe
-            return true;
+            return true; // Permitir el envío del formulario
         }
-    </script>    
+    </script>
+ 
     <script>
         // Copiar el valor del campo "vendedor" al campo "ordenado_a"
         document.querySelector('input[name="vendedor"]').addEventListener('input', function() {
@@ -581,6 +867,31 @@
         // Copiar el valor del campo "nombre_cliente" al campo "ordenado_por"
         document.querySelector('input[name="nombre_cliente"]').addEventListener('input', function() {
             document.querySelector('input[name="ordenado_a"]').value = this.value;
+        });
+    </script>
+
+    <script>
+        function formatCurrencyOnInput(input, hiddenFieldId) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value) {
+                document.getElementById(hiddenFieldId).value = value; // Actualiza el campo oculto
+                value = parseInt(value, 10).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 });
+            }
+            input.value = value;
+            calculateTotal(); // Llamar a calculateTotal después de formatear
+        }
+    </script>
+    <script>
+        function formatCurrency(value) {
+            return parseFloat(value).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Formatear los valores a moneda
+            const elementsToFormat = document.querySelectorAll('.currency');
+            elementsToFormat.forEach(function(element) {
+                element.value = formatCurrency(element.value);
+            });
         });
     </script>
 
@@ -723,16 +1034,6 @@
         };
     
     </script>
-    
-
-    <div class="button-group">
-        <!-- Botón para guardar los cambios -->
-        <button class="btn" type="submit">Guardar Cambios</button>
-    
-        <!-- Botón para volver al menú (fuera del formulario) -->
-        <button class="btn" type="button" onclick="window.location.href='{{ url_for('menu') }}'">Volver al Menú</button>
-    </div>
-       
 
     
 </body>
