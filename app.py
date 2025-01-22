@@ -96,6 +96,8 @@ def logout():
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    role = session.get('role', 'user')
+    
     if 'username' not in session:
         return redirect(url_for('login'))
 
@@ -351,6 +353,8 @@ def submit():
 
 @app.route('/consulta/<int:pedido_id>', methods=['GET','POST'])
 def ver_orden(pedido_id):
+    role = session.get('role', 'user')
+    
     if 'username' not in session:
         return redirect(url_for('login'))
 
