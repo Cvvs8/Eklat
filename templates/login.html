@@ -1,77 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
+    <!-- Basic page settings and meta data -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
-        }
-        .login-box {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center; /* Centramos el contenido */
-        }
-        .login-box img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 20px;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-bottom: 5px;
-            text-align: left; /* Para alinear las etiquetas a la izquierda */
-        }
-        input[type="text"],
-        input[type="password"] {
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        button {
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login Page</title>
+    <!-- Link to the stylesheet -->
+    <link rel="stylesheet" href="./static/style.css">
 </head>
 <body>
-    <div class="login-box">
-        <!-- Agregamos la imagen del logo -->
-        <img src="https://i.imgur.com/yaB6a63.png" alt="Ekla Ópticas"></img>
 
-        <!-- Formulario de login -->
-        <form action="{{ url_for('login') }}" method="post">
-            <label for="username">Usuario:</label>
-            <input type="text" id="username" name="username" required><br>
-
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required><br>
-
-            <button type="submit">Login</button>
-        </form>
+<section class="login_page">
+    <!-- Login image section -->
+    <div class="login-img">
+        <img src="./static/images/eklatlogo1.png" alt="Login Image">
     </div>
+    <!-- Login form -->
+    <form action="{{ url_for('login') }}" method="post">
+        <h1>Bienvenidos</h1>
+        <!-- Username input group -->
+        <div class="form-group">
+            <input type="text" placeholder=" " maxlength="13" id="username" name="username" required>
+            <label>Usuario</label>
+            <i><img src="./static/images/icons8-male-user-32.png"></i>
+        </div>
+        <!-- Password input group -->
+        <div class="form-group">
+            <input type="password" id="password" name="password" placeholder=" " maxlength="20" required>
+            <label>Clave</label>
+            <!-- Icons for showing and hiding the password -->
+            <i id="show-icon"><img src="./static/images/icons8-lock-50.png"></i>
+            <i id="hide-icon"><img src="./static/images/icons8-unlock-50.png"></i>
+        </div>
+        <!-- Sign in button -->
+        <button type="submit" class="custom-btn btn-1">Entrar</button>
+        <!-- Sign up link -->
+        <!--<p class="custom-text">
+            Don't have an account? <a href="#">Sign Up!</a>
+        </p>-->
+    </form>
+</section>
+
+<!-- Link to the JavaScript file -->
+<script src="./static/custom.js"></script>
+
 </body>
 </html>
-
-
