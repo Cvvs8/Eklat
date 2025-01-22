@@ -8,99 +8,159 @@
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-size: 18px;
-        }
-        .container {
-            width: 70%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        h2 {
-            margin-top: 0;
-            text-align: center;
-            font-weight: bold;
-        }
-        table {
-            width: 100%;
-            margin-top: 20px; /* Añade espacio entre secciones si es necesario */
-            border-collapse: collapse;
-        }
-        td, th {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        input, textarea {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 4px;
-        }
-        .order-number {
-            color: red;
-            font-size: 24px;
-            text-align: right;
-            vertical-align: middle;
-            padding-right: 20px;  /* Asegúrate de que haya suficiente espacio a la derecha */
+        :root {
+            --primary-color: #28a745;
+            --secondary-color: #8bc34a;
+            --background-gradient: linear-gradient(140deg, var(--secondary-color), var(--primary-color));
+            --text-color: #2d3436;
+            --accent-color: #20c997;
+            --font-family: 'Lato', sans-serif;
         }
 
-        input[type="text"] {
-            padding: 4px;
+        * {
             margin: 0;
-            width: 100%; /* Esto ayudará a evitar que los campos de entrada excedan el espacio de su celda */
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: var(--background-gradient);
+            font-family: var(--font-family);
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 30px;
+            box-shadow: 0 0 20px 10px rgba(38, 38, 69, 0.52);
+            width: 90%;
+            max-width: 1200px;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            letter-spacing: 3px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 1rem;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            font-size: 1rem;
+        }
+
         .button-group {
             display: flex;
-            flex-direction: column; /* Hace que los botones se apilen uno debajo del otro */
-            align-items: center; /* Centra los botones horizontalmente */
-            gap: 10px; /* Añade espacio entre los botones */
-            margin-top: 20px;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 2rem;
         }
 
         button {
-            width: 20%; /* El botón ocupará el 60% del ancho del contenedor */
-            padding: 12px 30px; /* Ajusta el tamaño del botón */
-            background-color: #007bff;
-            color: white;
+            background: linear-gradient(0deg, rgba(86, 180, 109, 1) 0%, rgba(61, 143, 87, 1) 100%);
             border: none;
+            color: white;
+            padding: 10px 20px;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background: var(--accent-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
+
         .section-header {
-            font-weight: bold; /* Negrita */
-            font-size: 24px; /* Tamaño de fuente más grande */
-            text-align: center; /* Centrado */
-            padding: 10px 0; /* Añadir espacio arriba y abajo */
+            background: var(--primary-color);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 2rem;
         }
-        
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+
+        @media screen and (max-width: 768px) {
+            table {
+                font-size: 0.9rem;
+            }
+
+            input, select, textarea {
+                font-size: 0.9rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+            }
+        }
+        .label {
+            font-weight: bold;
+        }
+        .payment-label {
+            font-weight: bold;
+        }
+        .header {
+            font-weight: bold;
+        }
 
     </style>
 </head>
 <body>
     <div class="container">
+        
         <h2 style="text-align: center;">ORDEN DE PEDIDO</h2>       
         <form action="/submit" method="post" onsubmit="return validarPagos()">
             <table>
                 <tr>
-                    <td>Fecha:</td>
+                    <td class="label">Fecha:</td>
                     <td colspan="2">
                         <input type="text" id="fecha" class="form-control" name="fecha" required />
                     </td>
-                    <td class="order-number" colspan="2">N° {{ numero_orden }}</td>
+                    <td class="order-number" colspan="2" style="text-align: left;">
+                        <span style="color: red; font-size: 1.5rem; font-weight: bold;">N° {{ numero_orden }}</span>
+                    </td>
                 </tr>
                 <tr>
-                    <td>Nombre del Laboratorio:</td>
+                    <td class="label">Nombre del Laboratorio:</td>
                     <td colspan="4"><input type="text" name="nombre_laboratorio" required></td>
                 </tr>
                 <tr>
@@ -173,239 +233,292 @@
                     <td class="label">Código Montura:</td>
                     <td><input type="text" name="codigo_montura" required></td>
                     <td class="label">Valor Montura:</td>
-                    <td colspan="2"><input type="text" name="valor_montura" required></td>
+                    <td colspan="2">
+                        <input type="text" name="valor_montura_hidden" required oninput="formatCurrency(this, 'valor_montura')">
+                        <input type="hidden" name="valor_montura" id="valor_montura">
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">Código Lente:</td>
                     <td><input type="text" name="codigo_lente"></td>
                     <td class="label">Valor Lente:</td>
-                    <td colspan="2"><input type="text" name="valor_lente"></td>
+                    <td colspan="2">
+                        <input type="text" name="valor_lente_hidden" oninput="formatCurrency(this, 'valor_lente')">
+                        <input type="hidden" name="valor_lente" id="valor_lente">
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">Otros:</td>
-                    <td><input type="text" name="otros" required></td>
+                    <td><input type="text" name="otros"></td>
                     <td class="label">Valor Otros:</td>
-                    <td colspan="2"><input type="text" name="valor_otros" required></td> <!-- Changed name to "otros" -->
+                    <td colspan="2">
+                        <input type="text" name="valor_otros_hidden" oninput="formatCurrency(this, 'valor_otros')">
+                        <input type="hidden" name="valor_otros" id="valor_otros">
+                    </td>
                 </tr>
+
                 <tr>
                     <td class="label">Total Venta:</td>
-                    <td colspan="4"><input type="text" name="total_venta" id="total_venta" readonly></td>
+                    <td colspan="4">
+                        <input type="text" name="total_venta_hidden" id="total_venta_hidden" readonly>
+                        <input type="hidden" name="total_venta" id="total_venta">
+                    </td>
                 </tr>
-                
+
                 <tr class="section-header">
                     <td colspan="5" class="section-header">FORMAS DE PAGO</td>
                 </tr>
                 <tr>
                     <td class="payment-label">Efectivo:</td>
-                    <td><input type="text" name="pago_efectivo"></td>
+                    <td>
+                        <input type="text" name="pago_efectivo_hidden" oninput="formatCurrency(this, 'pago_efectivo')">
+                        <input type="hidden" name="pago_efectivo" id="pago_efectivo">
+                    </td>
                     <td class="payment-label">Sistecredito:</td>
-                    <td colspan="2"><input type="text" name="pago_sistecredito"></td>
+                    <td colspan="2">
+                        <input type="text" name="pago_sistecredito_hidden" oninput="formatCurrency(this, 'pago_sistecredito')">
+                        <input type="hidden" name="pago_sistecredito" id="pago_sistecredito">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Bancolombia:</td>
-                    <td><input type="text" name="pago_bancolombia"></td>
+                    <td>
+                        <input type="text" name="pago_bancolombia_hidden" oninput="formatCurrency(this, 'pago_bancolombia')">
+                        <input type="hidden" name="pago_bancolombia" id="pago_bancolombia">
+                    </td>
                     <td class="payment-label">Davivienda:</td>
-                    <td colspan="2"><input type="text" name="pago_davivienda"></td>
+                    <td colspan="2">
+                        <input type="text" name="pago_davivienda_hidden" oninput="formatCurrency(this, 'pago_davivienda')">
+                        <input type="hidden" name="pago_davivienda" id="pago_davivienda">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Addi:</td>
-                    <td><input type="text" name="pago_addi"></td>
+                    <td>
+                        <input type="text" name="pago_addi_hidden" oninput="formatCurrency(this, 'pago_addi')">
+                        <input type="hidden" name="pago_addi" id="pago_addi">
+                    </td>
                     <td class="payment-label">Envia:</td>
-                    <td colspan="2"><input type="text" name="pago_envia"></td>
+                    <td colspan="2">
+                        <input type="text" name="pago_envia_hidden" oninput="formatCurrency(this, 'pago_envia')">
+                        <input type="hidden" name="pago_envia" id="pago_envia">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Inter Rapidismo:</td>
-                    <td><input type="text" name="pago_interapidismo"></td>
+                    <td>
+                        <input type="text" name="pago_interapidismo_hidden" oninput="formatCurrency(this, 'pago_interapidismo')">
+                        <input type="hidden" name="pago_interapidismo" id="pago_interapidismo">
+                    </td>
                     <td class="payment-label">Pasarela de Pagos:</td>
-                    <td colspan="2"><input type="text" name="pasa_pagos"></td>
+                    <td colspan="2">
+                        <input type="text" name="pasa_pagos_hidden" oninput="formatCurrency(this, 'pasa_pagos')">
+                        <input type="hidden" name="pasa_pagos" id="pasa_pagos">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Bold:</td>
-                    <td><input type="text" name="pago_bold"></td>
+                    <td>
+                        <input type="text" name="pago_bold_hidden" oninput="formatCurrency(this, 'pago_bold')">
+                        <input type="hidden" name="pago_bold" id="pago_bold">
+                    </td>
                     <td class="payment-label">Mensajería EKlat:</td>
-                    <td colspan="2"><input type="text" name="pago_mensajeria_eklat"></td>
+                    <td colspan="2">
+                        <input type="text" name="pago_mensajeria_eklat_hidden" oninput="formatCurrency(this, 'pago_mensajeria_eklat')">
+                        <input type="hidden" name="pago_mensajeria_eklat" id="pago_mensajeria_eklat">
+                    </td>
                 </tr>
                 <tr>
                     <td class="payment-label">Mercado Pago:</td>
-                    <td><input type="text" name="pago_mercadopago"></td>
+                    <td>
+                        <input type="text" name="pago_mercadopago_hidden" oninput="formatCurrency(this, 'pago_mercadopago')">
+                        <input type="hidden" name="pago_mercadopago" id="pago_mercadopago">
+                    </td>
                     <td class="payment-label">Servientrega:</td>
-                    <td colspan="2"><input type="text" name="pago_servientrega"></td>
+                    <td colspan="2">
+                        <input type="text" name="pago_servientrega_hidden" oninput="formatCurrency(this, 'pago_servientrega')">
+                        <input type="hidden" name="pago_servientrega" id="pago_servientrega">
+                    </td>
                 </tr>
-                
                 <tr>
                     <td class="payment-label">Otro:</td>
-                    <td colspan="4"><input type="text" name="pago_otro"></td>
+                    <td colspan="4">
+                        <input type="text" name="pago_otro_hidden" oninput="formatCurrency(this, 'pago_otro')">
+                        <input type="hidden" name="pago_otro" id="pago_otro">
+                    </td>
                 </tr>
+
+
                 <tr>
-                    <td class="payment-label">Guía de Despacho:</td>
-                    <td colspan="4"><input type="text" name="guia_despacho"></td>
-                </tr>
-                <tr>
-                    <td>Fecha de Entrega:</td>
+                    <td class="label">Fecha de Entrega:</td>
                     <td colspan="4">
                         <input type="text" id="fecha_entrega" class="form-control" name="fecha_entrega" required />
                     </td>
                 </tr>    
                 <tr>
-                    <td colspan="5">Observaciones:<textarea name="observaciones" rows="3"></textarea></td>
+                    <td class="label" colspan="5">Observaciones:<textarea name="observaciones" rows="3"></textarea></td>
                 </tr>
             </table>
 
-        <h2 style="text-align: center;">ORDEN DE LABORATORIO</h2>
-        <table>
-                <tr>
-                    <td colspan="2" class="header">Fecha:</td>
-                    <td colspan="3">
-                        <input type="text" id="fecha_lab" name="fecha_lab" readonly/>
-                    </td>
-                    <td class="order-number" colspan="1">N° {{ numero_orden }}</td>
-                </tr>
-                <tr colspan="5">
-                    <th></th>
-                    <th>Esfera</th>
-                    <th>Cilindro</th>
-                    <th>Eje</th>
-                    <th>Adición</th>
-                    <th>DP</th>
-                </tr>
-                <tr>
-                    <td class="header">O.D.</td>
-                    <td><input type="text" name="esfera_od"></td>
-                    <td><input type="text" name="cilindro_od"></td>
-                    <td><input type="text" name="eje_od"></td>
-                    <td><input type="text" name="adicion_od"></td>
-                    <td><input type="text" name="dp_od"></td>
-                </tr>
-                <tr>
-                    <td class="header">O.I.</td>
-                    <td><input type="text" name="esfera_oi"></td>
-                    <td><input type="text" name="cilindro_oi"></td>
-                    <td><input type="text" name="eje_oi"></td>
-                    <td><input type="text" name="adicion_oi"></td>
-                    <td><input type="text" name="dp_oi"></td>
-                </tr>
-            </table>
-
+            <h2 style="text-align: center;">ORDEN DE LABORATORIO</h2>
             <table>
-                <tr>
-                    <td class="header">REF: Montura</td>
-                    <td colspan="2"><input type="text" name="montura" required></td>
-                    <td class="header">Color:</td>
-                    <td colspan="2"><input type="text" name="color" required></td>
-                </tr>
-                <tr>
-                    <td class="header">Material Lentes:</td>
-                    <td colspan="2"><input type="text" name="material_lentes"></td>
-                    <td class="header">AR:</td>
-                    <td colspan="5">
-                        <select name="ar" id="ar-select" required>
-                            <option value="">Seleccione</option>
-                            <option value="Blanco">Blanco</option>
-                            <option value="Green">Green</option>
-                            <option value="Blue">Blue Block</option>
-                            <option value="Otro">Otro</option>
-                        </select>
+                    <tr>
+                        <td colspan="2" class="header">Fecha:</td>
+                        <td colspan="3">
+                            <input type="text" id="fecha_lab" name="fecha_lab" readonly/>
+                        </td>
+                        <td class="order-number" colspan="2" style="text-align: left;">
+                            <span style="color: red; font-size: 1.5rem; font-weight: bold;">N° {{ numero_orden }}</span>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
+                        <th></th>
+                        <th>Esfera</th>
+                        <th>Cilindro</th>
+                        <th>Eje</th>
+                        <th>Adición</th>
+                        <th>DP</th>
+                    </tr>
+                    <tr>
+                        <td class="header">O.D.</td>
+                        <td><input type="text" name="esfera_od"></td>
+                        <td><input type="text" name="cilindro_od"></td>
+                        <td><input type="text" name="eje_od"></td>
+                        <td><input type="text" name="adicion_od"></td>
+                        <td><input type="text" name="dp_od"></td>
+                    </tr>
+                    <tr>
+                        <td class="header">O.I.</td>
+                        <td><input type="text" name="esfera_oi"></td>
+                        <td><input type="text" name="cilindro_oi"></td>
+                        <td><input type="text" name="eje_oi"></td>
+                        <td><input type="text" name="adicion_oi"></td>
+                        <td><input type="text" name="dp_oi"></td>
+                    </tr>
+                </table>
+
+                <table>
+                    <tr>
+                        <td class="header">REF: Montura</td>
+                        <td colspan="2"><input type="text" name="montura" required></td>
+                        <td class="header">Color:</td>
+                        <td colspan="2"><input type="text" name="color" required></td>
+                    </tr>
+                    <tr>
+                        <td class="header">Material Lentes:</td>
+                        <td colspan="2"><input type="text" name="material_lentes"></td>
+                        <td class="header">AR:</td>
+                        <td colspan="5">
+                            <select name="ar" id="ar-select" required>
+                                <option value="">Seleccione</option>
+                                <option value="Blanco">Blanco</option>
+                                <option value="Green">Green</option>
+                                <option value="Blue">Blue Block</option>
+                                <option value="Otro">Otro</option>
+                            </select>
                 
-                        <!-- Campo de texto para "Otro" que se mostrará cuando se seleccione "Otro" -->
-                        <input type="text" name="ar_otro" id="ar-otro-input" placeholder="Especifique otro" style="display: none; width: 50%; margin-left: 10px;">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="header">Progresivo:</td>
-                    <td colspan="2">
-                        <select name="progresivo" id="progresivo-select" required>
-                            <option value="">Seleccione</option>
-                            <option value="SI">Sí</option>
-                            <option value="NO">No</option>
-                        </select>
+                            <!-- Campo de texto para "Otro" que se mostrará cuando se seleccione "Otro" -->
+                            <input type="text" name="ar_otro" id="ar-otro-input" placeholder="Especifique otro" style="display: none; width: 50%; margin-left: 10px;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="header">Progresivo:</td>
+                        <td colspan="2">
+                            <select name="progresivo" id="progresivo-select" required>
+                                <option value="">Seleccione</option>
+                                <option value="SI">Sí</option>
+                                <option value="NO">No</option>
+                            </select>
 
-                        <!-- Campo de selección adicional para la gama de Progresivo -->
-                        <select name="progresivo_gama" id="progresivo-gama" style="display: none; margin-left: 10px;">
-                            <option value="">Seleccione una gama</option>
-                            <option value="Premium">Premium</option>
-                            <option value="Alta">Alta</option>
-                            <option value="Media">Media</option>
-                        </select>
-                    </td>
-                    <td class="header">Monofocal:</td>
-                    <td colspan="5">
-                        <select name="monofocal" id="monofocal-select" required>
-                            <option value="">Seleccione</option>
-                            <option value="SI">Sí</option>
-                            <option value="NO">No</option>
-                        </select>
+                            <!-- Campo de selección adicional para la gama de Progresivo -->
+                            <select name="progresivo_gama" id="progresivo-gama" style="display: none; margin-left: 10px;">
+                                <option value="">Seleccione una gama</option>
+                                <option value="Premium">Premium</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Media">Media</option>
+                            </select>
+                        </td>
+                        <td class="header">Monofocal:</td>
+                        <td colspan="5">
+                            <select name="monofocal" id="monofocal-select" required>
+                                <option value="">Seleccione</option>
+                                <option value="SI">Sí</option>
+                                <option value="NO">No</option>
+                            </select>
 
-                        <!-- Campo de selección adicional para las opciones de Monofocal -->
-                        <select name="monofocal_option" id="monofocal-options" style="display: none; margin-left: 10px;">
-                            <option value="">Seleccione una opción</option>
-                            <option value="Terminado">Terminado</option>
-                            <option value="Extrarrango">Extrarrango</option>
-                            <option value="Tallado">Tallado</option>
-                        </select>
-                    </td>
-                <tr>
-                    <td class="header">Fotocromático:</td>
-                    <td colspan="2">
-                        <select name="fotocrom" id="fotocromatico-select" required>
-                            <option value="">Seleccione</option>
-                            <option value="SI">Sí</option>
-                            <option value="NO">No</option>
-                        </select>
-        <!-- Campo de texto para "Cual" que solo aparecerá si seleccionan "Sí" -->
-                        <input type="text" name="fotocromatico_cual" id="fotocromatico-cual-input" placeholder="Cual" style="display: none; width: 50%; margin-left: 10px;">
-                    </td>
-                    <td class="header">Bifocal:</td>
-                    <td colspan="5">
-                        <select name="bifocal" id="bifocal-select" required>
-                            <option value="">Seleccione</option>
-                            <option value="Invisible">Invisible</option>
-                            <option value="Flat Top">Flat Top</option>
-                            <option value="N/A">N/A</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="header">AF:</td>
-                    <td colspan="2"><input type="text" name="af"></td>
-                    <td class="header">Corredor:</td>
-                    <td colspan="2"><input type="text" name="corredor"></td>
-                </tr>
-                <tr>
-                    <td class="header">Adicional:</td>
-                    <td colspan="5"><input type="text" name="adicional"></td>
-                </tr>
-            </table>
+                            <!-- Campo de selección adicional para las opciones de Monofocal -->
+                            <select name="monofocal_option" id="monofocal-options" style="display: none; margin-left: 10px;">
+                                <option value="">Seleccione una opción</option>
+                                <option value="Terminado">Terminado</option>
+                                <option value="Extrarrango">Extrarrango</option>
+                                <option value="Tallado">Tallado</option>
+                            </select>
+                        </td>
+                    <tr>
+                        <td class="header">Fotocromático:</td>
+                        <td colspan="2">
+                            <select name="fotocrom" id="fotocromatico-select" required>
+                                <option value="">Seleccione</option>
+                                <option value="SI">Sí</option>
+                                <option value="NO">No</option>
+                            </select>
+            <!-- Campo de texto para "Cual" que solo aparecerá si seleccionan "Sí" -->
+                            <input type="text" name="fotocromatico_cual" id="fotocromatico-cual-input" placeholder="Cual" style="display: none; width: 50%; margin-left: 10px;">
+                        </td>
+                        <td class="header">Bifocal:</td>
+                        <td colspan="5">
+                            <select name="bifocal" id="bifocal-select" required>
+                                <option value="">Seleccione</option>
+                                <option value="Invisible">Invisible</option>
+                                <option value="Flat Top">Flat Top</option>
+                                <option value="N/A">N/A</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="header">AF:</td>
+                        <td colspan="2"><input type="text" name="af"></td>
+                        <td class="header">Corredor:</td>
+                        <td colspan="2"><input type="text" name="corredor"></td>
+                    </tr>
+                    <tr>
+                        <td class="header">Adicional:</td>
+                        <td colspan="5"><input type="text" name="adicional"></td>
+                    </tr>
+                </table>
 
-            <table>
-                <tr>
-                    <td class="header">Ordenado a:</td>
-                    <td colspan="3"><input type="text" name="ordenado_a" id="ordenado_a" readonly></td>
-                </tr>
-                <tr>
-                    <td class="header">Ordenado por:</td>
-                    <td colspan="3"><input type="text" name="ordenado_por" id="ordenado_por" readonly></td>
-                </tr>                
-            </table>
-        </div>
-        <div class="button-group">
-            <button type="submit">Enviar Orden</button>
-            <button type="button" onclick="window.location.href='{{ url_for('menu') }}'">Volver al Menú</button>
-        </div>   
+                <table>
+                    <tr>
+                        <td class="header">Ordenado a:</td>
+                        <td colspan="3"><input type="text" name="ordenado_a" id="ordenado_a" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="header">Ordenado por:</td>
+                        <td colspan="3"><input type="text" name="ordenado_por" id="ordenado_por" readonly></td>
+                    </tr>                
+                </table>
+       
+                <div class="button-group">
+                    <button type="submit">Enviar Orden</button>
+                    <button type="button" onclick="window.location.href='{{ url_for('menu') }}'">Volver al Menú</button>
+                </div>   
         </form> 
     </div>
     <script>
         function calculateTotal() {
-            const valorMontura = parseFloat(document.querySelector('input[name="valor_montura"]').value) || 0;
-            const valorLente = parseFloat(document.querySelector('input[name="valor_lente"]').value) || 0;
-            const otros = parseFloat(document.querySelector('input[name="valor_otros"]').value) || 0;
+            const valorMontura = parseFloat(document.getElementById('valor_montura').value) || 0;
+            const valorLente = parseFloat(document.getElementById('valor_lente').value) || 0;
+            const otros = parseFloat(document.getElementById('valor_otros').value) || 0;
             const totalVenta = valorMontura + valorLente + otros;
-            document.querySelector('input[name="total_venta"]').value = totalVenta.toFixed(0);
+            document.getElementById('total_venta_hidden').value = totalVenta.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 });
+            document.getElementById('total_venta').value = totalVenta; // Actualizar el campo oculto
         }
-    
-        document.querySelector('input[name="valor_montura"]').addEventListener('input', calculateTotal);
-        document.querySelector('input[name="valor_lente"]').addEventListener('input', calculateTotal);
-        document.querySelector('input[name="valor_otros"]').addEventListener('input', calculateTotal);
+
+        document.querySelector('input[name="valor_montura_hidden"]').addEventListener('input', calculateTotal);
+        document.querySelector('input[name="valor_lente_hidden"]').addEventListener('input', calculateTotal);
+        document.querySelector('input[name="valor_otros_hidden"]').addEventListener('input', calculateTotal);
     </script>
+
     <script>
         function validateCylinderAndAxis() {
             // Obtener los valores de los campos de cilindro y eje para OD (Ojo Derecho)
@@ -526,22 +639,22 @@
     <script>
         function validarPagos() {
             // Obtener el valor de "Total Venta"
-            const totalVenta = parseFloat(document.querySelector('input[name="total_venta"]').value) || 0;
+            const totalVenta = parseFloat(document.getElementById('total_venta').value) || 0;
 
-            // Obtener los valores de las formas de pago
-            const pagoEfectivo = parseFloat(document.querySelector('input[name="pago_efectivo"]').value) || 0;
-            const pagoSistecredito = parseFloat(document.querySelector('input[name="pago_sistecredito"]').value) || 0;
-            const pagoBancolombia = parseFloat(document.querySelector('input[name="pago_bancolombia"]').value) || 0;
-            const pagoDavivienda = parseFloat(document.querySelector('input[name="pago_davivienda"]').value) || 0;
-            const pagoAddi = parseFloat(document.querySelector('input[name="pago_addi"]').value) || 0;
-            const pagoEnvia = parseFloat(document.querySelector('input[name="pago_envia"]').value) || 0;
-            const pagoInterapidismo = parseFloat(document.querySelector('input[name="pago_interapidismo"]').value) || 0;
-            const pagoPasaPagos = parseFloat(document.querySelector('input[name="pasa_pagos"]').value) || 0;
-            const pagoBold = parseFloat(document.querySelector('input[name="pago_bold"]').value) || 0;
-            const pagoMensajeriaEklat = parseFloat(document.querySelector('input[name="pago_mensajeria_eklat"]').value) || 0;
-            const pagoMercadopago = parseFloat(document.querySelector('input[name="pago_mercadopago"]').value) || 0;
-            const pagoServientrega = parseFloat(document.querySelector('input[name="pago_servientrega"]').value) || 0;
-            const pagoOtro = parseFloat(document.querySelector('input[name="pago_otro"]').value) || 0;
+            // Obtener los valores de las formas de pago desde los campos ocultos
+            const pagoEfectivo = parseFloat(document.getElementById('pago_efectivo').value) || 0;
+            const pagoSistecredito = parseFloat(document.getElementById('pago_sistecredito').value) || 0;
+            const pagoBancolombia = parseFloat(document.getElementById('pago_bancolombia').value) || 0;
+            const pagoDavivienda = parseFloat(document.getElementById('pago_davivienda').value) || 0;
+            const pagoAddi = parseFloat(document.getElementById('pago_addi').value) || 0;
+            const pagoEnvia = parseFloat(document.getElementById('pago_envia').value) || 0;
+            const pagoInterapidismo = parseFloat(document.getElementById('pago_interapidismo').value) || 0;
+            const pagoPasaPagos = parseFloat(document.getElementById('pasa_pagos').value) || 0;
+            const pagoBold = parseFloat(document.getElementById('pago_bold').value) || 0;
+            const pagoMensajeriaEklat = parseFloat(document.getElementById('pago_mensajeria_eklat').value) || 0;
+            const pagoMercadopago = parseFloat(document.getElementById('pago_mercadopago').value) || 0;
+            const pagoServientrega = parseFloat(document.getElementById('pago_servientrega').value) || 0;
+            const pagoOtro = parseFloat(document.getElementById('pago_otro').value) || 0;
 
             // Calcular la suma de las formas de pago
             const sumaPagos = pagoEfectivo + pagoSistecredito + pagoBancolombia + pagoDavivienda +
@@ -551,13 +664,15 @@
             // Comparar la suma con el "Total Venta"
             if (sumaPagos !== totalVenta) {
                 alert('La suma de las formas de pago debe ser igual al Total Venta.');
+                console.log(`Total Venta: ${totalVenta}, Suma Pagos: ${sumaPagos}`); // Depuración
                 return false; // Evitar el envío del formulario si la validación falla
             }
 
             // Si la validación pasa, permitir que el formulario se envíe
             return true;
         }
-    </script>    
+    </script>
+
     <script>
         // Copiar el valor del campo "vendedor" al campo "ordenado_a"
         document.querySelector('input[name="vendedor"]').addEventListener('input', function() {
@@ -568,6 +683,17 @@
         document.querySelector('input[name="nombre_cliente"]').addEventListener('input', function() {
             document.querySelector('input[name="ordenado_a"]').value = this.value;
         });
+    </script>
+    <script>
+        function formatCurrency(input, hiddenFieldId) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value) {
+                document.getElementById(hiddenFieldId).value = value; // Actualiza el campo oculto
+                value = parseInt(value, 10).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 });
+            }
+            input.value = value;
+            calculateTotal(); // Llamar a calculateTotal después de formatear
+        }
     </script>
 
 
