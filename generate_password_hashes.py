@@ -10,12 +10,12 @@ def hash_password(password):
 def main():
     # Dictionary of users and their corresponding plaintext passwords
     users = {
-        'user1': 'password123',
-        'user2': 'mypassword',
-        'user3': 'secretpass',
-        'user4': 'welcome123',
-        'user5': 'letmein',
-        'user6': 'testpass456'
+        'ADMIN': 'Gabri3L2024',
+        'VR-vendor': '8pkV143Qo',
+        'JP-vendor': 'MS9m1Qk6',
+        'NE-vendor': '7f5AI95hd',
+        'XX-vendor': 'letmein',
+        'D-Cientifica': 'Dv655Ni3V'
     }
 
     # Generate hashes for each user
