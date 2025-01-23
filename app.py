@@ -12,7 +12,7 @@ from functools import wraps
 
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'your_default_secret_key')
+app.secret_key = os.environ.get('SECRET_KEY', 'your_default_secret_key') 
 
 # Configuración de conexión a MySQL
 app.config['MYSQL_HOST'] = 'localhost'
@@ -370,7 +370,7 @@ def ver_orden(pedido_id):
         return "No se encontró el pedido."
     
     fecha_entrega=pedido[23]
-    puede_modificar = not fecha_entrega or fecha_entrega == '0000-00-00' or fecha_entrega == '00/00/0000'
+    Puede_modificar = not fecha_entrega or fecha_entrega == '0000-00-00' or fecha_entrega == '00/00/0000'
 
     # Consultar la información adicional del laboratorio
     cursor.execute('''
@@ -419,7 +419,7 @@ def ver_orden(pedido_id):
     if not lensometria:
         lensometria = ('', '', '', '', '', '')
 
-    role = session.get('role', 'user')
+    Role = session.get('role', 'user')
 
     # Renderizar la plantilla con todos los datos
     return render_template(
@@ -498,8 +498,8 @@ def ver_orden(pedido_id):
             lote_od=lensometria[3],
             lote_oi=lensometria[4],
             aprobado=lensometria[5],
-            puede_modificar=puede_modificar,
-            role=role 
+            puede_modificar=Puede_modificar,
+            role=Role 
         )
 
 
