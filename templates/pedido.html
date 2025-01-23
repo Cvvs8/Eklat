@@ -103,7 +103,7 @@
 <div class="pedido-container">
     <div class="header">
         <div class="logo">
-            <img src="https://i.imgur.com/yaB6a63.png" alt="Eklat Ópticas">
+            <img src="{{ url_for('static', filename='images/eklatlogo.png') }}" alt="Eklat Ópticas">
         </div>
         <div class="info">
             <p>NIT: 901.714.006-7</p>
@@ -132,7 +132,7 @@
                 <th>Nombre del Cliente:</th>
                 <td>{{ nombre_cliente }}</td>
                 <th>Identificación Cliente:</th>
-                <td>{{ identificacion_cliente }}</td>
+                <td>{{ numero_identificacion }}</td>
             </tr>
             <tr>
                 <th>Departamento:</th>

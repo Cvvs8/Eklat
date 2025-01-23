@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, session, flash
+from flask import Flask, request, render_template, redirect, url_for, session
 import bcrypt
 import json
 import os
@@ -18,7 +18,7 @@ app.secret_key = os.environ.get('SECRET_KEY', 'your_default_secret_key')
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Carlosv.Usa8132' 
+app.config['MYSQL_PASSWORD'] = 'Carlosv.Usa8132'  # Cambia esto si tienes una contraseña
 app.config['MYSQL_DB'] = 'eklatClientes'
 
 # Inicializar la conexión con MySQL
@@ -41,25 +41,20 @@ def login():
         password = request.form.get('password')
         
         if not username or not password:
-            flash('Por favor ingresa tanto el nombre de usuario como la contraseña.', 'error')
-            return redirect(url_for('login'))
+            return 'Por favor ingresa tanto el nombre de usuario como la contraseña.', 400
 
         password_bytes = password.encode('utf-8')
         users = load_users()
 
         if username in users:
-            stored_hash = users[username]['password'].encode('utf-8')
+            stored_hash = users[username].encode('utf-8')
             if bcrypt.checkpw(password_bytes, stored_hash):
                 session['username'] = username
-                session['role'] = users[username]['role']
-                flash('Inicio de sesión exitoso.', 'success')
                 return redirect(url_for('menu'))
             else:
-                flash('Inicio de sesión fallido. Verifica tus credenciales.', 'error')
+                return 'Inicio de sesión fallido. Verifica tus credenciales.', 401
         else:
-            flash('Inicio de sesión fallido. Verifica tus credenciales.', 'error')
-
-        return redirect(url_for('login'))
+            return 'Inicio de sesión fallido. Verifica tus credenciales.', 401
 
     return render_template('login1.html')
 
@@ -69,6 +64,7 @@ def menu():
         return redirect(url_for('login'))
     role = session.get('role', 'user')  # Obtener el rol del usuario de la sesión
     return render_template('Menu.html', role=role)  # Pasar el rol a la plantilla
+  # Asegúrate de que exista la plantilla Menu.html
 
 @app.route('/nueva_orden')
 def nueva_orden():
@@ -81,7 +77,7 @@ def nueva_orden():
     max_pedido_id = cursor.fetchone()[0]
     
     if max_pedido_id is None:
-        nuevo_numero_orden = 6467  # Si no hay órdenes, iniciar en 1
+        nuevo_numero_orden = 7050  # Si no hay órdenes, iniciar en 1
     else:
         nuevo_numero_orden = max_pedido_id + 1  # Incrementar en 1
 
@@ -96,8 +92,6 @@ def logout():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    role = session.get('role', 'user')
-    
     if 'username' not in session:
         return redirect(url_for('login'))
 
@@ -353,8 +347,6 @@ def submit():
 
 @app.route('/consulta/<int:pedido_id>', methods=['GET','POST'])
 def ver_orden(pedido_id):
-    role = session.get('role', 'user')
-    
     if 'username' not in session:
         return redirect(url_for('login'))
 
@@ -406,7 +398,6 @@ def ver_orden(pedido_id):
     ''', (pedido_id,))
     pagos = cursor.fetchone()
 
-    # Consultar los detalles de la lensometría (si existe)
     cursor.execute('''
         SELECT lensometria, registro_invima_od, registro_invima_oi, 
                lote_od, lote_oi, aprobado
@@ -414,10 +405,6 @@ def ver_orden(pedido_id):
         WHERE pedido_id = %s
     ''', (pedido_id,))
     lensometria = cursor.fetchone()
-
-    # Comprobar si la consulta devolvió valores, si no, asignar valores por defecto
-    if not lensometria:
-        lensometria = ('', '', '', '', '', '')
 
     # Comprobar si las consultas devolvieron valores
     if not orden_laboratorio:
@@ -428,6 +415,11 @@ def ver_orden(pedido_id):
 
     if not pagos:
         pagos = ('', '', '', '', '', '', '', '', '', '', '', '', '')
+
+    if not lensometria:
+        lensometria = ('', '', '', '', '', '')
+
+    role = session.get('role', 'user')
 
     # Renderizar la plantilla con todos los datos
     return render_template(
@@ -506,8 +498,8 @@ def ver_orden(pedido_id):
             lote_od=lensometria[3],
             lote_oi=lensometria[4],
             aprobado=lensometria[5],
-            puede_modificar=puede_modificar,  # Según lógica
-            role=role
+            puede_modificar=puede_modificar,
+            role=role 
         )
 
 
@@ -645,7 +637,7 @@ def imprimir_pedido(pedido_id):
 def editar(cliente_id):
 
     role = session.get('role', 'user')
-    
+
     if 'username' not in session:
         return redirect(url_for('login'))
     
@@ -656,7 +648,7 @@ def editar(cliente_id):
     "Atlántico": ["Barranquilla", "Baranoa", "Campo de la Cruz", "Candelaria", "Galapa", "Juan de Acosta", "Luruaco", "Malambo", "Manatí", "Palmar de Varela", "Piojó", "Polonuevo", "Ponedera", "Puerto Colombia", "Repelón", "Sabanagrande", "Sabanalarga", "Santa Lucía", "Santo Tomás", "Soledad", "Suan", "Tubará", "Usiacurí"],
     "Bogotá D.C": ["Bogotá D.C."],
     "Bolívar": ["Cartagena de Indias", "Achí", "Altos del Rosario", "Arenal", "Arjona", "Arroyohondo", "Barranco de Loba", "Calamar", "Cantagallo", "Cicuco", "Clemencia", "Córdoba", "El Carmen de Bolívar", "El Guamo", "El Peñón", "Hatillo de Loba", "Magangué", "Mahates", "Margarita", "María la Baja", "Montecristo", "Morales", "Norosí", "Pinillos", "Regidor", "Río Viejo", "San Cristóbal", "San Estanislao", "San Fernando", "San Jacinto", "San Jacinto del Cauca", "San Juan Nepomuceno", "San Martín de Loba", "Santa Catalina", "Santa Rosa", "Santa Rosa del Sur", "Simití", "Soplaviento", "Talaigua Nuevo", "Tiquisio", "Turbaco", "Turbaná", "Villanueva", "Zambrano"],
-    "Boyacá": ["Tunja", "Almeida", "Aquitania", "Arcabuco", "Belén", "Berbeo", "Betéitiva", "Boavita", "Boyacá", "Briceño", "Buena Vista", "Busbanzá", "Caldas", "Campohermoso", "Cerinza", "Chinavita", "Chiquinquirá", "Chíquiza", "Chiscas", "Chita", "Chitaraque", "Chivatá", "Ciénaga", "Cómbita", "Coper", "Corrales", "Covarachía", "Cubará", "Cucaita", "Cuítiva", "Chivor", "Duitama", "El Cocuy", "El Espino", "Firavitoba", "Floresta", "Gachantivá", "Gámeza", "Garagoa", "Guacamayas", "Guateque", "Guayatá", "Güicán", "Iza", "Jenesano", "Jericó", "Labranzagrande", "La Capilla", "La Uvita", "La Victoria", "Macanal", "Maripí", "Miraflores", "Mongua", "Monguí", "Moniquirá", "Motavita", "Muzo", "Nobsa", "Nuevo Colón", "Oicatá", "Otanche", "Pachavita", "Páez", "Paipa", "Pajarito", "Panqueba", "Pauna", "Paya", "Paz de Río", "Pesca", "Pisba", "Puerto Boyacá", "Quípama", "Ramiriquí", "Ráquira", "Rondón", "Saboyá", "Sáchica", "Samacá", "San Eduardo", "San José de Pare", "San Luis de Gaceno", "San Mateo", "San Miguel de Sema", "San Pablo de Borbur", "Santa María", "Santa Rosa de Viterbo", "Santa Sofía", "Santana", "Sativanorte", "Sativasur", "Siachoque", "Soatá", "Socha", "Socotá", "Sogamoso", "Somondoco", "Sora", "Sotaquirá", "Soracá", "Susacón", "Sutamarchán", "Sutatenza", "Tasco", "Tenza", "Tibaná", "Tibasosa", "Tinjacá", "Tipacoque", "Toca", "Togüí", "Tópaga", "Tota", "Tununguá", "Turmequé", "Tuta", "Tutazá", "Úmbita", "Ventaquemada", "Viracachá", "Zetaquira"],
+    "Boyacá": ["Tunja", "Almeida", "Aquitania", "Arcabuco", "Belén", "Berbeo", "Betéitiva", "Boavita", "Boyacá", "Briceño", "Buena Vista", "Busbanzá", "Caldas", "Campohermoso", "Cerinza", "Chinavita", "Chiquinquirá", "Chíquiza", "Chiscas", "Chita", "Chitaraque", "Chivatá", "Ciénaga", "Cómbita", "Coper", "Corrales", "Covarachía", "Cubará", "Cucaita", "Cuítiva", "Chivor", "Duitama", "El Cocuy", "El Espino", "Firavitoba", "Floresta", "Gachantivá", "Gámeza", "Garagoa", "Guacamayas", "Guateque", "Guayatá", "Güicán", "Iza", "Jenesano", "Jericó", "Labranzagrande", "La Capilla", "La Uvita", "La Victoria", "Macanal", "Maripí", "Miraflores", "Mongua", "Monguí", "Moniquirá", "Motavita", "Muzo", "Nobsa", "Nuevo Colón", "Oicatá", "Otanche", "Pachavita", "Páez", "Paipa", "Pajarito", "Panqueba", "Pauna", "Paya", "Paz de Río", "Pesca", "Pisba", "Puerto Boyacá", "Quípama", "Ramiriquí", "Ráquira", "Rondón", "Saboyá", "Sáchica", "Samacá", "San Eduardo", "San José de Pare", "San Luis de Gaceno", "San Mateo", "San Miguel de Sema", "San Pablo de Borbur", "Santa María", "Santa Rosa de Viterbo", "Santa Sofía", "Santana", "Sativanorte", "Sativasur", "Siachoque", "Soatá", "Socha", "Socotá", "Sogamoso", "Somondoco", "Sora", "Sotaquirá", "Soracá", "Susacón", "Sutamarchán", "Sutatenza", "Tasco", "Tenza", "Tibaná", "Tibasosa", "Tinjacá", "Tipacoque", "Toca", "Togüí", "Tópaga", "Tota", "Tununguá", "Turmequé", "Tuta", "Tutazá", "Úmbita", "Ventaquemada", "Viracachá", "Villa de Leyva", "Zetaquira"],
     "Caldas": ["Manizales", "Aguadas", "Anserma", "Aranzazu", "Belalcázar", "Chinchiná", "Filadelfia", "La Dorada", "La Merced", "Manzanares", "Marmato", "Marquetalia", "Marulanda", "Neira", "Norcasia", "Pácora", "Palestina", "Pensilvania", "Riosucio", "Risaralda", "Salamina", "Samaná", "San José", "Supía", "Victoria", "Villamaría", "Viterbo"],
     "Caquetá": ["Florencia", "Albania", "Belén de los Andaquíes", "Cartagena del Chairá", "Curillo", "El Doncello", "El Paujil", "La Montañita", "Milán", "Morelia", "Puerto Rico", "San José del Fragua", "San Vicente del Caguán", "Solano", "Solita", "Valparaíso"],
     "Casanare": ["Yopal", "Aguazul", "Chámeza", "Hato Corozal", "La Salina", "Maní", "Monterrey", "Nunchía", "Orocué", "Paz de Ariporo", "Pore", "Recetor", "Sabanalarga", "Sácama", "San Luis de Palenque", "Támara", "Tauramena", "Trinidad", "Villanueva"],
@@ -771,7 +763,6 @@ def editar(cliente_id):
     if lensometria is None:
         lensometria = ('', '', '', '', '', '')
 
-    # Verificar si el usuario es director para permitir edición de lensometría
     puede_editar_lensometria = role == 'director'
 
     # Renderizar el template para la edición
@@ -781,7 +772,6 @@ def editar(cliente_id):
                            detalles_lentes=detalles_lentes,
                            pagos=pagos,
                            orden_laboratorio=orden_laboratorio,
-                           lensometria=lensometria,
                            departamentosYciudades=departamentosYciudades,
                            puede_modificar=puede_modificar,
                            puede_editar_lensometria=puede_editar_lensometria)
@@ -789,8 +779,6 @@ def editar(cliente_id):
 
 @app.route('/guardar_cambios/<int:cliente_id>', methods=['POST'])
 def guardar_cambios(cliente_id):
-    role = session.get('role', 'user')
-
     if 'username' not in session:
         return redirect(url_for('login'))
 
@@ -819,368 +807,89 @@ def guardar_cambios(cliente_id):
             'total_venta': request.form.get('total_venta', '0'),
             'guia_despacho': request.form.get('guia_despacho', ''),
             'fecha_entrega': request.form.get('fecha_entrega', ''),
-            'fecha_lab': request.form.get('fecha_lab', '00-00-0000'),
             'observaciones': request.form.get('observaciones', ''),
             'ordenado_a': request.form.get('ordenado_a', ''),
             'ordenado_por': request.form.get('ordenado_por', '')
         }
 
-        datos_lentes = {
-            'esfera_od': request.form.get('esfera_od', ''),
-            'cilindro_od': request.form.get('cilindro_od', ''),
-            'eje_od': request.form.get('eje_od', ''),
-            'adicion_od': request.form.get('adicion_od', ''),
-            'dp_od': request.form.get('dp_od', ''),
-            'esfera_oi': request.form.get('esfera_oi', ''),
-            'cilindro_oi': request.form.get('cilindro_oi', ''),
-            'eje_oi': request.form.get('eje_oi', ''),
-            'adicion_oi': request.form.get('adicion_oi', ''),
-            'dp_oi': request.form.get('dp_oi', '')
-        }
-
-        datos_laboratorio = {
-            'montura': request.form.get('montura', ''),
-            'color': request.form.get('color', ''),
-            'material_lentes': request.form.get('material_lentes', ''),
-            'ar': request.form.get('ar', ''),
-            'progresivo': request.form.get('progresivo', '').upper(),
-            'gama_progresivo': request.form.get('progresivo_gama', '') if request.form.get('progresivo', '').upper() == 'SI' else '',
-            'monofocal': request.form.get('monofocal', '').upper(),
-            'opcion_monofocal': request.form.get('monofocal_option', '') if request.form.get('monofocal', '').upper() == 'SI' else '',
-            'fotocromatico': request.form.get('fotocrom', 'NO').upper(),
-            'fotocromatico_cual': request.form.get('fotocromatico_cual', '') if request.form.get('fotocrom', 'NO').upper() == 'SI' else '',
-            'bifocal': request.form.get('bifocal', ''),
-            'af': request.form.get('af', ''),
-            'corredor': request.form.get('corredor', ''),
-            'adicional': request.form.get('adicional', '')
-        }
-
-        pagos = {
-            'pago_efectivo': int(request.form.get('pago_efectivo', '0') or 0),
-            'pago_bancolombia': int(request.form.get('pago_bancolombia', '0') or 0),
-            'pago_davivienda': int(request.form.get('pago_davivienda', '0') or 0),
-            'pasa_pagos': int(request.form.get('pasa_pagos', '0') or 0),
-            'pago_bold': int(request.form.get('pago_bold', '0') or 0),
-            'pago_mercadopago': int(request.form.get('pago_mercadopago', '0') or 0),
-            'pago_sistecredito': int(request.form.get('pago_sistecredito', '0') or 0),
-            'pago_addi': int(request.form.get('pago_addi', '0') or 0),
-            'pago_envia': int(request.form.get('pago_envia', '0') or 0),
-            'pago_interapidismo': int(request.form.get('pago_interapidismo', '0') or 0),
-            'pago_servientrega': int(request.form.get('pago_servientrega', '0') or 0),
-            'pago_otro': int(request.form.get('pago_otro', '0') or 0),
-            'pago_mensajeria_eklat': int(request.form.get('pago_mensajeria_eklat', '0') or 0)
-        }
-
-        datos_lensometria = None
-        if role == 'director':
-            datos_lensometria = {
-                'lensometria': request.form.get('lensometria', ''),
-                'registro_invima_od': request.form.get('registro_invima_od', ''),
-                'registro_invima_oi': request.form.get('registro_invima_oi', ''),
-                'lote_od': request.form.get('lote_od', ''),
-                'lote_oi': request.form.get('lote_oi', ''),
-                'aprobado': request.form.get('aprobado', '')
-            }
-
+        # Función para convertir fechas
         def convertir_fecha(fecha):
-            # Convierte 'dd/mm/yyyy' -> 'yyyy-mm-dd' o retorna None si viene en blanco/00/00/0000
-            if not fecha or fecha.strip() in ['00/00/0000', '', '00-00-0000']:
-                return None
-            try:
-                return datetime.strptime(fecha.strip(), '%d/%m/%Y').strftime('%Y-%m-%d')
-            except ValueError:
-                print(f"Fecha inválida recibida: {fecha}")
-                raise ValueError(f"Fecha inválida: {fecha}")
+            if fecha and fecha != '00/00/0000':  # Si la fecha no está vacía
+                try:
+                    return datetime.strptime(fecha, '%d/%m/%Y').strftime('%Y-%m-%d')
+                except ValueError:
+                    return None  # Si hay algún problema con la conversión, usar None (NULL en SQL)
+            return None  # Fecha vacía o inválida
 
-        # Procesar fechas
+        datos_pedido['fecha'] = convertir_fecha(datos_pedido['fecha'])
+        datos_pedido['fecha_entrega'] = convertir_fecha(datos_pedido['fecha_entrega'])
+
+        # Convertir valores numéricos a float
         try:
-            datos_pedido['fecha'] = convertir_fecha(datos_pedido['fecha'])
-            datos_pedido['fecha_entrega'] = convertir_fecha(datos_pedido['fecha_entrega'])
-            datos_pedido['fecha_lab'] = convertir_fecha(datos_pedido['fecha_lab'])
+            datos_pedido['valor_montura'] = float(datos_pedido['valor_montura'] or 0.0)
+            datos_pedido['valor_lente'] = float(datos_pedido['valor_lente'] or 0.0)
+            datos_pedido['valor_otros'] = float(datos_pedido['valor_otros'] or 0.0)
+            datos_pedido['total_venta'] = float(datos_pedido['total_venta'] or 0.0)
         except ValueError as e:
-            return f"Error en la fecha: {str(e)}", 400
+            return f"Error en la conversión de valores numéricos: {str(e)}"
 
+        # Actualizar los datos del cliente
         cursor = mysql.connection.cursor()
-
-        # ======================
-        # OBTENER DATOS ACTUALES
-        # ======================
-
-        # 1. clientes
-        cursor.execute('''
-            SELECT nombre_cliente, tipo_identificacion, numero_identificacion, direccion_entrega, 
-                   departamento, ciudad, barrio, telefonos, email, regimen_iva, ordenado_a, ordenado_por
-            FROM clientes
-            WHERE cliente_id = %s
-        ''', (cliente_id,))
-        cliente_actual = cursor.fetchone()
-        cols_clientes = [col[0] for col in cursor.description]
-
-        # 2. pedidos
-        cursor.execute('''
-            SELECT nombre_laboratorio, vendedor, codigo_montura, valor_montura, 
-                   codigo_lente, valor_lente, otros, valor_otros, total_venta, 
-                   guia_despacho, observaciones, fecha_entrega, fecha
-            FROM pedidos
-            WHERE cliente_id = %s
-        ''', (cliente_id,))
-        pedido_actual = cursor.fetchone()
-        cols_pedidos = [col[0] for col in cursor.description]
-
-        # 3. detalles_Lentes
-        cursor.execute('''
-            SELECT esfera_od, cilindro_od, eje_od, adicion_od, dp_od, 
-                   esfera_oi, cilindro_oi, eje_oi, adicion_oi, dp_oi
-            FROM detalles_Lentes
-            WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
-        ''', (cliente_id,))
-        lentes_actual = cursor.fetchone()
-        cols_lentes = [col[0] for col in cursor.description]
-
-        # 4. orden_Laboratorio
-        cursor.execute('''
-            SELECT montura, color, material_lentes, ar, progresivo, 
-                   gama_progresivo, monofocal, opcion_monofocal, fotocromatico, 
-                   bifocal, af, corredor, adicional, gama_fotocromatico
-            FROM orden_Laboratorio
-            WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
-        ''', (cliente_id,))
-        laboratorio_actual = cursor.fetchone()
-        cols_laboratorio = [col[0] for col in cursor.description]
-
-        # 5. Pagos
-        cursor.execute('''
-            SELECT pago_efectivo, pago_bancolombia, pago_davivienda, pasa_pagos, 
-                   pago_bold, pago_mensajeria_eklat, pago_mercadopago, pago_sistecredito, 
-                   pago_addi, pago_envia, pago_interapidismo, pago_servientrega, pago_otro
-            FROM pagos
-            WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
-        ''', (cliente_id,))
-        pagos_actual = cursor.fetchone()
-        cols_pagos = [col[0] for col in cursor.description]
-
-        # Si existe Lensometría para DIRECTOR
-        lensometria_actual = None
-        cols_lensometria = []
-        if role == 'director':
-            cursor.execute('''
-                SELECT lensometria, registro_invima_od, registro_invima_oi, 
-                       lote_od, lote_oi, aprobado
-                FROM lensometria
-                WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
-            ''', (cliente_id,))
-            lensometria_actual = cursor.fetchone()
-            if lensometria_actual:
-                cols_lensometria = [col[0] for col in cursor.description]
-
-        # ===========
-        # COMPARAR DATOS
-        # ===========
-
-        cambios = {}
-
-        def comparar_datos(actual_dict, nuevo_dict, seccion):
-            """
-            Compara los valores de actual_dict con nuevo_dict.
-            - actual_dict: {columna: valor}
-            - nuevo_dict:  {campo_form: valor_form}
-            Si hay diferencias, las agrega en cambios[seccion].
-            """
-            for key, nuevo_valor in nuevo_dict.items():
-                if key in actual_dict:
-                    valor_actual = actual_dict[key] if actual_dict[key] is not None else ''
-                    valor_nuevo = nuevo_valor if nuevo_valor is not None else ''
-
-                    if str(valor_actual).strip() != str(valor_nuevo).strip():
-                        if seccion not in cambios:
-                            cambios[seccion] = {}
-                        cambios[seccion][key] = {
-                            'antes': valor_actual,
-                            'despues': valor_nuevo
-                        }
-
-        # 1. Comparar clientes
-        if cliente_actual:
-            dict_clientes = dict(zip(cols_clientes, cliente_actual))
-            comparar_datos(dict_clientes, datos_pedido, 'clientes')
-
-        # 2. Comparar pedidos
-        if pedido_actual:
-            dict_pedidos = dict(zip(cols_pedidos, pedido_actual))
-            comparar_datos(dict_pedidos, datos_pedido, 'pedidos')
-
-        # 3. Comparar detalles_Lentes
-        if lentes_actual:
-            dict_lentes = dict(zip(cols_lentes, lentes_actual))
-            comparar_datos(dict_lentes, datos_lentes, 'detalles_Lentes')
-
-        # 4. Comparar orden_Laboratorio
-        if laboratorio_actual:
-            dict_lab = dict(zip(cols_laboratorio, laboratorio_actual))
-            comparar_datos(dict_lab, datos_laboratorio, 'orden_Laboratorio')
-
-        # 5. Comparar pagos
-        if pagos_actual:
-            dict_pagos = dict(zip(cols_pagos, pagos_actual))
-            comparar_datos(dict_pagos, pagos, 'pagos')
-
-        # 6. Comparar Lensometría (solo para director)
-        if role == 'director' and lensometria_actual and datos_lensometria:
-            dict_lensometria_actual = dict(zip(cols_lensometria, lensometria_actual))
-            comparar_datos(dict_lensometria_actual, datos_lensometria, 'lensometria')
-
-        # ======================
-        # ACTUALIZAR LAS TABLAS
-        # ======================
-        # 1. clientes
         cursor.execute('''
             UPDATE clientes
-            SET nombre_cliente = %s, tipo_identificacion = %s, numero_identificacion = %s, 
-                direccion_entrega = %s, departamento = %s, ciudad = %s, barrio = %s, 
-                telefonos = %s, email = %s, regimen_iva = %s, ordenado_a = %s, ordenado_por = %s
+            SET nombre_cliente = %s, tipo_identificacion = %s, numero_identificacion = %s, direccion_entrega = %s, departamento = %s, ciudad = %s, barrio = %s, telefonos = %s, email = %s, regimen_iva = %s, ordenado_a = %s, ordenado_por = %s
             WHERE cliente_id = %s
-        ''', (
-            datos_pedido['nombre_cliente'],
-            datos_pedido['tipo_identificacion'],
-            datos_pedido['numero_identificacion'],
-            datos_pedido['direccion_entrega'],
-            datos_pedido['departamento'],
-            datos_pedido['ciudad'],
-            datos_pedido['barrio'],
-            datos_pedido['telefonos'],
-            datos_pedido['email'],
-            datos_pedido['tipo_regimen_iva'],
-            datos_pedido['ordenado_a'],
-            datos_pedido['ordenado_por'],
-            cliente_id
-        ))
+        ''', (datos_pedido['nombre_cliente'], datos_pedido['tipo_identificacion'], datos_pedido['numero_identificacion'],
+              datos_pedido['direccion_entrega'], datos_pedido['departamento'], datos_pedido['ciudad'], datos_pedido['barrio'], datos_pedido['telefonos'],
+              datos_pedido['email'], datos_pedido['tipo_regimen_iva'], datos_pedido['ordenado_a'], datos_pedido['ordenado_por'], cliente_id))
 
-        # 2. pedidos
+        # Actualizar los datos del pedido
         cursor.execute('''
             UPDATE pedidos
-            SET nombre_laboratorio = %s, vendedor = %s, codigo_montura = %s, valor_montura = %s, 
-                codigo_lente = %s, valor_lente = %s, otros = %s, valor_otros = %s, total_venta = %s, 
-                guia_despacho = %s, observaciones = %s, fecha_entrega = %s, fecha = %s
+            SET nombre_laboratorio = %s, vendedor = %s, codigo_montura = %s, valor_montura = %s, codigo_lente = %s, valor_lente = %s, otros = %s, valor_otros = %s, total_venta = %s, guia_despacho = %s, observaciones = %s, fecha_entrega = %s
             WHERE cliente_id = %s
-        ''', (
-            datos_pedido['nombre_laboratorio'],
-            datos_pedido['vendedor'],
-            datos_pedido['codigo_montura'],
-            datos_pedido['valor_montura'],
-            datos_pedido['codigo_lente'],
-            datos_pedido['valor_lente'],
-            datos_pedido['otros'],
-            datos_pedido['valor_otros'],
-            datos_pedido['total_venta'],
-            datos_pedido['guia_despacho'],
-            datos_pedido['observaciones'],
-            datos_pedido['fecha_entrega'],
-            datos_pedido['fecha'],
-            cliente_id
-        ))
+        ''', (datos_pedido['nombre_laboratorio'], datos_pedido['vendedor'], datos_pedido['codigo_montura'], datos_pedido['valor_montura'],
+              datos_pedido['codigo_lente'], datos_pedido['valor_lente'], datos_pedido['otros'], datos_pedido['valor_otros'],
+              datos_pedido['total_venta'], datos_pedido['guia_despacho'], datos_pedido['observaciones'], datos_pedido['fecha_entrega'], cliente_id))
 
-        # 3. detalles_Lentes
+        # Obtener el pedido_id para actualizar las demás tablas
+        cursor.execute('SELECT pedido_id FROM pedidos WHERE cliente_id = %s ORDER BY pedido_id DESC LIMIT 1', (cliente_id,))
+        pedido_id = cursor.fetchone()[0]
+
+        # Actualizar los detalles de los lentes
         cursor.execute('''
-            UPDATE detalles_Lentes
-            SET esfera_od = %s, cilindro_od = %s, eje_od = %s, adicion_od = %s, dp_od = %s, 
-                esfera_oi = %s, cilindro_oi = %s, eje_oi = %s, adicion_oi = %s, dp_oi = %s
-            WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
-        ''', (
-            datos_lentes['esfera_od'],
-            datos_lentes['cilindro_od'],
-            datos_lentes['eje_od'],
-            datos_lentes['adicion_od'],
-            datos_lentes['dp_od'],
-            datos_lentes['esfera_oi'],
-            datos_lentes['cilindro_oi'],
-            datos_lentes['eje_oi'],
-            datos_lentes['adicion_oi'],
-            datos_lentes['dp_oi'],
-            cliente_id
-        ))
+            UPDATE detalles_lentes
+            SET esfera_od = %s, cilindro_od = %s, eje_od = %s, adicion_od = %s, dp_od = %s, esfera_oi = %s, cilindro_oi = %s, eje_oi = %s, adicion_oi = %s, dp_oi = %s
+            WHERE pedido_id = %s
+        ''', (request.form.get('esfera_od', ''), request.form.get('cilindro_od', ''), request.form.get('eje_od', ''), request.form.get('adicion_od', ''),
+              request.form.get('dp_od', ''), request.form.get('esfera_oi', ''), request.form.get('cilindro_oi', ''), request.form.get('eje_oi', ''),
+              request.form.get('adicion_oi', ''), request.form.get('dp_oi', ''), pedido_id))
 
-        # 4. orden_Laboratorio
+        # Obtener el valor de AR y si es "Otro", obtener el valor del campo adicional
+        ar = request.form.get('ar', '')
+        if ar == 'Otro':
+            ar = request.form.get('ar_otro', '')
+
+        # Actualizar la orden del laboratorio
         cursor.execute('''
-            UPDATE orden_Laboratorio
-            SET montura = %s, color = %s, material_lentes = %s, ar = %s, progresivo = %s, 
-                gama_progresivo = %s, monofocal = %s, opcion_monofocal = %s, fotocromatico = %s, 
-                bifocal = %s, af = %s, corredor = %s, adicional = %s, gama_fotocromatico = %s
-            WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
-        ''', (
-            datos_laboratorio['montura'],
-            datos_laboratorio['color'],
-            datos_laboratorio['material_lentes'],
-            datos_laboratorio['ar'],
-            datos_laboratorio['progresivo'],
-            datos_laboratorio['gama_progresivo'],
-            datos_laboratorio['monofocal'],
-            datos_laboratorio['opcion_monofocal'],
-            datos_laboratorio['fotocromatico'],
-            datos_laboratorio['bifocal'],
-            datos_laboratorio['af'],
-            datos_laboratorio['corredor'],
-            datos_laboratorio['adicional'],
-            datos_laboratorio['fotocromatico_cual'],
-            cliente_id
-        ))
+            UPDATE orden_laboratorio
+            SET montura = %s, color = %s, material_lentes = %s, ar = %s, progresivo = %s, gama_progresivo = %s, monofocal = %s, opcion_monofocal = %s, fotocromatico = %s, bifocal = %s, af = %s, corredor = %s, adicional = %s
+            WHERE pedido_id = %s
+        ''', (request.form.get('montura', ''), request.form.get('color', ''), request.form.get('material_lentes', ''), ar,  # Usar el valor ajustado de AR
+              request.form.get('progresivo', ''), request.form.get('progresivo_gama', ''), request.form.get('monofocal', ''), request.form.get('monofocal_option', ''),
+              request.form.get('fotocrom', ''), request.form.get('bifocal', ''), request.form.get('af', ''), request.form.get('corredor', ''),
+              request.form.get('adicional', ''), pedido_id))
 
-        # 5. pagos
+        # Actualizar los pagos
         cursor.execute('''
             UPDATE pagos
-            SET pago_efectivo = %s, pago_bancolombia = %s, pago_davivienda = %s, pasa_pagos = %s, 
-                pago_bold = %s, pago_mensajeria_eklat = %s, pago_mercadopago = %s, pago_sistecredito = %s, 
-                pago_addi = %s, pago_envia = %s, pago_interapidismo = %s, pago_servientrega = %s, pago_otro = %s
-            WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
-        ''', (
-            pagos['pago_efectivo'],
-            pagos['pago_bancolombia'],
-            pagos['pago_davivienda'],
-            pagos['pasa_pagos'],
-            pagos['pago_bold'],
-            pagos['pago_mensajeria_eklat'],
-            pagos['pago_mercadopago'],
-            pagos['pago_sistecredito'],
-            pagos['pago_addi'],
-            pagos['pago_envia'],
-            pagos['pago_interapidismo'],
-            pagos['pago_servientrega'],
-            pagos['pago_otro'],
-            cliente_id
-        ))
-
-        # 6. lensometria (solo para director)
-        if role == 'director' and datos_lensometria:
-            cursor.execute('''
-                UPDATE lensometria
-                SET lensometria = %s, registro_invima_od = %s, registro_invima_oi = %s, 
-                    lote_od = %s, lote_oi = %s, aprobado = %s
-                WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
-            ''', (
-                datos_lensometria['lensometria'],
-                datos_lensometria['registro_invima_od'],
-                datos_lensometria['registro_invima_oi'],
-                datos_lensometria['lote_od'],
-                datos_lensometria['lote_oi'],
-                datos_lensometria['aprobado'],
-                cliente_id
-            ))
-
-        # =======================
-        # REGISTRAR CAMBIOS (AUDITORÍA)
-        # =======================
-        usuario = session['username']
-        cursor.execute('''
-            INSERT INTO auditoria (pedido_id, usuario, cambio)
-            VALUES (
-                (SELECT pedido_id FROM pedidos WHERE cliente_id = %s),
-                %s,
-                %s
-            )
-        ''', (
-            cliente_id,
-            usuario,
-            json.dumps(cambios, ensure_ascii=False)
-        ))
+            SET pago_efectivo = %s, pago_bancolombia = %s, pago_davivienda = %s, pasa_pagos = %s, pago_bold = %s, pago_mensajeria_eklat = %s, pago_mercadopago = %s, pago_sistecredito = %s, pago_addi = %s, pago_envia = %s, pago_interapidismo = %s, pago_servientrega = %s, pago_otro = %s
+            WHERE pedido_id = %s
+        ''', (int(request.form.get('pago_efectivo', '0')), int(request.form.get('pago_bancolombia', '0')), int(request.form.get('pago_davivienda', '0')),
+              int(request.form.get('pasa_pagos', '0')), int(request.form.get('pago_bold', '0')), int(request.form.get('pago_mensajeria_eklat', '0')),
+              int(request.form.get('pago_mercadopago', '0')), int(request.form.get('pago_sistecredito', '0')), int(request.form.get('pago_addi', '0')),
+              int(request.form.get('pago_envia', '0')), int(request.form.get('pago_interapidismo', '0')), int(request.form.get('pago_servientrega', '0')),
+              int(request.form.get('pago_otro', '0')), pedido_id))
 
         mysql.connection.commit()
 
@@ -1188,8 +897,8 @@ def guardar_cambios(cliente_id):
 
     except Exception as e:
         print(f"Error: {str(e)}")
-        return f"Ocurrió un error: {str(e)}", 400
-
+        return f"Ocurrió un error: {str(e)}"
+    
 def auditor_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -1203,7 +912,7 @@ def auditor_required(f):
 @auditor_required
 def ver_auditoria():
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM auditoria ORDER BY fecha DESC')
+    cursor.execute('SELECT * FROM Auditoria ORDER BY fecha DESC')
     auditoria = cursor.fetchall()
     return render_template('auditoria.html', auditoria=auditoria)
    
@@ -1225,7 +934,6 @@ def format_currency(value):
 def consulta_unificada():
     filtro = None
     numero_identificacion = None
-    numero_orden = None
     pedidos = []
 
     if request.method == 'POST':
@@ -1235,7 +943,6 @@ def consulta_unificada():
 
         cursor = mysql.connection.cursor()
 
-        # Prioridad de búsqueda: primero número de orden, luego número de identificación, luego filtro
         if numero_orden:
             # Consulta por número de orden
             cursor.execute('''
@@ -1244,51 +951,38 @@ def consulta_unificada():
                 WHERE pedidos.pedido_id = %s
                 ORDER BY pedidos.pedido_id DESC
             ''', (numero_orden,))
-        
+
         elif numero_identificacion:
             # Consulta por número de identificación
             cursor.execute('''
-                SELECT pedidos.pedido_id, pedidos.fecha, pedidos.total_venta, pedidos.vendedor, clientes.cliente_id
+                SELECT pedidos.pedido_id, pedidos.fecha, pedidos.total_venta, pedidos.guia_despacho,
+                       pedidos.fecha_entrega, clientes.cliente_id
                 FROM pedidos
                 JOIN clientes ON pedidos.cliente_id = clientes.cliente_id
                 WHERE clientes.numero_identificacion = %s
                 ORDER BY pedidos.pedido_id DESC
             ''', (numero_identificacion,))
-        
-        elif filtro:
-            # Consulta por filtro con información del vendedor
-            base_query = '''
-                SELECT pedidos.pedido_id, pedidos.fecha, pedidos.total_venta, pedidos.vendedor, pedidos.guia_despacho, pedidos.fecha_entrega, pedidos.cliente_id
-                FROM pedidos
-            '''
-            if filtro == 'Activos':
-                cursor.execute(base_query + " WHERE fecha_entrega IS NULL ORDER BY pedidos.pedido_id DESC")
-            elif filtro == 'Terminados':
-                cursor.execute(base_query + " WHERE fecha_entrega IS NOT NULL ORDER BY pedidos.pedido_id DESC")
-            elif filtro == 'En proceso':
-                cursor.execute(base_query + " WHERE (guia_despacho IS NULL OR guia_despacho = '') AND fecha_entrega IS NULL ORDER BY pedidos.pedido_id DESC")
-            elif filtro == 'Despachados':
-                cursor.execute(base_query + " WHERE guia_despacho IS NOT NULL AND guia_despacho != '' AND fecha_entrega IS NULL ORDER BY pedidos.pedido_id DESC")
-            else:
-                cursor.execute(base_query + " ORDER BY pedidos.pedido_id DESC")
-        
-        else:
-            # Consulta general sin filtro
-            cursor.execute('''
-                SELECT pedidos.pedido_id, pedidos.fecha, pedidos.total_venta, pedidos.vendedor, pedidos.guia_despacho, pedidos.fecha_entrega, pedidos.cliente_id
-                FROM pedidos
-                ORDER BY pedidos.pedido_id DESC
-            ''')
 
+        elif filtro:
+            # Consulta por filtro, asegurando siempre el mismo orden de columnas
+            if filtro == 'Activos':
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE fecha_entrega IS NULL")
+            elif filtro == 'Terminados':
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE fecha_entrega IS NOT NULL")
+            elif filtro == 'En proceso':
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE (guia_despacho IS NULL OR guia_despacho = '') AND fecha_entrega IS NULL")
+            elif filtro == 'Despachados':
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE guia_despacho IS NOT NULL AND guia_despacho != '' AND fecha_entrega IS NULL")
+            else:
+                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos")
+        
         pedidos = cursor.fetchall()
         cursor.close()
 
         # Imprimir los pedidos para depuración
         print("pedidos recuperados:", pedidos)
 
-    return render_template('lista.html', pedidos=pedidos, filtro=filtro, numero_identificacion=numero_identificacion, numero_orden=numero_orden)
-
-
+    return render_template('lista.html', pedidos=pedidos, filtro=filtro, numero_identificacion=numero_identificacion)
 
 @app.route('/rotulo/<int:cliente_id>')
 def rotulo(cliente_id):
@@ -1320,5 +1014,12 @@ def rotulo(cliente_id):
     except Exception as e:
         return f"Error en la consulta: {str(e)}"
 
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+

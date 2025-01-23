@@ -1,26 +1,8 @@
 {
-    "ADMIN": {
-        "password": "$2b$12$XubDfe6jOKldqEwnG6M8sejMf7Xl23OjF1gTJbIaz7mATNjKj2/K6",
-        "role": "auditor"
-    },
-    "VR-vendor": {
-        "password": "$2b$12$LJAvuPFHxGIYdvYi3txuXu/jZfcr970ncjVn/0ehozdnG1dNfRTte",
-        "role": "user"
-    },
-    "JP-vendor": {
-        "password": "$2b$12$6UjbIDZRGXUiUGKYgGc9G.9K1iawK0GGZqAJPDZl3lrACew7sKaxG",
-        "role": "user"
-    },
-    "NE-vendor": {
-        "password": "$2b$12$6eyKsxJ6yI3CV7nevwYqDelIOptEB/xB.ci.SFUFB3c/ZwyTzviD.",
-        "role": "user"
-    },
-    "XX-vendor": {
-        "password": "$2b$12$sTbgRzGtkoSCLRCky4Qf.eGrDTov4ThoqRlSex3RMRp55wVdaubM2",
-        "role": "user"
-    },
-    "D-Cientifica": {
-        "password": "$2b$12$FTQsoRXPSS42KMJBNHr48.eqD/yJEXlHuVFWpn/XqSv6vXqEzWznO",
-        "role": "director"
-    }
+    "user1": "$2b$12$1Qd79Rm0bgopnBIpQTwp0OtAHP5XuhcPpZ15fXaZRsk/HYiSRDCWS",
+    "user2": "$2b$12$ViyD4SMZZEncPBNRvfJyn.L5bx.gha7n7HyZT0gNbXW1Iz/DhYfxy",
+    "user3": "$2b$12$AstlkAdc3yILUvXjSLjrXuvs.TdFGfTLRljObo2qde8PXaofUlqeK",
+    "user4": "$2b$12$f.zBUJhuNDBdKCYCe2dxh.XIZk2DoYoYFAur4MhklG8cXoFZGlMY2",
+    "user5": "$2b$12$9PVdE4qguO.i4QoU/mIkfe/sU7vGQyXLTGGAhZC4n1nYaFplVXL6m",
+    "user6": "$2b$12$BZ99VWjPQvPQTqkud/H6ZegW3PQEwSSZin6LVcAMRcifOcjsSJNUa"
 }
