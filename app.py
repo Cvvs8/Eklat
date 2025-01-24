@@ -564,7 +564,7 @@ def imprimir_laboratorio(pedido_id):
                            corredor = pedido[24],
                            adicional=pedido[25])
 
-
+'''
 @app.route('/imprimir_pedido/<int:pedido_id>')
 def imprimir_pedido(pedido_id):
     cursor = mysql.connection.cursor()
@@ -632,7 +632,7 @@ def imprimir_pedido(pedido_id):
                            pago_mensajeria_eklat=pedido[31],  # índice 31
                            pago_otro=pedido[32])  # índice 32
 
-
+'''
 @app.route('/editar/<int:cliente_id>', methods=['GET'])
 def editar(cliente_id):
 
