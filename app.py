@@ -914,7 +914,7 @@ def auditor_required(f):
 @auditor_required
 def ver_auditoria():
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM Auditoria ORDER BY fecha DESC')
+    cursor.execute('SELECT * FROM auditoria ORDER BY fecha DESC')
     auditoria = cursor.fetchall()
     return render_template('auditoria.html', auditoria=auditoria)
    
