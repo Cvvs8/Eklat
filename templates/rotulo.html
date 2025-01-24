@@ -154,14 +154,11 @@
     </div>
 
     <div class="logo">
-        <div class="image-selector" onclick="document.getElementById('empresa').click();">
-            <img id="logo-img" src="{{ url_for('static', filename='images/envia.png') }}" alt="Envía">
-        </div>
     
         <select id="empresa" class="input-overlay-select" onchange="cambiarLogo()">
-            <option value="envia" data-image="{{ url_for('static', filename='images/envia.png') }}">Envía</option>
-            <option value="interrapidisimo" data-image="{{ url_for('static', filename='images/interrapidisimo.png') }}">Interrapidísimo</option>
-            <option value="servientrega" data-image="{{ url_for('static', filename='images/servientrega.png') }}">Servientrega</option>
+            <option value="envia" class="delicado">Envía</option>
+            <option value="interrapidisimo" class="delicado"">Interrapidísimo</option>
+            <option value="servientrega" class="delicado">Servientrega</option>
         </select>
     </div>
 
