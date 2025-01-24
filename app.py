@@ -924,7 +924,7 @@ def guardar_cambios(cliente_id):
         cursor.execute('''
             SELECT esfera_od, cilindro_od, eje_od, adicion_od, dp_od, 
                    esfera_oi, cilindro_oi, eje_oi, adicion_oi, dp_oi
-            FROM detalles_Lentes
+            FROM detalles_lentes
             WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
         ''', (cliente_id,))
         lentes_actual = cursor.fetchone()
@@ -935,7 +935,7 @@ def guardar_cambios(cliente_id):
             SELECT montura, color, material_lentes, ar, progresivo, 
                    gama_progresivo, monofocal, opcion_monofocal, fotocromatico, 
                    bifocal, af, corredor, adicional, gama_fotocromatico
-            FROM orden_Laboratorio
+            FROM orden_laboratorio
             WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
         ''', (cliente_id,))
         laboratorio_actual = cursor.fetchone()
@@ -1005,12 +1005,12 @@ def guardar_cambios(cliente_id):
         # 3. Comparar Detalles_Lentes
         if lentes_actual:
             dict_lentes = dict(zip(cols_lentes, lentes_actual))
-            comparar_datos(dict_lentes, datos_lentes, 'detalles_Lentes')
+            comparar_datos(dict_lentes, datos_lentes, 'detalles_lentes')
 
         # 4. Comparar Orden_Laboratorio
         if laboratorio_actual:
             dict_lab = dict(zip(cols_laboratorio, laboratorio_actual))
-            comparar_datos(dict_lab, datos_laboratorio, 'orden_Laboratorio')
+            comparar_datos(dict_lab, datos_laboratorio, 'orden_laboratorio')
 
         # 5. Comparar Pagos
         if pagos_actual:
@@ -1074,7 +1074,7 @@ def guardar_cambios(cliente_id):
 
         # 3. Detalles_Lentes
         cursor.execute('''
-            UPDATE detalles_Lentes
+            UPDATE detalles_lentes
             SET esfera_od = %s, cilindro_od = %s, eje_od = %s, adicion_od = %s, dp_od = %s, 
                 esfera_oi = %s, cilindro_oi = %s, eje_oi = %s, adicion_oi = %s, dp_oi = %s
             WHERE pedido_id = (SELECT pedido_id FROM pedidos WHERE cliente_id = %s)
@@ -1094,7 +1094,7 @@ def guardar_cambios(cliente_id):
 
         # 4. Orden_Laboratorio
         cursor.execute('''
-            UPDATE orden_Laboratorio
+            UPDATE orden_laboratorio
             SET montura = %s, color = %s, material_lentes = %s, ar = %s, progresivo = %s, 
                 gama_progresivo = %s, monofocal = %s, opcion_monofocal = %s, fotocromatico = %s, 
                 bifocal = %s, af = %s, corredor = %s, adicional = %s, gama_fotocromatico = %s
