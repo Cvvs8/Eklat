@@ -50,6 +50,7 @@ def login():
             stored_hash = users[username]['password'].encode('utf-8')
             if bcrypt.checkpw(password_bytes, stored_hash):
                 session['username'] = username
+                session['role'] = users[username]['role']
                 return redirect(url_for('menu'))
             else:
                 return 'Inicio de sesión fallido. Verifica tus credenciales.', 401
