@@ -564,75 +564,74 @@ def imprimir_laboratorio(pedido_id):
                            corredor = pedido[24],
                            adicional=pedido[25])
 
-'''
-@app.route('/imprimir_pedido/<int:pedido_id>')
-def imprimir_pedido(pedido_id):
-    cursor = mysql.connection.cursor()
+
+#@app.route('/imprimir_pedido/<int:pedido_id>')
+#def imprimir_pedido(pedido_id):
+#    cursor = mysql.connection.cursor()
 
     # Consulta los datos del pedido y cliente usando el pedido_id
-    cursor.execute('''
-        SELECT clientes.nombre_cliente, clientes.numero_identificacion, clientes.direccion_entrega, clientes.departamento, clientes.ciudad, clientes.barrio, clientes.telefonos, clientes.email,
-               pedidos.pedido_id, pedidos.nombre_laboratorio, pedidos.vendedor, pedidos.codigo_montura, pedidos.valor_montura, pedidos.codigo_lente, pedidos.valor_lente,
-               pedidos.otros, pedidos.valor_otros, pedidos.total_venta, pedidos.fecha, pedidos.observaciones,
-               pagos.pago_efectivo, pagos.pago_bancolombia, pagos.pago_davivienda, pagos.pasa_pagos, pagos.pago_bold, pagos.pago_mercadopago,
-               pagos.pago_sistecredito, pagos.pago_addi, pagos.pago_envia, pagos.pago_interapidismo, pagos.pago_servientrega, pagos.pago_mensajeria_eklat, pagos.pago_otro
-        FROM pedidos
-        JOIN clientes ON pedidos.cliente_id = clientes.cliente_id
-        JOIN pagos ON pedidos.pedido_id = pagos.pedido_id
-        WHERE pedidos.pedido_id = %s
-    ''', (pedido_id,))
+#    cursor.execute('''
+#        SELECT clientes.nombre_cliente, clientes.numero_identificacion, clientes.direccion_entrega, clientes.departamento, clientes.ciudad, clientes.barrio, clientes.telefonos, clientes.email,
+#               pedidos.pedido_id, pedidos.nombre_laboratorio, pedidos.vendedor, pedidos.codigo_montura, pedidos.valor_montura, pedidos.codigo_lente, pedidos.valor_lente,
+#               pedidos.otros, pedidos.valor_otros, pedidos.total_venta, pedidos.fecha, pedidos.observaciones,
+#               pagos.pago_efectivo, pagos.pago_bancolombia, pagos.pago_davivienda, pagos.pasa_pagos, pagos.pago_bold, pagos.pago_mercadopago,
+#               pagos.pago_sistecredito, pagos.pago_addi, pagos.pago_envia, pagos.pago_interapidismo, pagos.pago_servientrega, pagos.pago_mensajeria_eklat, pagos.pago_otro
+#        FROM pedidos
+#        JOIN clientes ON pedidos.cliente_id = clientes.cliente_id
+#        JOIN pagos ON pedidos.pedido_id = pagos.pedido_id
+#        WHERE pedidos.pedido_id = %s
+#    ''', (pedido_id,))
     
-    pedido = cursor.fetchone()
+#    pedido = cursor.fetchone()
 
-    if not pedido:
-        return "No se encontró ningún pedido con ese número de pedido."
+#    if not pedido:
+#        return "No se encontró ningún pedido con ese número de pedido."
 
     # Manejo de fecha: la columna fecha está en el índice 18
-    fecha_pedido = pedido[18]  
-    dia = fecha_pedido.day
-    mes = fecha_pedido.month
-    año = fecha_pedido.year
+#    fecha_pedido = pedido[18]  
+#    dia = fecha_pedido.day
+#    mes = fecha_pedido.month
+#    año = fecha_pedido.year
 
     # Renderizar la plantilla pedido.html
-    return render_template('pedido.html', pedido_id=pedido[8],
-                           dia=dia,
-                           mes=mes,
-                           año=año,
-                           numero_orden=pedido[8],  # pedido_id que está en el índice 8
-                           nombre_laboratorio=pedido[9],  # índice 9
-                           vendedor=pedido[10],  # índice 10
-                           nombre_cliente=pedido[0],  # índice 0
-                           identificacion_cliente=pedido[1],  # índice 1
-                           direccion_entrega=pedido[2],  # índice 2
-                           departamento=pedido[3],  # índice 3
-                           ciudad=pedido[4],  # índice 4
-                           barrio=pedido[5],  # índice 5
-                           telefonos=pedido[6],  # índice 6
-                           email=pedido[7],  # índice 7
-                           codigo_montura=pedido[11],  # índice 11
-                           valor_montura=pedido[12],  # índice 12
-                           codigo_lente=pedido[13],  # índice 13
-                           valor_lente=pedido[14],  # índice 14
-                           otros=pedido[15],  # índice 15
-                           valor_otros=pedido[16],  # índice 16
-                           total_venta=pedido[17],  # índice 17
-                           observaciones=pedido[19],  # observaciones en el índice 19
+#    return render_template('pedido.html', pedido_id=pedido[8],
+#                           dia=dia,
+#                           mes=mes,
+#                           año=año,
+#                           numero_orden=pedido[8],  # pedido_id que está en el índice 8
+#                           nombre_laboratorio=pedido[9],  # índice 9
+#                           vendedor=pedido[10],  # índice 10
+#                           nombre_cliente=pedido[0],  # índice 0
+#                           identificacion_cliente=pedido[1],  # índice 1
+#                           direccion_entrega=pedido[2],  # índice 2
+#                           departamento=pedido[3],  # índice 3
+#                           ciudad=pedido[4],  # índice 4
+#                           barrio=pedido[5],  # índice 5
+#                           telefonos=pedido[6],  # índice 6
+#                           email=pedido[7],  # índice 7
+#                           codigo_montura=pedido[11],  # índice 11
+#                           valor_montura=pedido[12],  # índice 12
+#                           codigo_lente=pedido[13],  # índice 13
+#                           valor_lente=pedido[14],  # índice 14
+#                           otros=pedido[15],  # índice 15
+#                           valor_otros=pedido[16],  # índice 16
+#                           total_venta=pedido[17],  # índice 17
+#                           observaciones=pedido[19],  # observaciones en el índice 19
                            # Información de pagos (correctamente alineada)
-                           pago_efectivo=pedido[20],  # índice 20
-                           pago_bancolombia=pedido[21],  # índice 21
-                           pago_davivienda=pedido[22],  # índice 22
-                           pago_pasa_pagos=pedido[23],  # índice 23
-                           pago_bold=pedido[24],  # índice 24
-                           pago_mercadopago=pedido[25],  # índice 25
-                           pago_sistecredito=pedido[26],  # índice 26
-                           pago_addi=pedido[27],  # índice 27
-                           pago_envia=pedido[28],  # índice 28
-                           pago_interapidismo=pedido[29],  # índice 29
-                           pago_servientrega=pedido[30],  # índice 30
-                           pago_mensajeria_eklat=pedido[31],  # índice 31
-                           pago_otro=pedido[32])  # índice 32
+#                           pago_efectivo=pedido[20],  # índice 20
+#                           pago_bancolombia=pedido[21],  # índice 21
+#                           pago_davivienda=pedido[22],  # índice 22
+#                           pago_pasa_pagos=pedido[23],  # índice 23
+#                           pago_bold=pedido[24],  # índice 24
+#                          pago_mercadopago=pedido[25],  # índice 25
+#                           pago_sistecredito=pedido[26],  # índice 26
+#                           pago_addi=pedido[27],  # índice 27
+#                           pago_envia=pedido[28],  # índice 28
+#                           pago_interapidismo=pedido[29],  # índice 29
+#                           pago_servientrega=pedido[30],  # índice 30
+#                           pago_mensajeria_eklat=pedido[31],  # índice 31
+#                           pago_otro=pedido[32])  # índice 32
 
-'''
 @app.route('/editar/<int:cliente_id>', methods=['GET'])
 def editar(cliente_id):
 
