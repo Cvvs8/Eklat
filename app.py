@@ -762,7 +762,7 @@ def editar(cliente_id):
     ''', (pedido_id,))
     lensometria = cursor.fetchone()
 
-    if lensometria is None:
+    if not lensometria :
         lensometria = ('', '', '', '', '', '')
 
     puede_editar_lensometria = role == 'director'
