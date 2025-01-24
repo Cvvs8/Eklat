@@ -62,9 +62,11 @@ def login():
 def menu():
     if 'username' not in session:
         return redirect(url_for('login'))
-    role = session.get('role', 'user')  # Obtener el rol del usuario de la sesión
-    return render_template('Menu.html', role=role)  # Pasar el rol a la plantilla
-  # Asegúrate de que exista la plantilla Menu.html
+    
+    role = session.get('role', 'user')  # Obtener el rol almacenado en la sesión
+    print(f"Usuario: {session['username']}, Rol: {role}")
+    
+    return render_template('Menu.html', role=role)
 
 @app.route('/nueva_orden')
 def nueva_orden():
