@@ -47,7 +47,7 @@ def login():
         users = load_users()
         print(users[username])
         if username in users:
-            stored_hash = bytes(users[username].encode('utf-8'))
+            stored_hash = users[username]['password'].encode('utf-8')
             if bcrypt.checkpw(password_bytes, stored_hash):
                 session['username'] = username
                 return redirect(url_for('menu'))
