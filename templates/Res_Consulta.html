@@ -466,7 +466,7 @@
         </table>       
         <div class="button-group">
             
-            <a href="{{ url_for('imprimir_laboratorio', numero_identificacion = numero_identificacion) }}" target="_blank">
+            <a href="{{ url_for('imprimir_laboratorio', numero_identificacion = numero_identificacion, pedido_id=pedido_id)}}" target="_blank">
                 <button class="btn">Imprimir Orden de Laboratorio</button>
             </a>
             <a href="{{ url_for('rotulo', cliente_id=cliente_id) }}" target="_blank">
