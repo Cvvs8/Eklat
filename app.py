@@ -964,18 +964,30 @@ def consulta_unificada():
             ''', (numero_identificacion,))
 
         elif filtro:
-            # Consulta por filtro, asegurando siempre el mismo orden de columnas
+            # Consulta por filtro con información del vendedor
+            base_query = '''
+                SELECT pedidos.pedido_id, pedidos.fecha, pedidos.total_venta, pedidos.vendedor, pedidos.guia_despacho, pedidos.fecha_entrega, pedidos.cliente_id
+                FROM pedidos
+            '''
             if filtro == 'Activos':
-                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE fecha_entrega IS NULL")
+                cursor.execute(base_query + " WHERE fecha_entrega IS NULL ORDER BY pedidos.pedido_id DESC")
             elif filtro == 'Terminados':
-                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE fecha_entrega IS NOT NULL")
+                cursor.execute(base_query + " WHERE fecha_entrega IS NOT NULL ORDER BY pedidos.pedido_id DESC")
             elif filtro == 'En proceso':
-                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE (guia_despacho IS NULL OR guia_despacho = '') AND fecha_entrega IS NULL")
+                cursor.execute(base_query + " WHERE (guia_despacho IS NULL OR guia_despacho = '') AND fecha_entrega IS NULL ORDER BY pedidos.pedido_id DESC")
             elif filtro == 'Despachados':
-                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos WHERE guia_despacho IS NOT NULL AND guia_despacho != '' AND fecha_entrega IS NULL")
+                cursor.execute(base_query + " WHERE guia_despacho IS NOT NULL AND guia_despacho != '' AND fecha_entrega IS NULL ORDER BY pedidos.pedido_id DESC")
             else:
-                cursor.execute("SELECT pedido_id, fecha, total_venta, guia_despacho, fecha_entrega, cliente_id FROM pedidos")
+                cursor.execute(base_query + " ORDER BY pedidos.pedido_id DESC")
         
+        else:
+            # Consulta general sin filtro
+            cursor.execute('''
+                SELECT pedidos.pedido_id, pedidos.fecha, pedidos.total_venta, pedidos.vendedor, pedidos.guia_despacho, pedidos.fecha_entrega, pedidos.cliente_id
+                FROM pedidos
+                ORDER BY pedidos.pedido_id DESC
+            ''')
+
         pedidos = cursor.fetchall()
         cursor.close()
 
