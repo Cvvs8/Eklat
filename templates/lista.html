@@ -214,6 +214,7 @@
                     <th>Pedido</th>
                     <th>Fecha</th>
                     <th>Total Venta</th>
+                    <th>Guía de Despacho</th>
                     <th>Vendedor</th>
                     <th>Acciones</th>
                 </tr>
@@ -224,6 +225,7 @@
                     <td style="color: green; font-size: 1.5rem;" class="pedido-id">{{ pedido[0] }}</td>
                     <td class="pedido-id">{{ pedido[1].strftime('%d/%m/%Y') if pedido[1] is not none else 'N/A' }}</td>
                     <td class="pedido-id">{{ pedido[2] | format_currency}}</td>
+                    <td class="pedido-id">{{ pedido[4] if pedido[4] else 'N/A' }}</td>
                     <td class="pedido-id">{{ pedido[3] if pedido[3] else 'N/A' }}</td>
                     <td>
                         <a href="{{ url_for('ver_orden', pedido_id=pedido[0]) }}" style="color: green;" class="pedido-id">Ver</a>
