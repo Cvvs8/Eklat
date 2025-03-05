@@ -847,6 +847,9 @@ def guardar_cambios(cliente_id):
             'corredor': request.form.get('corredor', ''),
             'adicional': request.form.get('adicional', '')
         }
+        
+        if datos_laboratorio['ar'] == 'Otro':
+            datos_laboratorio['ar'] = request.form.get('ar_otro', '')
 
         pagos = {
             'pago_efectivo': int(request.form.get('pago_efectivo', '0') or 0),
