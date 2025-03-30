@@ -9,6 +9,8 @@ from tkinter import Tk, Button
 from datetime import datetime
 import locale
 from functools import wraps
+import pandas as pd
+import io
 
 
 app = Flask(__name__)
@@ -1319,9 +1321,100 @@ def vista_reportes():
     return render_template('reportes.html')
 
 @app.route('/generar_reporte_excel', methods=['POST'])
-@auditor_required # <--- CAMBIO AQUÍ: Usa el decorador de auditor existente
+@auditor_required
 def generar_reporte_excel():
-    return ":D"
+    """
+    Genera un archivo Excel con datos de pedidos, clientes y pagos
+    basado en un rango de fechas (columna 'fecha' en tabla 'pedidos').
+    Obtiene clientes y pagos asociados a esos pedidos por sus respectivos IDs.
+    """
+    try:
+        start_date_str = request.form.get('start_date')
+        end_date_str = request.form.get('end_date')
+
+        if not start_date_str or not end_date_str:
+            flash('Debes seleccionar una fecha de inicio y una fecha de fin.', 'warning')
+            return redirect(url_for('vista_reportes'))
+
+        start_date = start_date_str
+        end_date = end_date_str
+
+        conn = mysql.connection
+
+        # --- Consulta 1: Datos de Pedidos en el rango de fechas ---
+        query_pedidos = """
+            SELECT
+                p.pedido_id, p.fecha, p.nombre_laboratorio, p.vendedor,
+                p.codigo_montura, p.valor_montura, p.codigo_lente, p.valor_lente,
+                p.otros, p.valor_otros, p.total_venta, p.guia_despacho,
+                p.fecha_entrega, p.observaciones, p.cliente_id
+            FROM pedidos p
+            WHERE p.fecha BETWEEN %s AND %s
+            ORDER BY p.fecha, p.pedido_id;
+        """
+        df_pedidos = pd.read_sql(query_pedidos, conn, params=(start_date, end_date))
+
+        # Verificar si se encontraron pedidos antes de continuar
+        if df_pedidos.empty:
+             flash('No se encontraron pedidos en el rango de fechas seleccionado.', 'info')
+             return redirect(url_for('vista_reportes'))
+
+        # --- Consulta 2: Datos de Clientes asociados a esos pedidos (SIN DISTINCT) ---
+        # Se mostrará la información del cliente por cada pedido que tenga en el rango
+        query_clientes = """
+            SELECT
+                c.cliente_id, p.pedido_id, -- Incluir pedido_id aquí puede ser útil para relacionar filas
+                c.nombre_cliente, c.tipo_identificacion, c.numero_identificacion,
+                c.direccion_entrega, c.departamento, c.ciudad, c.barrio,
+                c.telefonos, c.email, c.regimen_iva, c.ordenado_a, c.ordenado_por
+            FROM clientes c
+            JOIN pedidos p ON c.cliente_id = p.cliente_id
+            WHERE p.fecha BETWEEN %s AND %s
+            ORDER BY p.fecha, p.pedido_id; -- Ordenar igual que pedidos para posible correspondencia
+        """
+        df_clientes = pd.read_sql(query_clientes, conn, params=(start_date, end_date))
+
+        # --- Consulta 3: Datos de Pagos asociados a esos pedidos ---
+        query_pagos = """
+            SELECT
+                pg.pago_id, pg.pedido_id, pg.pago_efectivo, pg.pago_bancolombia, pg.pago_davivienda,
+                pg.pasa_pagos, pg.pago_bold, pg.pago_mensajeria_eklat, pg.pago_mercadopago,
+                pg.pago_sistecredito, pg.pago_addi, pg.pago_envia, pg.pago_interapidismo,
+                pg.pago_servientrega, pg.pago_otro
+            FROM pagos pg
+            JOIN pedidos p ON pg.pedido_id = p.pedido_id
+            WHERE p.fecha BETWEEN %s AND %s
+            ORDER BY p.fecha, pg.pedido_id; -- Ordenar igual que pedidos
+        """
+        df_pagos = pd.read_sql(query_pagos, conn, params=(start_date, end_date))
+
+        # --- Generar el archivo Excel en memoria ---
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df_pedidos.to_excel(writer, sheet_name='Pedidos', index=False)
+            df_clientes.to_excel(writer, sheet_name='Clientes', index=False)
+            df_pagos.to_excel(writer, sheet_name='Pagos', index=False)
+
+        output.seek(0)
+
+        # --- Preparar y enviar el archivo para descarga ---
+        filename = f"Reporte_Pedidos_{start_date}_a_{end_date}.xlsx"
+        return send_file(
+            output,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=filename
+        )
+
+    except mysql.connection.Error as db_err:
+        flash(f"Error de base de datos al generar el reporte: {db_err}", 'danger')
+        print(f"Error DB en /generar_reporte_excel: {db_err}")
+        return redirect(url_for('vista_reportes'))
+    except Exception as e:
+        flash(f"Error inesperado al generar el reporte: {str(e)}", 'danger')
+        print(f"Error General en /generar_reporte_excel: {str(e)}")
+        return redirect(url_for('vista_reportes'))
+
 
 
 
