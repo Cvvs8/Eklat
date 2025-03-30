@@ -94,6 +94,7 @@
             <a href="{{ url_for('consulta_unificada') }}" class="btn">Consultar Orden</a>
             <!-- Mostrar la opción de auditoría solo si el usuario es auditor -->
             {% if session['role'] == 'auditor' %}
+            <a href="{{ url_for('vista_reportes') }}" class="btn btn-primary">Generar Reporte de Pedidos</a>
             <a href="{{ url_for('ver_auditoria') }}" class="btn">Auditoría</a>
             {% endif %}
         </div>

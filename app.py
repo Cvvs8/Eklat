@@ -1312,6 +1312,11 @@ def rotulo(cliente_id):
                                ciudad=ciudad)
     except Exception as e:
         return f"Error en la consulta: {str(e)}"
+    
+@app.route('/reportes')
+@auditor_required 
+def vista_reportes():
+    return render_template('reportes.html')
 
 
 
