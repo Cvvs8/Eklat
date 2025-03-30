@@ -1318,6 +1318,11 @@ def rotulo(cliente_id):
 def vista_reportes():
     return render_template('reportes.html')
 
+@app.route('/generar_reporte_excel', methods=['POST'])
+@auditor_required # <--- CAMBIO AQUÍ: Usa el decorador de auditor existente
+def generar_reporte_excel():
+    return ":D"
+
 
 
 
