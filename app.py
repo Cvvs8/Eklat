@@ -1377,7 +1377,7 @@ def generar_reporte_excel():
         # --- Consulta 3: Datos de Pagos asociados a esos pedidos ---
         query_pagos = """
             SELECT
-                pg.pago_id, pg.pedido_id, pg.pago_efectivo, pg.pago_bancolombia, pg.pago_davivienda,
+                pg.pedido_id, pg.pago_efectivo, pg.pago_bancolombia, pg.pago_davivienda,
                 pg.pasa_pagos, pg.pago_bold, pg.pago_mensajeria_eklat, pg.pago_mercadopago,
                 pg.pago_sistecredito, pg.pago_addi, pg.pago_envia, pg.pago_interapidismo,
                 pg.pago_servientrega, pg.pago_otro
