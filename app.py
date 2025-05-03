@@ -1289,31 +1289,43 @@ def consulta_unificada():
 def rotulo(cliente_id):
     try:
         cursor = mysql.connection.cursor()
+        # Ensure column names match your table structure (using direccion_entrega here)
         cursor.execute("""
-            SELECT nombre_cliente, numero_identificacion, telefonos, direccion_entrega, barrio, ciudad 
-            FROM clientes 
+            SELECT nombre_cliente, numero_identificacion, telefonos, direccion_entrega, barrio, ciudad
+            FROM clientes
             WHERE cliente_id = %s
-        """, (cliente_id,))
-        
-        cliente = cursor.fetchone()
+        """, (cliente_id,)) # Pass cliente_id as a tuple
+
+        cliente_data = cursor.fetchone()
         cursor.close()
 
-        if cliente:
-            nombre_cliente, numero_identificacion, telefonos, direccion, barrio, ciudad = cliente
+        if cliente_data:
+            # Correctly unpack the 6 values fetched from the database
+            nombre_cliente, numero_identificacion, telefonos, direccion, barrio, ciudad = cliente_data
         else:
-            nombre_cliente, numero_identificacion, telefonos, direccion, barrio, ciudad = (
-                "No encontrado", "No encontrado", "No encontrado", "No encontrado", "No encontrado", "No encontrado"
-            )
+            # Provide default values if client not found
+            nombre_cliente = "No encontrado"
+            numero_identificacion = "No encontrado"
+            telefonos = "No encontrado"
+            direccion = "No encontrado"
+            barrio = "No encontrado"
+            ciudad = "No encontrado"
+            # Note: cliente_id is already available from the URL parameter
 
-        return render_template('rotulo.html', 
-                               nombre_cliente=nombre_cliente, 
-                               numero_identificacion=numero_identificacion, 
+        # Render the template, passing the fetched data and the original cliente_id
+        return render_template('rotulo.html',
+                               nombre_cliente=nombre_cliente,
+                               numero_identificacion=numero_identificacion,
                                telefonos=telefonos,
-                               direccion=direccion,
+                               direccion=direccion, # Use the correct variable name
                                barrio=barrio,
-                               ciudad=ciudad)
+                               ciudad=ciudad,
+                               cliente_id=cliente_id) # Pass the ID from the URL
     except Exception as e:
-        return f"Error en la consulta: {str(e)}"
+        # Log the error for debugging
+        print(f"Error fetching data for cliente_id {cliente_id}: {str(e)}")
+        # Return a user-friendly error message or page
+        return f"Error al obtener los datos del cliente: {str(e)}"
     
 @app.route('/reportes')
 @auditor_required 
