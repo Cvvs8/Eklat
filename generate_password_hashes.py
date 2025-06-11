@@ -3,31 +3,34 @@ import json
 
 def hash_password(password):
     """Generate a bcrypt hash for a password."""
-    password_bytes = password.encode('utf-8')  # Ensure the password is encoded to bytes
-    hashed = bcrypt.hashpw(password_bytes, bcrypt.gensalt())  # Generate the hash
-    return hashed.decode('utf-8')  # Decode the hash to store in JSON as a string
+    password_bytes = password.encode('utf-8')
+    hashed = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
+    return hashed.decode('utf-8')
 
 def main():
-    # Dictionary of users and their corresponding plaintext passwords
-    users = {
-        'ADMIN': 'Gabri3L2024',
-        'VR-vendor': '8pkV143Qo',
-        'JP-vendor': 'MS9m1Qk6',
-        'NE-vendor': '7I95hdAf5',
-        'XX-vendor': 'letmein',
-        'D-Cientifica': 'Dv655Ni3V'
+    # Dictionary of users with their plaintext passwords and roles
+    users_with_roles = {
+        'ADMIN': {'password': 'Gabri3L2024', 'role': 'director'},
+        'D-Cientifica': {'password': 'Dv655Ni3V', 'role': 'auditor'},
+        'VR-vendor': {'password': '8pkV143Qo', 'role': 'user'},
+        'JP-vendor': {'password': 'MS9m1Qk6', 'role': 'user'},
+        'NE-vendor': {'password': '7I95hdAf5', 'role': 'user'},
+        'XX-vendor': {'password': 'letmein', 'role': 'user'}
     }
 
-    # Generate hashes for each user
-    hashed_users = {username: hash_password(pw) for username, pw in users.items()}
+    # Generate hashes and build the final dictionary
+    hashed_users = {}
+    for username, data in users_with_roles.items():
+        hashed_users[username] = {
+            'password': hash_password(data['password']),
+            'role': data['role']
+        }
 
-    # Write the hashed passwords to users.json
+    # Write the correct structure to users.json
     with open('users.json', 'w') as file:
         json.dump(hashed_users, file, indent=4)
 
-    print("Hashed passwords have been saved to users.json")
+    print("Hashed passwords and roles have been saved to users.json")
 
 if __name__ == "__main__":
     main()
-
-
