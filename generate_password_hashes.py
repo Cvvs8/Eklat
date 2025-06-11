@@ -10,8 +10,8 @@ def hash_password(password):
 def main():
     # Dictionary of users with their plaintext passwords and roles
     users_with_roles = {
-        'ADMIN': {'password': 'Gabri3L2024', 'role': 'director'},
-        'D-Cientifica': {'password': 'Dv655Ni3V', 'role': 'auditor'},
+        'ADMIN': {'password': 'Gabri3L2024', 'role': 'auditor'},
+        'D-Cientifica': {'password': 'Dv655Ni3V', 'role': 'director'},
         'VR-vendor': {'password': '8pkV143Qo', 'role': 'user'},
         'JP-vendor': {'password': 'MS9m1Qk6', 'role': 'user'},
         'NE-vendor': {'password': '7I95hdAf5', 'role': 'user'},
