@@ -13,7 +13,7 @@ def main():
         'ADMIN': 'Gabri3L2024',
         'VR-vendor': '8pkV143Qo',
         'JP-vendor': 'MS9m1Qk6',
-        'NE-vendor': '7f5AI95hd',
+        'NE-vendor': '7I95hdAf5',
         'XX-vendor': 'letmein',
         'D-Cientifica': 'Dv655Ni3V'
     }
